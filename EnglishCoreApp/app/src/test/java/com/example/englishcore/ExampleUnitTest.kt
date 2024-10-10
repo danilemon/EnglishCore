@@ -1,4 +1,4 @@
-package com.example.englishcoreappk
+package com.example.englishcore
 
 import org.junit.Test
 

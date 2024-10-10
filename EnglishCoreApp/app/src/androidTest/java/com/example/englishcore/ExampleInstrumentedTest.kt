@@ -1,4 +1,4 @@
-package com.example.englishcoreappk
+package com.example.englishcore
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.englishcoreappk", appContext.packageName)
+        assertEquals("com.example.englishcore", appContext.packageName)
     }
 }
