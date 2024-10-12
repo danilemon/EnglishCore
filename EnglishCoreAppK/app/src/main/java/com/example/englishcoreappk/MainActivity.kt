@@ -1,6 +1,7 @@
 package com.example.englishcoreappk
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -14,13 +15,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 import com.example.englishcoreappk.Retrofit.LoginRepository
 
@@ -41,6 +45,13 @@ fun Welcome() {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
+    var Register by remember  { mutableStateOf(true) }
+
+    var Street by remember { mutableStateOf("") }
+    var Date by remember{ mutableStateOf("") }
+    var Phone by remember{ mutableStateOf("") }
+
+
 
     // Retrofit client instance
     val loginRepository = remember { LoginRepository() }
@@ -70,6 +81,7 @@ fun Welcome() {
 
         // Mostrar la tarjeta en el centro si el botón fue presionado
         if (expanded) {
+            Register=false
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -136,6 +148,113 @@ fun Welcome() {
             }
         }
 
+        if (Register) {
+            expanded=false
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    border = BorderStroke(2.dp, colorResource(id = R.color.bluemarine)),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = "Registra tus datos",
+                            color = Color.Gray,
+                            fontSize = 25.sp,
+                            modifier = Modifier
+                                .background(Color.Transparent)  // Cambia el color de fondo
+                                .padding(8.dp)
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        TextField(
+                            value = username,
+                            onValueChange = {username=it},
+                            label={Text("Ingresa tu usuario")},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        TextField(
+                            value = password,
+                            onValueChange = {password=it},
+                            label={Text("Ingresa tu contrasenia")},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        TextField(
+                            value = Street,
+                            onValueChange = {Street=it},
+                            label={Text("Ingresa tu Direcion")},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        var isFocused by remember { mutableStateOf(false) }
+                        TextField(
+                            value = Date,
+                            onValueChange = {Date=it},
+                                label = {
+                                    // Cambiar el hint dependiendo del foco
+                                    if (isFocused) {
+                                        Text("DD/MM/AAAA")
+                                    } else {
+                                        Text("Ingresa tu fecha de cumpleanios")
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .onFocusChanged { focusState ->
+                                        // Cambiar el estado de foco cuando el TextField recibe o pierde el foco
+                                        isFocused = focusState.isFocused
+                                    }
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        TextField(
+                            value = Phone,
+                            onValueChange = {Phone=it},
+                            label={Text("Ingresa tu Telfono o el de tu tutor")},
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                        if (errorMessage.isNotEmpty()) {
+                            ShowErrorMessage(errorMessage)
+                        }
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Button(onClick = {
+
+                                loginRepository.Register(username, password,Date,Street,Phone) { success, error ->
+                                    if (success) {
+                                        errorMessage = ""  // Limpia el mensaje de error si el login es exitoso
+                                    } else {
+                                        errorMessage = error ?: "Error desconocido"
+                                    }
+                                }
+
+                        }) { Text("Continuar") }
+
+
+
+
+
+                    }
+
+                }
+
+            }
+        }
         // Botón en la parte inferior
         Column(
             modifier = Modifier
@@ -143,6 +262,14 @@ fun Welcome() {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            OutlinedButton(
+                shape = RoundedCornerShape(16.dp),
+                onClick = { Register = !Register },
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+            ) {
+                Text(if (Register) "Volver" else "Resgistrate", color = colorResource(id = R.color.bluemarine))
+            }
+
             OutlinedButton(
                 shape = RoundedCornerShape(16.dp),
                 onClick = { expanded = !expanded },
@@ -160,4 +287,10 @@ fun WelcomePreview() {
     EnglishCoreAppKTheme {
         Welcome()
     }
+}
+
+@Composable
+fun ShowErrorMessage(errorMessage: String) {
+        val context = LocalContext.current
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show() 
 }

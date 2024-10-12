@@ -1,5 +1,6 @@
 package com.example.englishcoreappk.Retrofit
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,5 +27,19 @@ class LoginRepository {
                 callback(false, t.message)
             }
         })
+    }
+
+    fun Register(username: String, password: String,Date:String,Adrees:String,Phone:String, callback: (Boolean, String?) -> Unit){
+        val RegisterRequest = RegisterRequest(username,password,Date,Adrees,Phone)
+        api.Register(RegisterRequest).enqueue(object : Callback<ResponseBody>{
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    callback(response.isSuccessful,response.message())
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                callback(false, t.message)
+            }
+        })
+
     }
 }
