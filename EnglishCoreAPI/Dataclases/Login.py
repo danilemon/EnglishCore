@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
-class LoginAtemp(BaseModel):
-    USR:int
-    PSW:str
+class LoginRequest(BaseModel):
+    username:str
+    password:str
 
 class RegisterAttemp(BaseModel):
     USR:int

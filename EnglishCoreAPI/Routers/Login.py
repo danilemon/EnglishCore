@@ -1,12 +1,13 @@
-from fastapi import APIRouter
-from Dataclases.Login import LoginAtemp,RegisterAttemp
+from fastapi import APIRouter,HTTPException
+from Dataclases.Login import LoginRequest,RegisterAttemp
+from Firebase.firebase import db
 
 Login=APIRouter()
 
 @Login.post('/Login')
-def LoginAtemp(Data:LoginAtemp):
+def LoginAtemp(Data:LoginRequest):
     users_ref = db.collection('users')
-    query_ref = users_ref.where('username', '==', data.username).limit(1).get()
+    query_ref = users_ref.where('username', '==', Data.username).limit(1).get()
 
     if not query_ref:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
@@ -14,7 +15,7 @@ def LoginAtemp(Data:LoginAtemp):
     # Verifica la contraseña
     user_data = query_ref[0].to_dict()
     
-    if user_data['password'] != data.password:
+    if user_data['password'] != Data.password:
         raise HTTPException(status_code=400, detail="Contraseña incorrecta")
 
     return {"message": "Inicio de sesión exitoso", "user": user_data}

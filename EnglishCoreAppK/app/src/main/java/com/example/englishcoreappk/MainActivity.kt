@@ -292,5 +292,5 @@ fun WelcomePreview() {
 @Composable
 fun ShowErrorMessage(errorMessage: String) {
         val context = LocalContext.current
-        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show() 
+        Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
 }
