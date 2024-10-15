@@ -205,8 +205,19 @@ fun Welcome() {
                         var isFocused by remember { mutableStateOf(false) }
                         TextField(
                             value = Date,
-                            onValueChange = {Date=it},
+
+                            onValueChange = {newText ->
+                                // Remover caracteres que no sean números
+                                val digits = newText.filter { it.isDigit() }
+
+                                // Limitar a 8 caracteres (DDMMYYYY)
+                                if (digits.length <= 8) {
+                                    // Formatear el texto como DD/MM/AAAA
+                                    Date = digits.chunked(2).joinToString("/") { it }
+                                }
+                                            },
                                 label = {
+
                                     // Cambiar el hint dependiendo del foco
                                     if (isFocused) {
                                         Text("DD/MM/AAAA")

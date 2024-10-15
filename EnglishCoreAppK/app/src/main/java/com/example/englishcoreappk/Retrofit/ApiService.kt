@@ -13,7 +13,7 @@ interface ApiService {
     @POST("/Login")  // Cambia esto si la ruta de tu API es diferente
     fun login(@Body request: LoginRequest): Call<LoginResponse>
     @POST("/Register")
-    fun Register(@Body request: RegisterRequest): Call<ResponseBody>
+    fun Register(@Body request: RegisterRequest): Call<GenericResponse>
 }
 
 // Clase para manejar la respuesta del servidor
@@ -21,6 +21,8 @@ data class LoginResponse(
     val success: Boolean,  // Esta propiedad indica si el login fue exitoso o no
     val message: String    // Este es el mensaje que el servidor puede devolver
 )
+
+
 data class LoginRequest(
     val username: String,
     val password: String
@@ -32,6 +34,10 @@ data class RegisterRequest(
     val Adrees: String,//direccion
     val Date: String,//fecha de nacimiento
     val Phone: String//telefono de contacto
+)
+
+data class GenericResponse(
+    val message:String
 )
 
 

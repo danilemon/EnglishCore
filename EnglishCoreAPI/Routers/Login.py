@@ -22,4 +22,17 @@ def LoginAtemp(Data:LoginRequest):
 
 @Login.post('/Register')
 def registerAtemp(Data:RegisterAttemp):
-    pass
+    users_ref = db.collection('users').document
+    query_ref = users_ref.where('username', '==', Data.username).limit(1).get()
+    if not query_ref:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    
+    user_doc = query_ref[0]
+
+    user_doc.update({
+        'Phone':Data.Phone,
+        'address':Data.address,
+        'birthday':Data.birthday,
+        'password':Data.password
+    })
+    return {"message": "Usuario actualizado correctamente"}
