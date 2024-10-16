@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">EnglishCoreAppK</string>
+    <string name="title_activity_teachers_menu">Teachers_Menu</string>
+    <string name="A">A</string>
+
 </resources>

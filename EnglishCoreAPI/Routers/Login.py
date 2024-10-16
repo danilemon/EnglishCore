@@ -17,8 +17,11 @@ def LoginAtemp(Data:LoginRequest):
     
     if user_data['password'] != Data.password:
         raise HTTPException(status_code=400, detail="Contraseña incorrecta")
-
-    return {"message": "Inicio de sesión exitoso", "user": user_data}
+    
+    if user_data['IsStudent']==True:
+        return {"success":True,"message": "Inicio de sesión exitoso","isStudent":True}
+    else:
+        return {"success":True,"message": "Inicio de sesión exitoso","isStudent":False}
 
 @Login.post('/Register')
 def registerAtemp(Data:RegisterRequest):

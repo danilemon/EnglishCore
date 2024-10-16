@@ -19,7 +19,8 @@ interface ApiService {
 // Clase para manejar la respuesta del servidor
 data class LoginResponse(
     val success: Boolean,  // Esta propiedad indica si el login fue exitoso o no
-    val message: String    // Este es el mensaje que el servidor puede devolver
+    val message: String,    // Este es el mensaje que el servidor puede devolver
+    val isStudent: Boolean
 )
 
 

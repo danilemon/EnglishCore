@@ -1,4 +1,4 @@
-from pydantic import BaseModel, constr, field_validator,Field
+from pydantic import BaseModel, constr,Field
 
 
 class LoginRequest(BaseModel):

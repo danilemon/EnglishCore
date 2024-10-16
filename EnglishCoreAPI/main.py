@@ -4,10 +4,7 @@ import uvicorn
 from Routers import Login
 
 app = FastAPI()
-hostname = socket.gethostname()
-local_ip = socket.gethostbyname(hostname)
-    
-print(f"Application running on: http://{local_ip}:5000")
+
 app.include_router(Login.Login)
 @app.get("/")
 def read_root():
@@ -15,7 +12,8 @@ def read_root():
 
 if __name__ == "__main__":
     # Obtener la IP local
-
-    
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    print(f"Application running on: http://{local_ip}:5000")
     # Ejecutar el servidor Uvicorn
     uvicorn.run(app, host="0.0.0.0", port=5000)

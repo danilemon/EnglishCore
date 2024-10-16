@@ -1,5 +1,7 @@
 package com.example.englishcoreappk
 
+
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -26,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 import com.example.englishcoreappk.Retrofit.LoginRepository
+import com.example.englishcoreappk.Teachers.Teachers_Menu
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +45,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Welcome() {
+    val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -144,9 +149,15 @@ fun Welcome() {
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
-                                loginRepository.login(username, password) { success, error ->
+
+                                loginRepository.login(username, password) { success, error , IsStudent->
                                     if (success) {
-                                        errorMessage = ""  // Limpia el mensaje de error si el login es exitoso
+                                        if(IsStudent){
+
+                                        }else{
+                                            val intent = Intent(context, Teachers_Menu::class.java)
+                                            context.startActivity(intent)
+                                        }
                                     } else {
                                         errorMessage = error ?: "Error desconocido"
                                     }
