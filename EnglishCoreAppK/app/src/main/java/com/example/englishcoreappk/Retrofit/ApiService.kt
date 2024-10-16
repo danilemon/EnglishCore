@@ -31,9 +31,9 @@ data class LoginRequest(
 data class RegisterRequest(
     val username: String,//Usuario que se le enntego al momento de registrarse a la escuela
     val password: String,//contrasenia que asignara a su cuenta
-    val Adrees: String,//direccion
-    val Date: String,//fecha de nacimiento
-    val Phone: String//telefono de contacto
+    val adrees: String,//direccion
+    val birthday: String,//fecha de nacimiento
+    val phone: String//telefono de contacto
 )
 
 data class GenericResponse(

@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,6 +38,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Welcome() {
     var expanded by remember { mutableStateOf(false) }
@@ -50,6 +50,18 @@ fun Welcome() {
     var Street by remember { mutableStateOf("") }
     var Date by remember{ mutableStateOf("") }
     var Phone by remember{ mutableStateOf("") }
+
+    var DayIsExpanded by remember{ mutableStateOf(false) }
+    var MonthIsExpanded by remember{ mutableStateOf(false) }
+    var YearIsExpanded by remember { mutableStateOf(false)}
+
+    var selectedDay by remember { mutableStateOf("Dia") }
+    var selectedMonth by remember { mutableStateOf("Mes") }
+    var selectedYear by remember { mutableStateOf("Año") }
+
+    val days = (1..30).map { it.toString() }
+    val months = listOf("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+    val years = (1900..2024).map { it.toString() }
 
 
 
@@ -202,36 +214,91 @@ fun Welcome() {
                                 .fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        var isFocused by remember { mutableStateOf(false) }
-                        TextField(
-                            value = Date,
-
-                            onValueChange = {newText ->
-                                // Remover caracteres que no sean números
-                                val digits = newText.filter { it.isDigit() }
-
-                                // Limitar a 8 caracteres (DDMMYYYY)
-                                if (digits.length <= 8) {
-                                    // Formatear el texto como DD/MM/AAAA
-                                    Date = digits.chunked(2).joinToString("/") { it }
-                                }
-                                            },
-                                label = {
-
-                                    // Cambiar el hint dependiendo del foco
-                                    if (isFocused) {
-                                        Text("DD/MM/AAAA")
-                                    } else {
-                                        Text("Ingresa tu fecha de cumpleanios")
-                                    }
-                                },
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly){
+                            ExposedDropdownMenuBox(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .onFocusChanged { focusState ->
-                                        // Cambiar el estado de foco cuando el TextField recibe o pierde el foco
-                                        isFocused = focusState.isFocused
+                                    .weight(1f)
+                                    .padding(8.dp),
+                                expanded=DayIsExpanded,
+                                onExpandedChange = {DayIsExpanded=!DayIsExpanded}
+                            ) {
+                                TextField(
+                                    modifier = Modifier.menuAnchor(),
+                                    value = selectedDay,
+                                    onValueChange = {},
+                                    readOnly = true
+                                )
+                                ExposedDropdownMenu(expanded=DayIsExpanded, onDismissRequest = {DayIsExpanded=false}) {
+                                    days.forEachIndexed{index,text ->
+                                         DropdownMenuItem(
+                                             text = {Text(text=text)},
+                                             onClick = {selectedDay=days[index]
+                                             DayIsExpanded=false}
+                                         )
                                     }
-                        )
+                                }
+                            }
+
+                            ExposedDropdownMenuBox(
+
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(8.dp),
+
+                                expanded=MonthIsExpanded,
+                                onExpandedChange = {MonthIsExpanded=!MonthIsExpanded}
+                            ) {
+                                TextField(
+                                    modifier = Modifier.menuAnchor(),
+                                    value = selectedMonth,
+                                    onValueChange = {},
+                                    readOnly = true
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = MonthIsExpanded,
+                                    onDismissRequest = {MonthIsExpanded = false}
+                                ) {
+                                    months.forEachIndexed{index,text ->
+                                        DropdownMenuItem(
+                                            text = {Text(text=text)},
+                                            onClick = {selectedMonth=months[index]
+                                            MonthIsExpanded=false}
+                                        )
+
+                                    }
+                                }
+                            }
+
+                            ExposedDropdownMenuBox(
+                                expanded = YearIsExpanded,
+                                onExpandedChange = {YearIsExpanded=!YearIsExpanded},
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(8.dp)
+                            ) {
+                                TextField(
+                                    modifier = Modifier.menuAnchor(),
+                                    value = selectedYear,
+                                    onValueChange = {},
+                                    readOnly = true
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = YearIsExpanded,
+                                    onDismissRequest = {YearIsExpanded=false}
+                                ) {
+                                    years.forEachIndexed{index,text->
+                                        DropdownMenuItem(
+                                            text = {Text(text=text)},
+                                            onClick = {selectedYear=years[index]
+                                                YearIsExpanded=false}
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+
+
                         Spacer(modifier = Modifier.height(10.dp))
                         TextField(
                             value = Phone,
@@ -245,19 +312,17 @@ fun Welcome() {
                         }
                         Spacer(modifier = Modifier.height(10.dp))
                         Button(onClick = {
+                            Date=selectedDay+'/'+selectedMonth+'/'+selectedYear
 
                                 loginRepository.Register(username, password,Date,Street,Phone) { success, error ->
                                     if (success) {
-                                        errorMessage = ""  // Limpia el mensaje de error si el login es exitoso
+                                        errorMessage = "TodoBien"  // Limpia el mensaje de error si el login es exitoso
                                     } else {
                                         errorMessage = error ?: "Error desconocido"
                                     }
                                 }
 
                         }) { Text("Continuar") }
-
-
-
 
 
                     }

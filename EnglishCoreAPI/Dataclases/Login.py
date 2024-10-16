@@ -1,22 +1,18 @@
-from pydantic import BaseModel, constr, field_validator
-from typing import Optional
+from pydantic import BaseModel, constr, field_validator,Field
+
 
 class LoginRequest(BaseModel):
     username:str
     password:str
 
-class RegisterAttemp(BaseModel):
-    username:int
+class RegisterRequest(BaseModel):
+    username:str
     password: str=constr(min_length=8)
-    address:str
+    adrees:str
     birthday:str
-    Phone:int=constr(regex=r'^\d{10}$')
+    phone:str=Field(pattern=r'^\d{10}$')
 
-    @field_validator('Phone')
-    def phone_must_be_ten_digits(cls, v):
-        if len(v) != 10:
-            raise ValueError('El número de teléfono debe tener exactamente 10 dígitos')
-        return v
+
     
 
     

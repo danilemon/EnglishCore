@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-from Dataclases.Login import LoginRequest,RegisterAttemp
+from Dataclases.Login import LoginRequest,RegisterRequest
 from Firebase.firebase import db
 
 Login=APIRouter()
@@ -21,18 +21,21 @@ def LoginAtemp(Data:LoginRequest):
     return {"message": "Inicio de sesión exitoso", "user": user_data}
 
 @Login.post('/Register')
-def registerAtemp(Data:RegisterAttemp):
-    users_ref = db.collection('users').document
+def registerAtemp(Data:RegisterRequest):
+    users_ref = db.collection('users')
     query_ref = users_ref.where('username', '==', Data.username).limit(1).get()
     if not query_ref:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
     user_doc = query_ref[0]
 
-    user_doc.update({
-        'Phone':Data.Phone,
-        'address':Data.address,
-        'birthday':Data.birthday,
-        'password':Data.password
+    doc_ref = user_doc.reference
+
+
+    doc_ref.update({
+    'Phone': Data.phone,
+    'address': Data.adrees,
+    'birthday': Data.birthday,
+    'password': Data.password
     })
     return {"message": "Usuario actualizado correctamente"}

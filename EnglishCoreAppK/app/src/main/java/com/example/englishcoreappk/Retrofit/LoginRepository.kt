@@ -31,14 +31,21 @@ class LoginRepository {
 
     fun Register(username: String, password: String,Date:String,Adrees:String,Phone:String, callback: (Boolean, String?) -> Unit){
         val RegisterRequest = RegisterRequest(username,password,Date,Adrees,Phone)
-        api.Register(RegisterRequest).enqueue(object : Callback<ResponseBody>{
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    callback(response.isSuccessful,response.message())
+        api.Register(RegisterRequest).enqueue(object : Callback<GenericResponse>{
+            override fun onResponse(
+                call: Call<GenericResponse>,
+                response: Response<GenericResponse>
+            ) {
+                callback(response.isSuccessful,response.message())
             }
 
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            override fun onFailure(call: Call<GenericResponse>, t: Throwable) {
                 callback(false, t.message)
             }
+
+
+
+
         })
 
     }
