@@ -4,7 +4,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TeacherRepository {
+object TeacherRepository {
     private val api = RetrofitClient.instance.create(TeacherService::class.java)
     fun GetGroupsRequest(callback: (List<Groups>) -> Unit){
         val Usr=GetGroupsRequest(1)
@@ -15,7 +15,7 @@ class TeacherRepository {
             }
 
             override fun onFailure(call: Call<List<Groups>>, t: Throwable) {
-                callback(Groups)
+                callback(emptyList())
             }
 
         })

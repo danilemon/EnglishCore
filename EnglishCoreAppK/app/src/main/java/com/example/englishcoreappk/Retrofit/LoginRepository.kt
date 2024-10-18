@@ -30,7 +30,7 @@ class LoginRepository {
     }
 
     fun Register(username: String, password: String,Date:String,Adrees:String,Phone:String, callback: (Boolean, String?) -> Unit){
-        val RegisterRequest = RegisterRequest(username,Date,password,Adrees,Phone)
+        val RegisterRequest = RegisterRequest(username,password,Adrees,Date,Phone)
         api.Register(RegisterRequest).enqueue(object : Callback<GenericResponse>{
             override fun onResponse(
                 call: Call<GenericResponse>,
