@@ -10,7 +10,7 @@ object TeacherRepository {
         val Usr=GetGroupsRequest(1)
         api.getGroups(Usr).enqueue(object : Callback<List<Groups>> {
             override fun onResponse(call: Call<List<Groups>>, response: Response<List<Groups>>) {
-                var Groups=response.body()!!
+                val Groups=response.body()!!
                 callback(Groups)
             }
 

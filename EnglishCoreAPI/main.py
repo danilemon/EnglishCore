@@ -2,10 +2,14 @@ import socket
 from fastapi import FastAPI
 import uvicorn
 from Routers import Login
+from Routers import Teachers
 
 app = FastAPI()
 
+
+app.include_router(Teachers.TeachersR)
 app.include_router(Login.Login)
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to FastAPI!"}

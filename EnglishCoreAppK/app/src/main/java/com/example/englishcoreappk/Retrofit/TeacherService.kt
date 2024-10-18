@@ -6,7 +6,7 @@ import retrofit2.Call
 
 interface TeacherService {
         @POST("/GetGroups")
-        fun getGroups(@Body teacher: GetGroupsRequest): Call<List<Groups>>
+        fun getGroups(@Body request: GetGroupsRequest): Call<List<Groups>>
 }
 
 data class GetGroupsRequest(
