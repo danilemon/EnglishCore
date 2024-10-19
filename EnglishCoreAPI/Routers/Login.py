@@ -1,6 +1,7 @@
 from fastapi import APIRouter,HTTPException
 from Dataclases.Login import LoginRequest,RegisterRequest
 from Firebase.firebase import db
+from Dataclases.Teachers import GetGroupsRequest,Groups
 
 Login=APIRouter()
 
@@ -31,6 +32,9 @@ def registerAtemp(Data:RegisterRequest):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     
     user_doc = query_ref[0]
+    data=user_doc.to_dict()
+    if data['password'] != "":
+        raise HTTPException(status_code=400, detail="Usuario ya registrado")
 
     doc_ref = user_doc.reference
 

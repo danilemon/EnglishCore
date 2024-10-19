@@ -46,11 +46,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Welcome() {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(false) }
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(true) }
+    var username by remember { mutableStateOf("mauri") }
+    var password by remember { mutableStateOf("hola123") }
     var errorMessage by remember { mutableStateOf("") }
-    var Register by remember  { mutableStateOf(true) }
+    var Register by remember  { mutableStateOf(false) }
 
     var Street by remember { mutableStateOf("") }
     var Date by remember{ mutableStateOf("") }
@@ -67,6 +67,8 @@ fun Welcome() {
     val days = (1..30).map { it.toString() }
     val months = listOf("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
     val years = (1900..2024).map { it.toString() }
+
+    var CheckBoxS by remember{ mutableStateOf(false) }
 
 
 
@@ -144,6 +146,16 @@ fun Welcome() {
                             Text(text = errorMessage, color = Color.Red)
                             Spacer(modifier = Modifier.height(8.dp))
                         }
+
+                        Row(modifier = Modifier.padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(
+                            checked = CheckBoxS,
+                            onCheckedChange = {CheckBoxS=it}
+                        )
+                                Text(text = ("Mantener sesion inciada"))
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         // Botón de iniciar sesión
                         Button(

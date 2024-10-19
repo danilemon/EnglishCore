@@ -14,6 +14,7 @@ interface ApiService {
     fun login(@Body request: LoginRequest): Call<LoginResponse>
     @POST("/Register")
     fun Register(@Body request: RegisterRequest): Call<GenericResponse>
+
 }
 
 // Clase para manejar la respuesta del servidor
