@@ -8,8 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -54,7 +57,11 @@ import com.example.englishcoreappk.Retrofit.Groups
 import com.example.englishcoreappk.Retrofit.TeacherRepository
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.sp
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -83,7 +90,7 @@ class Teachers_Menu : ComponentActivity() {
 @Composable
 fun ShowView(){
     val navController = rememberNavController()
-    var ExitDIialog by remember { mutableStateOf(true) }
+    var ExitDIialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = ExitDIialog) {
         ExitDIialog=true
@@ -137,26 +144,32 @@ fun ShowView(){
 
                   )
                 }}
-        ){
-            NavigationHost(navController)
-            if (ExitDIialog){
+        ){paddingValues ->
+            // Box que ajusta su tamaño según el espacio disponible entre la topBar y la bottomBar
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues) // Usa paddingValues proporcionado por el Scaffold
+            ) {
+                NavigationHost(navController)
 
-
-                AlertDialog(
-                    onDismissRequest = { ExitDIialog = false },
-                    title = { Text(text = "Deseas salir de la aplicacion") },
-                    confirmButton = {
-                        Button(onClick = { ExitDIialog = false }) {
-                            Text("Si")
+                if (ExitDIialog) {
+                    AlertDialog(
+                        onDismissRequest = { ExitDIialog = false },
+                        title = { Text(text = "Deseas salir de la aplicación") },
+                        confirmButton = {
+                            Button(onClick = { ExitDIialog = false }) {
+                                Text("Sí")
+                            }
+                        },
+                        dismissButton = {
+                            OutlinedButton(onClick = { ExitDIialog = false }) {
+                                Text("No")
+                            }
                         }
-                    },
-                    dismissButton = {
-                        OutlinedButton(onClick = { ExitDIialog = false }) {
-                            Text("No")
-                        }
-                    })
+                    )
+                }
             }
-
         }
     }
 
@@ -202,8 +215,6 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 
 }
-
-
 
 @Composable
 fun NavigationHost(navController: NavHostController) {
@@ -251,18 +262,120 @@ fun GroupsScreen() {
                 .padding(16.dp),
         ) {
             itemsIndexed(groupsState.value) { index, group ->
-                GroupItem(group, index % 4) // Asegúrate de que GroupItem tenga los parámetros correctos
+                GroupItem(group, (index+1) % 4) // Asegúrate de que GroupItem tenga los parámetros correctos
             }
         }
     }
     }
-
-
 }
 
 @Composable
 fun ActivitiesScreen() {
-    Text(text = "Pantalla de perfil", modifier = Modifier.fillMaxSize())
+    Box(
+        modifier=Modifier
+            .fillMaxSize()
+    ){
+        Column(
+
+            modifier=Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Box(modifier = Modifier
+                .weight(1f)
+
+                .padding(5.dp),){
+            Image(
+                modifier = Modifier
+                    .fillMaxSize(),
+                painter = painterResource(id=R.drawable.activities_img),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(Color.Transparent, Color(0xFFDB162F).copy(alpha = 0.2f)), // Degradado de transparente a rojo oscuro
+                                start = Offset(0f, 0f), // Comienzo del degradado
+                                end = Offset(0f, Float.POSITIVE_INFINITY) // Final del degradado, de arriba a abajo
+                            )
+                        )
+                ){
+                Text(text = "Actividades",
+                    color=Color.White,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .align(Alignment.Center) // Alineación del texto en la esquina inferior izquierda
+                        .padding(8.dp) // Agrega padding alrededor del texto
+                )}
+            }
+
+            Box(modifier = Modifier
+                .weight(1f)
+
+                .padding(5.dp),){
+                Image(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    painter = painterResource(id=R.drawable.exam_img),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(Color.Transparent, Color(0xFF3A6EA5).copy(alpha = 0.4f)), // Degradado de transparente a rojo oscuro
+                                start = Offset(0f, 0f), // Comienzo del degradado
+                                end = Offset(0f, Float.POSITIVE_INFINITY) // Final del degradado, de arriba a abajo
+                            )
+                        )
+                ){
+                Text(text = "Actividades",
+                    color=Color.White,
+                    fontSize = 30.sp,
+                    modifier = Modifier
+                        .align(Alignment.Center) // Alineación del texto en la esquina inferior izquierda
+                        .padding(8.dp) // Agrega padding alrededor del texto
+                )}
+            }
+
+            Box(modifier = Modifier
+                .weight(1f)
+                .padding(5.dp),){
+                Image(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    painter = painterResource(id=R.drawable.practica_img),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(Color.Transparent, Color(0xFF74007A).copy(alpha = 0.4f)), // Degradado de transparente a rojo oscuro
+                                start = Offset(0f, 0f), // Comienzo del degradado
+                                end = Offset(0f, Float.POSITIVE_INFINITY) // Final del degradado, de arriba a abajo
+                            )
+                        )
+                ){
+                    Text(text = "Practicas",
+                        color=Color.White,
+                        fontSize = 30.sp,
+                        modifier = Modifier
+                            .align(Alignment.Center) // Alineación del texto en la esquina inferior izquierda
+                            .padding(8.dp) // Agrega padding alrededor del texto
+                    )}
+            }
+        }
+
+    }
 }
 
 @Composable

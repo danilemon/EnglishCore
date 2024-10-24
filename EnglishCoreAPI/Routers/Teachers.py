@@ -20,4 +20,5 @@ def GetGroups(Data:GetGroupsRequest):
         TeacherID=data.get('TeacherID')
         group = Groups(ID=ID,Days=Days,Hours=Hours,Level=Level,StartDate=StartDate,TeacherID=TeacherID)
         groups_list.append(group) 
+    print(groups_list)
     return(groups_list)
