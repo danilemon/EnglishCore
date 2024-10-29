@@ -16,6 +16,13 @@
         android:theme="@style/Theme.EnglishCoreAppK"
         tools:targetApi="31" >
         <activity
+            android:name=".Students.StudentsDashboard"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK" />
+        <activity android:name=".Students.StudentsProfile"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+        <activity
             android:name=".Teachers.Teachers_Menu"
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK" />
