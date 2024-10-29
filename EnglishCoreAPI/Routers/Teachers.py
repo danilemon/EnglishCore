@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-from Dataclases.Teachers import GetGroupsRequest,Groups
+from Dataclases.Teachers import GetGroupsRequest,Groups,StudetnsPreview
 from Firebase.firebase import db
 
 TeachersR=APIRouter()
@@ -22,3 +22,7 @@ def GetGroups(Data:GetGroupsRequest):
         groups_list.append(group) 
     print(groups_list)
     return(groups_list)
+
+@TeachersR.post('/GetStudents', response_model=list[StudetnsPreview])
+def GetStudents(Data:GetGroupsRequest):
+    pass

@@ -219,11 +219,11 @@ fun NavigationHost(navController: NavHostController) {
             GroupsScreen(navController)
         }
         composable(
-            "Grupos/{Group_ID}",
-            arguments = listOf(navArgument("Group_ID") { type = NavType.IntType })
+            "Grupos/{Group}",
+            arguments = listOf(navArgument("Group") { type = NavType.ParcelableType(Groups::class.java) })
         ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getInt("Group_ID")
-            GroupMenu(groupId!!)
+            val group = backStackEntry.arguments?.getParcelable<Groups> ("Group")
+            GroupMenu(group!!)
         }
         composable("Actividades") {
             ActivitiesScreen()

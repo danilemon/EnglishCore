@@ -1,15 +1,18 @@
 package com.example.englishcoreappk.Teachers
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -26,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,7 +68,7 @@ fun GroupsScreen(navController: NavController) {
             ) {
                 itemsIndexed(groupsState.value) { index, group ->
                     GroupItem(group, (index+1) % 4){
-                        navController.navigate("Grupos/${group.ID}")
+                        navController.navigate("Grupos/${group.toString()}")
                     } // Asegúrate de que GroupItem tenga los parámetros correctos
                 }
             }
@@ -108,14 +112,14 @@ fun GroupItem(Group: Groups,BGcolor:Int,GroupMenu:()->Unit){
 
 
 @Composable
-fun GroupMenu(GroupID: Int){
+fun GroupMenu(Group: Groups){
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
 
-            Text(text = "Nivel - 1",
+            Text(text = "Nivel - ${Group.ID}",
                 style = TextStyle(
                     fontSize = 25.sp, // Cambiar tamaño a 20sp
                     fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
@@ -123,7 +127,7 @@ fun GroupMenu(GroupID: Int){
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "L-J-V / 3:00 - 5:00"
+                text = "${Group.Days} / ${Group.Hours}"
             )
 
         Column(
@@ -178,7 +182,6 @@ fun GroupMenu(GroupID: Int){
                     fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
                 ))
             }
-
             Box(
                 modifier = Modifier
                     .weight(0.5f) // Comparte espacio con otros Boxes
@@ -197,10 +200,89 @@ fun GroupMenu(GroupID: Int){
     }
 }
 
-@Preview(showBackground = true)
 @Composable
+fun GroupList(Group:Groups){
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+
+        Text(text = "Nivel - ${Group.ID}",
+            style = TextStyle(
+                fontSize = 25.sp, // Cambiar tamaño a 20sp
+                fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
+            )
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "${Group.Days} / ${Group.Hours}"
+        )
+
+        Column(
+            modifier = Modifier.fillMaxSize(), // Ocupa todo el tamaño disponible
+            horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
+            verticalArrangement = Arrangement.Top // Comienza desde la parte superior
+        ) {
+            val isLoading = remember { mutableStateOf(true) }
+            LazyColumn(modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)) {
+
+            }
+        }
+        }
+
+}
+
+@Composable
+fun ListItem(){
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp), // Aumenté la altura para mejor visualización
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xff306388)  // Cambia el color de fondo aquí
+        )
+    ) {
+        Box(
+            Modifier.fillMaxSize()
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(10.dp),
+                text = "Daniel Lopez Aguilera",
+                style = TextStyle(color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(10.dp)
+                    .size(20.dp) // Tamaño del círculo
+                    .clickable {
+                        // Manejar el clic aquí
+                    }
+            ) {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    drawCircle(
+                        color = Color.Black, // Color del borde
+                        radius = size.minDimension / 2, // Radio del círculo
+                        style = Stroke(width = 2f) // Ancho del borde
+                    )
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+@Preview(showBackground = true)
 fun GroupPreview() {
+    //var GP=Groups(1,"L-M-V","5:00 - 8:00",1,"13/10/05",1)
     EnglishCoreAppKTheme {
-        GroupMenu(1)
+        ListItem()
+        //GroupMenu(GP)
     }
 }
