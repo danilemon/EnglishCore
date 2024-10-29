@@ -11,15 +11,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,9 +24,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -62,6 +55,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -77,6 +72,7 @@ class Teachers_Menu : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             EnglishCoreAppKTheme {
                 ShowView()
@@ -220,7 +216,14 @@ fun BottomNavigationBar(navController: NavHostController) {
 fun NavigationHost(navController: NavHostController) {
     NavHost(navController, startDestination = "Grupos") {
         composable("Grupos") {
-            GroupsScreen()
+            GroupsScreen(navController)
+        }
+        composable(
+            "Grupos/{Group_ID}",
+            arguments = listOf(navArgument("Group_ID") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getInt("Group_ID")
+            GroupMenu(groupId!!)
         }
         composable("Actividades") {
             ActivitiesScreen()
@@ -236,38 +239,6 @@ fun currentRoute(navController: NavHostController): String? {
     return navBackStackEntry?.destination?.route
 }
 
-@Composable
-fun GroupsScreen() {
-
-    val groupsState = remember { mutableStateOf<List<Groups>>(emptyList()) }
-    val isLoading = remember { mutableStateOf(true) } // Estado para cargar
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-    // Llama a GetGroupsRequest cuando se compone el Composable
-    LaunchedEffect(Unit) {
-        TeacherRepository.GetGroupsRequest { groups ->
-            groupsState.value = groups // Actualiza el estado con los grupos obtenidos
-            isLoading.value = false // Cambia el estado de carga
-        }
-    }
-
-    // Muestra un indicador de carga mientras se obtienen los datos
-    if (isLoading.value) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center) )
-    } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-        ) {
-            itemsIndexed(groupsState.value) { index, group ->
-                GroupItem(group, (index+1) % 4) // Asegúrate de que GroupItem tenga los parámetros correctos
-            }
-        }
-    }
-    }
-}
 
 @Composable
 fun ActivitiesScreen() {
@@ -389,39 +360,8 @@ fun PracticeScreen() {
 @Composable
 fun Preview() {
     EnglishCoreAppKTheme {
-        ShowView()
+
     }
 }
 
 
-@Composable
-fun GroupItem(Group: Groups,BGcolor:Int){
-    val ColorMap= mapOf(
-        0 to Color(0xFFDB162F),
-        1 to Color(0xFF2F2A50),
-        2 to Color(0xFFC4C6E7),
-        3 to Color(0XFF3A6EA5)
-    )
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            ,
-        colors = CardDefaults.cardColors(
-            containerColor = ColorMap[BGcolor] ?: Color.White  // Cambia el color de fondo aquí
-        ),
-
-
-
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-
-        ) {
-            Text(text = "Grupo:\n nivel ${Group.Level.toString()} / ${Group.Days} / ${Group.Hours}")
-        }
-    }
-
-
-}
