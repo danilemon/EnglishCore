@@ -3,10 +3,11 @@ from fastapi import FastAPI
 import uvicorn
 from Routers import Login
 from Routers import Teachers
+from Routers import Students
 
 app = FastAPI()
 
-
+app.include_router(Students.StudentsR)
 app.include_router(Teachers.TeachersR)
 app.include_router(Login.Login)
 
