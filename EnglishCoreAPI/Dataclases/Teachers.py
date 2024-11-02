@@ -14,3 +14,8 @@ class Groups(BaseModel):
 class StudetnsPreview(BaseModel):
     ID:int
     Name:str
+class StudentInfo(BaseModel):
+    ID:int
+    Name:str
+    Cellphone:str
+    Adrress:str

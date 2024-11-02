@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.Call
 import android.os.Parcelable
+import kotlinx.serialization.Serializable
 
 
 interface TeacherService {
@@ -12,6 +13,8 @@ interface TeacherService {
         fun getGroups(@Body request: GroupsRequest): Call<List<Groups>>
         @POST("/GetStudents")
         fun getGroupsStudents(@Body request: GroupsRequest): Call<List<StudentPreview>>
+        @POST("/GetStudentInfo")
+        fun getStudentInfo(@Body request: GroupsRequest): Call<StudentInfo>
 }
 
 data class GroupsRequest(
@@ -19,17 +22,23 @@ data class GroupsRequest(
 )
 
 // Definir el modelo que recibirás de la respuesta
-@Parcelize
+@Serializable
 data class Groups(
-    val ID: Int,
-    val Days: String,
-    val Hours: String,
-    val Level: Int,
-    val StartDate: String,
-    val TeacherID: Int
-): Parcelable
+    val ID: Int? = null,
+    val Days: String? = null,
+    val Hours: String? = null,
+    val Level: Int? = null,
+    val StartDate: String? = null,
+    val TeacherID: Int? = null
+)
 
 data class StudentPreview(
     val ID: Int,
     val Name: String
+)
+data class StudentInfo(
+    val ID: Int,
+    val Name: String,
+    val Cellphone: String,
+    val Adrress:String
 )

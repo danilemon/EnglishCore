@@ -57,6 +57,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -85,7 +86,7 @@ class Teachers_Menu : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ShowView(){
-    val navController = rememberNavController()
+    var navController = rememberNavController()
     var ExitDIialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = ExitDIialog) {
@@ -218,12 +219,11 @@ fun NavigationHost(navController: NavHostController) {
         composable("Grupos") {
             GroupsScreen(navController)
         }
-        composable(
-            "Grupos/{Group}",
-            arguments = listOf(navArgument("Group") { type = NavType.ParcelableType(Groups::class.java) })
-        ) { backStackEntry ->
-            val group = backStackEntry.arguments?.getParcelable<Groups> ("Group")
-            GroupMenu(group!!)
+        composable<Groups>(
+           ) { backStackEntry ->
+            val group:Groups = backStackEntry.toRoute()
+            val GroupNav = rememberNavController()
+            GroupsNavigationHost(GroupNav,group)
         }
         composable("Actividades") {
             ActivitiesScreen()

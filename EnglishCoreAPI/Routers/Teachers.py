@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-from Dataclases.Teachers import GetGroupsRequest,Groups,StudetnsPreview
+from Dataclases.Teachers import GetGroupsRequest,Groups,StudetnsPreview,StudentInfo
 from Firebase.firebase import db
 
 TeachersR=APIRouter()
@@ -25,4 +25,23 @@ def GetGroups(Data:GetGroupsRequest):
 
 @TeachersR.post('/GetStudents', response_model=list[StudetnsPreview])
 def GetStudents(Data:GetGroupsRequest):
-    pass
+    Group=db.collection('Groups').where('ID','==',Data.ID).get()
+    if Group:
+        Group_Doc=Group[0]
+        Users=db.collection('users')
+        Students=Group_Doc.get('StudentsIDs')
+        ReturnList=[]
+        for ID in Students:
+            User=Users.where('StudentID','==',ID).get()
+            UserDoc=User[0]
+            Student=StudetnsPreview(ID=ID,Name=UserDoc.get('Name')+" "+UserDoc.get('LastName'))
+            ReturnList.append(Student)
+        return(ReturnList)
+    
+@TeachersR.post('/GetStudentInfo')
+def GetStudentInfo(Data:GetGroupsRequest):
+    Student=db.collection('users').where('StudentID','==',Data.ID).get()
+    if Student:
+        Student_doc=Student[0]
+        FinalStudent=StudentInfo(ID=Data.ID,Name=Student_doc.get('Name')+" "+Student_doc.get('LastName'),Cellphone=Student_doc.get('Phone'),Adrress=Student_doc.get('address'))
+        return FinalStudent
