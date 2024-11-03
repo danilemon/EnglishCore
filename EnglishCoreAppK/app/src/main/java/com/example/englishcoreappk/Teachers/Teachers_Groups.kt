@@ -2,6 +2,7 @@ package com.example.englishcoreappk.Teachers
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -477,14 +478,12 @@ fun AttendanceList(Group: Groups){
 
 @Composable
 fun AttendanceItem(Student:StudentPreview,Attendance:()->Unit){
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(40.dp), // Aumenté la altura para mejor visualización
-
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xffC4C6E7)  // Cambia el color de fondo aquí
-        )
+            .height(40.dp)
+            .border(2.dp,Color.Black)
+            .background( Color(0xffC4C6E7) ) // Aumenté la altura para mejor visualización
     ) {
         Box(
             Modifier.fillMaxSize()

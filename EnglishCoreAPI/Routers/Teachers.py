@@ -28,13 +28,11 @@ def GetStudents(Data:GetGroupsRequest):
     Group=db.collection('Groups').where('ID','==',Data.ID).get()
     if Group:
         Group_Doc=Group[0]
-        Users=db.collection('users')
         Students=Group_Doc.get('StudentsIDs')
         ReturnList=[]
-        for ID in Students:
-            User=Users.where('StudentID','==',ID).get()
-            UserDoc=User[0]
-            Student=StudetnsPreview(ID=ID,Name=UserDoc.get('Name')+" "+UserDoc.get('LastName'))
+        for Student in Students:
+            Student_Doc=Student.get().to_dict()
+            Student=StudetnsPreview(ID=Student_Doc.Get("Student_Doc"),Name=Student_Doc.get('Name')+" "+Student_Doc.get('LastName'))
             ReturnList.append(Student)
         return(ReturnList)
     
