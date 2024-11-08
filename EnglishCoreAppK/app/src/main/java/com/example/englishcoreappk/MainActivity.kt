@@ -31,10 +31,15 @@ import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 import com.example.englishcoreappk.Retrofit.LoginRepository
 import com.example.englishcoreappk.Teachers.Teachers_Menu
 import com.example.englishcoreappk.Students.StudentsDashboard
+import com.example.englishcoreappk.Students.startActivityWithAnimation
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+            val splashScreen = installSplashScreen()
+
+
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContent {
@@ -49,9 +54,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Welcome() {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(true) }
-    var username by remember { mutableStateOf("mauri") }
-    var password by remember { mutableStateOf("hola123") }
+    var expanded by remember { mutableStateOf(false) }
+    var username by remember { mutableStateOf("dany") }
+    var password by remember { mutableStateOf("12345678") }
     var errorMessage by remember { mutableStateOf("") }
     var Register by remember  { mutableStateOf(false) }
 
@@ -169,10 +174,10 @@ fun Welcome() {
                                     if (success) {
                                         if(IsStudent){
                                             val intent = Intent(context, StudentsDashboard::class.java)
-                                            context.startActivity(intent)
+                                            context.startActivityWithAnimation(intent)
                                         }else{
                                             val intent = Intent(context, Teachers_Menu::class.java)
-                                            context.startActivity(intent)
+                                            context.startActivityWithAnimation(intent)
                                         }
                                     } else {
                                         errorMessage = error ?: "Error desconocido"

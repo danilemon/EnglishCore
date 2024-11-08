@@ -1,6 +1,9 @@
 package com.example.englishcoreappk.Students
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -31,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,10 +58,18 @@ class StudentsDashboard : ComponentActivity() {
     }
 }
 
+fun Context.startActivityWithAnimation(intent: Intent) {
+    startActivity(intent)
+    if (this is Activity) {
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_in_down)
+    }
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ShowStudentView() {
+    val context = LocalContext.current
+
     val navController = rememberNavController()
     var ExitDialog by remember { mutableStateOf(true) }
 
@@ -99,6 +111,8 @@ fun ShowStudentView() {
                             .size(50.dp)
                             .clip(CircleShape)
                             .align(Alignment.TopStart)
+                            .clickable { val intent = Intent(context, StudentsProfile::class.java)
+                                context.startActivityWithAnimation(intent)}
                     )
                 }
             },
@@ -107,30 +121,7 @@ fun ShowStudentView() {
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 // Imagen de fondo principal
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp).padding(top= 50.dp) // Ajusta la altura de la imagen
-                ) {
-                    // Imagen de fondo principal
-                    Image(
-                        painter = painterResource(id = R.drawable.harvard), // Coloca la imagen adecuada
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Crop // Ajusta la escala si es necesario
-                    )
 
-                    // Texto de bienvenida centrado
-                    Text(
-                        text = "¡HOLA ESTUDIANTE!",
-                        color = Color.White, // Ajusta el color según sea necesario
-                        modifier = Modifier
-                            .align(Alignment.Center).padding(top = 60.dp), // Centra el texto en el Box
-//        style = MaterialTheme.typography.h4 // Ajusta el tamaño y estilo
-                    )
-                }
 
                 // Tarjetas de Practicar, Pendientes y Calificaciones
                 LazyColumn(
@@ -138,6 +129,32 @@ fun ShowStudentView() {
                         .fillMaxSize()
                         .padding(bottom = 16.dp) // Añade un pequeño padding inferior si es necesario
                 ) {
+                    item{
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp).padding(top= 50.dp) // Ajusta la altura de la imagen
+                        ) {
+                            // Imagen de fondo principal
+                            Image(
+                                painter = painterResource(id = R.drawable.harvard), // Coloca la imagen adecuada
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(250.dp),
+                                contentScale = ContentScale.Crop // Ajusta la escala si es necesario
+                            )
+
+                            // Texto de bienvenida centrado
+                            Text(
+                                text = "¡HOLA ESTUDIANTE!",
+                                color = Color.White, // Ajusta el color según sea necesario
+                                modifier = Modifier
+                                    .align(Alignment.Center).padding(top = 60.dp), // Centra el texto en el Box
+//        style = MaterialTheme.typography.h4 // Ajusta el tamaño y estilo
+                            )
+                        }
+                    }
                     item {
                         SectionCard(
                             title = "PRACTICAR",
@@ -149,14 +166,16 @@ fun ShowStudentView() {
                         SectionCard(
                             title = "PENDIENTES",
                             imageResource = R.drawable.pending_image,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp).clickable { val intent = Intent(context, StudentsPending::class.java)
+                                    context.startActivityWithAnimation(intent)}
                         )
                     }
                     item {
                         SectionCard(
                             title = "CALIFICACIONES",
                             imageResource = R.drawable.grades_image,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp).clickable { val intent = Intent(context, StudentsScores::class.java)
+                                context.startActivityWithAnimation(intent)}
                         )
                     }
                 }
@@ -214,4 +233,5 @@ fun PreviewDashboard() {
         ShowStudentView()
     }
 }
+
 
