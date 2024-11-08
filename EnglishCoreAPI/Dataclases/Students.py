@@ -11,4 +11,4 @@ class StudentData(BaseModel):
     Address:str
     Birthday:str
     Username:str
-    Group: int
+    GroupID: int

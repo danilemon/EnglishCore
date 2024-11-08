@@ -25,7 +25,20 @@ def GetStudent(Data: GetStudentDataRequest):
         Address=student_data.get('address'),
         Birthday=student_data.get('birthday'),
         Username=student_data.get('username'),
-        Group=student_data.get('Group_id')
+        GroupID=student_data.get('GroupID')
     )
 
     return student
+
+@StudentsR.put('/UpdateStudentData')
+def UpdateStudent(Data: StudentData):
+    User_Ref = db.collection('users')
+    Query_Ref = User_Ref.where('StudentID', '==', Data.StudentID).get()
+    
+    if not Query_Ref:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    doc_ref = Query_Ref[0].reference
+    doc_ref.update(Data.dict())  # Usa Data.dict() para actualizar con todos los datos
+
+    return {"message": "Student data updated successfully"}
