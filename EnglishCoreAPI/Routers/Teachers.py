@@ -32,7 +32,7 @@ def GetStudents(Data:GetGroupsRequest):
         ReturnList=[]
         for Student in Students:
             Student_Doc=Student.get().to_dict()
-            Student=StudetnsPreview(ID=Student_Doc.Get("Student_Doc"),Name=Student_Doc.get('Name')+" "+Student_Doc.get('LastName'))
+            Student=StudetnsPreview(ID=Student_Doc.get("StudentID"),Name=Student_Doc.get('Name')+" "+Student_Doc.get('LastName'))
             ReturnList.append(Student)
         return(ReturnList)
     

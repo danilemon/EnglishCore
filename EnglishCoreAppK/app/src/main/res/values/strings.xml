@@ -2,5 +2,7 @@
     <string name="app_name">EnglishCoreAppK</string>
     <string name="title_activity_teachers_menu">Teachers_Menu</string>
     <string name="A">A</string>
+    <string name="title_activity_view">ActivityView</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

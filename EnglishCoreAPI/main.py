@@ -3,12 +3,14 @@ from fastapi import FastAPI
 import uvicorn
 from Routers import Login
 from Routers import Teachers
+from Routers import Activities
 
 app = FastAPI()
 
 
 app.include_router(Teachers.TeachersR)
 app.include_router(Login.Login)
+app.include_router(Activities.Activities)
 hostname = socket.gethostname()
 local_ip = socket.gethostbyname(hostname)
 print(f"Application running on: http://{local_ip}:5000")

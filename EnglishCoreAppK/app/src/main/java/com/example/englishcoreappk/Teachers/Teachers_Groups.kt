@@ -202,8 +202,7 @@ fun GroupMenu(Group: Groups,navController: NavController){
                     fontSize = 25.sp, // Cambiar tamaño a 20sp
                     fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
                 ))
-            }
-
+            }//Attendance
             // Segundo Box
             Box(
                 modifier = Modifier
@@ -211,7 +210,11 @@ fun GroupMenu(Group: Groups,navController: NavController){
                     .fillMaxWidth() // Asegura que el Box ocupe todo el ancho
                     .padding(10.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xffC4C6E7)),
+                    .background(Color(0xffC4C6E7))
+                    .clickable {
+                        navController.navigate("Attendance")
+                    }
+                ,
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Tomar Asistencia",color = Color.Black,style = TextStyle(

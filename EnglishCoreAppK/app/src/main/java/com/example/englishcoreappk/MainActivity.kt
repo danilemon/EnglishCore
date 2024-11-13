@@ -48,11 +48,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Welcome() {
     val context = LocalContext.current
-    var expanded by remember { mutableStateOf(true) }
+    var expanded by remember { mutableStateOf(false) }
     var username by remember { mutableStateOf("mauri") }
     var password by remember { mutableStateOf("hola123") }
     var errorMessage by remember { mutableStateOf("") }
-    var Register by remember  { mutableStateOf(false) }
+    var Register by remember  { mutableStateOf(true) }
 
     var Street by remember { mutableStateOf("") }
     var Date by remember{ mutableStateOf("") }
