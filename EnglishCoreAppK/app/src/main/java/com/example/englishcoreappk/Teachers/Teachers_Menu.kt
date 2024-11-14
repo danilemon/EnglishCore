@@ -57,7 +57,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import com.example.englishcoreappk.Activities.ActivityWraper
 import com.example.englishcoreappk.R
+import com.example.englishcoreappk.Retrofit.Activity
+import com.example.englishcoreappk.Retrofit.ClosedQuestion
+import com.example.englishcoreappk.Retrofit.CompleteText
+import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
 
@@ -85,7 +91,7 @@ class Teachers_Menu : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ShowView(){
-    val navController = rememberNavController()
+    var navController = rememberNavController()
     var ExitDIialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = ExitDIialog) {
@@ -218,18 +224,23 @@ fun NavigationHost(navController: NavHostController) {
         composable("Grupos") {
             GroupsScreen(navController)
         }
-        composable(
-            "Grupos/{Group_ID}",
-            arguments = listOf(navArgument("Group_ID") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getInt("Group_ID")
-            GroupMenu(groupId!!)
+        composable<Groups>(
+           ) { backStackEntry ->
+            val group:Groups = backStackEntry.toRoute()
+            val GroupNav = rememberNavController()
+            GroupsNavigationHost(GroupNav,group)
         }
         composable("Actividades") {
             ActivitiesScreen()
         }
         composable("Practicas") {
-            PracticeScreen()
+            var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","https://firebasestorage.googleapis.com/v0/b/englishcore-6cd88.firebasestorage.app/o/Actividades%2FTarea1%2FTarea1-IMG1.jpg?alt=media&token=37aaaf76-d9ff-48c1-857b-4f67ec2d6c07","")
+            var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
+            var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
+                listOf("")
+            )
+            var Act= Activity("lol","Actividad 1",1,"Verbos", listOf(OpenQ,ClosedQuestion,CompleteText))
+            ActivityWraper(Act)
         }
     }
 }

@@ -58,7 +58,7 @@ fun Welcome() {
     var username by remember { mutableStateOf("dany") }
     var password by remember { mutableStateOf("12345678") }
     var errorMessage by remember { mutableStateOf("") }
-    var Register by remember  { mutableStateOf(false) }
+    var Register by remember  { mutableStateOf(true) }
 
     var Street by remember { mutableStateOf("") }
     var Date by remember{ mutableStateOf("") }

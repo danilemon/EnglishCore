@@ -10,3 +10,12 @@ class Groups(BaseModel):
     Level:int
     StartDate:str
     TeacherID:int
+
+class StudetnsPreview(BaseModel):
+    ID:int
+    Name:str
+class StudentInfo(BaseModel):
+    ID:int
+    Name:str
+    Cellphone:str
+    Adrress:str
