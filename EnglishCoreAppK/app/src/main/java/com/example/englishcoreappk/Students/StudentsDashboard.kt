@@ -159,23 +159,33 @@ fun ShowStudentView() {
                         SectionCard(
                             title = "PRACTICAR",
                             imageResource = R.drawable.practice_image,
-                            modifier = Modifier.padding(16.dp)
+                            modifier = Modifier.padding(16.dp),
+                            onClick = {
+                                val intent = Intent(context, StudentsLevel::class.java)
+                                context.startActivity(intent)
+                            }
                         )
                     }
                     item {
                         SectionCard(
                             title = "PENDIENTES",
                             imageResource = R.drawable.pending_image,
-                            modifier = Modifier.padding(16.dp).clickable { val intent = Intent(context, StudentsPending::class.java)
-                                    context.startActivityWithAnimation(intent)}
+                            modifier = Modifier.padding(16.dp),
+                            onClick = {
+                                val intent = Intent(context, StudentsPending::class.java)
+                                context.startActivity(intent)
+                            }
                         )
                     }
                     item {
                         SectionCard(
                             title = "CALIFICACIONES",
                             imageResource = R.drawable.grades_image,
-                            modifier = Modifier.padding(16.dp).clickable { val intent = Intent(context, StudentsScores::class.java)
-                                context.startActivityWithAnimation(intent)}
+                            modifier = Modifier.padding(16.dp),
+                            onClick = {
+                                val intent = Intent(context, StudentsScores::class.java)
+                                context.startActivity(intent)
+                            }
                         )
                     }
                 }
@@ -203,14 +213,15 @@ fun ShowStudentView() {
 }
 
 @Composable
-fun SectionCard(title: String, imageResource: Int, modifier: Modifier = Modifier) {
+fun SectionCard(title: String, imageResource: Int, modifier: Modifier = Modifier, onClick: () -> Unit // Acción personalizada
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(200.dp) // Ajusta la altura de las tarjetas
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
+            .clickable { onClick() }
     ) {
         Image(
             painter = painterResource(id = imageResource),

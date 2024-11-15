@@ -38,7 +38,6 @@ def registerAtemp(Data:RegisterRequest):
 
     doc_ref = user_doc.reference
 
-
     doc_ref.update({
     'Phone': Data.phone,
     'address': Data.adrees,

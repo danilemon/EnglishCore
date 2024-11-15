@@ -30,13 +30,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Students.StudentsLevel"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"
+            />
         <activity android:name=".Students.StudentsPending"
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK"/>
+
         <activity android:name=".Students.StudentsScores"
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK"/>
-
 
         <activity
             android:name=".Students.StudentsDashboard"
@@ -53,9 +57,11 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.EnglishCoreAppK" >
-            android:theme="@style/Theme.EnglishCoreAppK">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 

@@ -156,11 +156,13 @@ class StudentsProfile: ComponentActivity() {
                                     )
                                     {
                                         Text(
-                                            text = "${student.Name}${student.LastName}",
+                                            text = "${student.Name} ${student.LastName}", // Añade un espacio entre Name y LastName
                                             fontSize = 25.sp,
                                             fontWeight = FontWeight(900),
                                             color = Color.Black,
-                                            textAlign = TextAlign.Justify
+                                            textAlign = TextAlign.Justify,
+                                            softWrap = true, // Habilita el ajuste de línea
+                                            modifier = Modifier.fillMaxWidth() // Asegura que el texto ocupe todo el ancho disponible
                                         )
                                     }
                                     Row(
