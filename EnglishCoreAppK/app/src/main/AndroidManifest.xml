@@ -34,6 +34,13 @@
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK"
             />
+        <activity android:name=".Activities.ActivitiesList"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+
+        <activity android:name=".Activities.SectionList"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
         <activity android:name=".Students.StudentsPending"
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK"/>

@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.englishcoreappk.Activities.SectionList
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -108,20 +109,35 @@ fun ShowStudentLevel() {
                         Alignment.CenterHorizontally).padding(top=16.dp))
                     LazyColumn (modifier = Modifier.fillMaxSize().background(Color.White)){
                         item {
-                            LevelCards(title = "1. BASICS", LevlColor = Color(0xffaed6f1))
+                            LevelCards(title = "1. BASICS", LevlColor = Color(0xffaed6f1), onClick = {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            LevelCards(title = "2. INTERMEDIATE", LevlColor = Color(0xff5dade2))
+                            LevelCards(title = "2. INTERMEDIATE", LevlColor = Color(0xff5dade2), onClick = {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivity(intent)
+                            })
 
                         }
                         item {
-                            LevelCards(title = "3. ADVANCED", LevlColor = Color(0xff2e86c1))
+                            LevelCards(title = "3. ADVANCED", LevlColor = Color(0xff2e86c1), onClick = {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            LevelCards(title = "4. EXPERT", LevlColor = Color(0xff21618c))
+                            LevelCards(title = "4. EXPERT", LevlColor = Color(0xff21618c), onClick = {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            LevelCards(title = "5. MASTER", LevlColor = Color(0xff34495e))
+                            LevelCards(title = "5. MASTER", LevlColor = Color(0xff34495e), onClick = {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
 
 
@@ -137,13 +153,13 @@ fun ShowStudentLevel() {
 }
 
 @Composable
-fun LevelCards(title: String, modifier: Modifier = Modifier, LevlColor: Color) {
+fun LevelCards(title: String, modifier: Modifier = Modifier, LevlColor: Color, onClick: () -> Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(160.dp) // Ajusta la altura de las tarjetas
             .background(LevlColor) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
+            .clickable { onClick() }
     ) {
         Text(
             text = title,

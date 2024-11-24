@@ -116,7 +116,7 @@ fun ShowStudentPending() {
                     ).fillMaxSize().background(Color.White)
                 )
                 {
-                    Text(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp, text = "PENDIENTES", modifier = Modifier.align(Alignment.CenterHorizontally).padding(top=16.dp))
+                    Text(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp, text = "Pendientes", modifier = Modifier.align(Alignment.CenterHorizontally).padding(top=16.dp))
                     LazyColumn(modifier = Modifier.padding(top = 20.dp).background(Color(0xff2e4053)).fillMaxSize())
                     {
                         item {
@@ -151,7 +151,7 @@ fun PendingCards(title: String, modifier: Modifier = Modifier) {
             text = title,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
-            modifier = Modifier.align(Alignment.TopStart).padding(start = 20.dp, bottom = 6.dp).fillMaxSize(),
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp, bottom = 6.dp).fillMaxSize(),
 //            style = MaterialTheme.typography.h5
         )
     }

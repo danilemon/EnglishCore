@@ -50,7 +50,7 @@ class ActivitiesList: ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             EnglishCoreAppKTheme {
-                ShowSections()
+                ShowActivities()
             }
         }
     }
@@ -140,56 +140,100 @@ fun ExamsContent() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
-        Text(
-            text = "Dashboard Section",
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(top = 16.dp)
-        )
+        Column {
+            Text(
+                text = "BASICS-Grammar",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Exams",
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
+            )
+            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
+                item { ExamsCards(title = "Exam 1" ) }
+                item { ExamsCards(title = "Exam 2") }
+                item { ExamsCards(title = "Exam 3") }
+                item { ExamsCards(title = "Exam 4") }
+                item { ExamsCards(title = "Exam 5") }
+            }
+        }
+
     }
 }
 
 
 @Composable
 fun ExercisesContent() {
-    Box(modifier = Modifier.fillMaxSize()) {
-    Text(
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 25.sp,
-        text = "BASICS-Grammar",
-        modifier = Modifier
-            .align(Alignment.TopCenter)
-            .padding(top = 16.dp)
-    )
-    LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White)) {
-        item { ExercisesCards(title = "1. BASICS", LevlColor = Color(0xffaed6f1)) }
-        item { ExercisesCards(title = "2. INTERMEDIATE", LevlColor = Color(0xff5dade2)) }
-        item { ExercisesCards(title = "3. ADVANCED", LevlColor = Color(0xff2e86c1)) }
-        item { ExercisesCards(title = "4. EXPERT", LevlColor = Color(0xff21618c)) }
-        item { ExercisesCards(title = "5. MASTER", LevlColor = Color(0xff34495e)) }
-    }
-}
-}
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        Column{
+            Text(
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                text = "BASICS-Grammar",
+                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+            )
+            Text(
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                text = "Exercises",
+                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
+            )
+            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
+                item { ExercisesCards(title = "Exercise 1" ) }
+                item { ExercisesCards(title = "Exercise 2") }
+                item { ExercisesCards(title = "Exercise 3") }
+                item { ExercisesCards(title = "Exercise 4") }
+                item { ExercisesCards(title = "Exercise 5") }
+            }
+        }
 
+
+}
+}
 
 @Composable
-fun ExercisesCards(title: String, modifier: Modifier = Modifier, LevlColor: Color) {
+fun ExercisesCards(title: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp) // Ajusta la altura de las tarjetas
             .padding(5.dp)
-            .background(LevlColor) // Coloca un color de fondo por defecto
+            .background(Color(0xff34495e)) // Coloca un color de fondo por defecto
             .clickable { /* Acción cuando se clickea la tarjeta */ }
     ) {
         Text(
             text = title,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 20.dp, bottom = 6.dp),
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp),
         )
     }
 }
+
+@Composable
+fun ExamsCards(title: String, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(50.dp) // Ajusta la altura de las tarjetas
+            .padding(5.dp)
+            .background(Color(0xff2e86c1)) // Coloca un color de fondo por defecto
+            .clickable { /* Acción cuando se clickea la tarjeta */ }
+    ) {
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp),
+        )
+    }
+}
+
+
 
 @Composable
 fun BottomNavigationBar(selectedTab: String, onTabSelected: (String) -> Unit) {

@@ -38,6 +38,7 @@ import com.example.englishcoreappk.Students.ShowStudentLevel
 import com.example.englishcoreappk.Students.StudentsDashboard
 import com.example.englishcoreappk.Students.StudentsLevel
 import com.example.englishcoreappk.Students.StudentsProfile
+import com.example.englishcoreappk.Students.StudentsScores
 import com.example.englishcoreappk.Students.startActivityWithAnimation
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -113,20 +114,35 @@ fun ShowSections() {
                         Alignment.CenterHorizontally).padding(top=16.dp))
                     LazyColumn (modifier = Modifier.fillMaxSize().background(Color.White)){
                         item {
-                            SectionCards(position = "1", title = "BASICS", LevlColor = Color(0xffaed6f1))
+                            SectionCards(position = "1", title = "BASICS", onClick = {
+                                val intent = Intent(context, ActivitiesList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            SectionCards(position = "2", title = "INTERMEDIATE", LevlColor = Color(0xff5dade2))
+                            SectionCards(position = "2", title = "INTERMEDIATE", onClick = {
+                                val intent = Intent(context, ActivitiesList::class.java)
+                                context.startActivity(intent)
+                            })
 
                         }
                         item {
-                            SectionCards(position = "3",title = "ADVANCED", LevlColor = Color(0xff2e86c1))
+                            SectionCards(position = "3",title = "ADVANCED", onClick = {
+                                val intent = Intent(context, ActivitiesList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            SectionCards(position = "4", title = "EXPERT", LevlColor = Color(0xff21618c))
+                            SectionCards(position = "4", title = "EXPERT", onClick = {
+                                val intent = Intent(context, ActivitiesList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
                         item {
-                            SectionCards(position = "5", title = "MASTER", LevlColor = Color(0xff34495e))
+                            SectionCards(position = "5", title = "MASTER", onClick = {
+                                val intent = Intent(context, ActivitiesList::class.java)
+                                context.startActivity(intent)
+                            })
                         }
 
 
@@ -142,14 +158,14 @@ fun ShowSections() {
 }
 
 @Composable
-fun SectionCards(title: String, modifier: Modifier = Modifier, LevlColor: Color, position: String) {
+fun SectionCards(title: String, modifier: Modifier = Modifier, position: String, onClick: ()-> Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .padding(5.dp)
             .height(60.dp) // Ajusta la altura de las tarjetas
-            .background(LevlColor) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
+            .background(Color(0xff21618c)) // Coloca un color de fondo por defecto
+            .clickable { onClick() }
     ) {
         Row (modifier= Modifier.align(Alignment.CenterStart)){
             Text(
