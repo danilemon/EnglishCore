@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -463,24 +464,35 @@ fun AttendanceList(Group: Groups){
             if (isLoading.value) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center) )
             } else {
+                var StudentAtendance by remember{ mutableStateOf(MutableList(studentsList.value.size){false}) }
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    items(studentsList.value){student ->
-                        AttendanceItem(student){
-
+                    itemsIndexed(studentsList.value){i,student ->
+                        AttendanceItem(student){B:Boolean->
+                            StudentAtendance[0]=B
                         }
                     }
                 }
+                Button(modifier = Modifier.fillMaxWidth(0.7f)
+                    .padding(20.dp)
+                    .height(50.dp).align(Alignment.BottomCenter)
+                    , onClick = {},) { Text(
+                    text = "Guardar",
+                    color = Color.White // Color del texto
+                )}
             }
+
         }
+
     }
 }
 
 @Composable
-fun AttendanceItem(Student:StudentPreview,Attendance:()->Unit){
+fun AttendanceItem(Student:StudentPreview,Attendance:(Boolean)->Unit){
+    var Selected by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -506,8 +518,10 @@ fun AttendanceItem(Student:StudentPreview,Attendance:()->Unit){
 
             ) {
                 Checkbox(
-                    checked = false,
-                    onCheckedChange = { Attendance() }
+                    checked = Selected,
+                    onCheckedChange = {i->
+                        Selected=i
+                        Attendance(i) }
                 )
             }
         }

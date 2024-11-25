@@ -54,7 +54,7 @@ import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.Question
 
 @Composable
-fun QuestionView(index:Int,Question: Question){
+fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
         verticalArrangement = Arrangement.Top) {
@@ -85,14 +85,27 @@ fun QuestionView(index:Int,Question: Question){
         Box(modifier = Modifier.weight(1.5f).fillMaxWidth()){
             when(Question){
                 is OpenQuestion->{
+                    var a = ""
+                    if(Saved is String){
+                        a = Saved as String
+                    }
                     var Answer = remember { mutableStateOf("") }
-                    OpenQuestionView(Answer = Answer)
+                    Answer.value = a
+                    OpenQuestionView(Answer = Answer,answer)
                 }
                 is ClosedQuestion->{
-                    ClosedQuestionView(Question)
+                    var a = ""
+                    if(Saved is String){
+                        a = Saved as String
+                    }
+                    ClosedQuestionView(Question,a,answer)
                 }
                 is CompleteText ->{
-                    CompleteTextView(Question)
+                    var a = emptyList<String>()
+                    if((Saved is MutableList<*>)){
+                        a = Saved as List<String>
+                    }
+                    CompleteTextView(Question,a,answer)
                 }
             }
         }
@@ -101,11 +114,12 @@ fun QuestionView(index:Int,Question: Question){
 }
 
 @Composable
-fun OpenQuestionView(Answer: MutableState<String>){
+fun OpenQuestionView(Answer: MutableState<String>,answer:(Any)->Unit){
     Box(modifier = Modifier.fillMaxSize()) {
         TextField(
             value = Answer.value,
-            onValueChange = { Answer.value = it },
+            onValueChange = { Answer.value = it
+                answer(Answer.value)},
             modifier = Modifier.fillMaxSize().padding(32.dp)
         )
     }
@@ -115,15 +129,19 @@ fun OpenQuestionView(Answer: MutableState<String>){
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ClosedQuestionView(Question:ClosedQuestion){
+fun ClosedQuestionView(Question:ClosedQuestion,Saved:String,answer:(Any)->Unit){
 
     Box(modifier = Modifier.fillMaxSize()){
         FlowRow(modifier=Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalArrangement = Arrangement.Center){
+            var Selection by remember { mutableStateOf(Saved) }
             for(i in 0..(Question.options.size)-1){
-                            var Selection= remember { mutableStateOf("") }
-                            var item=Question.options[i]
-                            var Lambda: (String) -> Unit ={ S:String-> Selection.value=S}
-                            LabeledRadioButon(item, selected = item==Selection.value, onClick = Lambda)
+                            var item  = Question.options[i] // La opción de la lista
+                            var Lambda: (String) -> Unit ={ S:String->
+                                Selection=S
+                                answer(S)
+
+                            }
+                            LabeledRadioButon(item, selected = item==Selection, onClick = Lambda)
                         }
             }
         }
@@ -132,7 +150,7 @@ fun ClosedQuestionView(Question:ClosedQuestion){
 @Composable
 fun LabeledRadioButon(s: String, selected: Boolean,
                       onClick: ((String) -> Unit),
-                      enabled: Boolean = true,){
+                      enabled: Boolean=true ){
     Row(
         modifier = Modifier
             .height(56.dp),
@@ -140,7 +158,9 @@ fun LabeledRadioButon(s: String, selected: Boolean,
     ){
         RadioButton(
             selected = selected,
-            onClick = {onClick(s)},
+            onClick = {
+                onClick(s)
+                      },
             enabled = enabled
         )
         Text(
@@ -157,8 +177,10 @@ fun LabeledRadioButon(s: String, selected: Boolean,
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun  CompleteTextView(Question:CompleteText){
+fun  CompleteTextView(Question:CompleteText,Saved:List<String>,answer:(Any)->Unit){
     val TextSegmented = Question.text.split(" ").filter { it.isNotEmpty() }
+    val Answers = MutableList<String>(Question.answers.size){""}
+    var Counter = 0
     Box(modifier = Modifier.fillMaxSize()) {
         FlowRow(
             modifier = Modifier.fillMaxSize().fillMaxWidth(),
@@ -169,7 +191,12 @@ fun  CompleteTextView(Question:CompleteText){
             for (i in 0..TextSegmented.size - 1) {
 
                 if (TextSegmented[i] == "{}") {
-                    Spiner(Question.options)
+
+                    Spiner(Question.options,Counter,Saved.getOrElse(Counter){""}){S,I->
+                        Answers[I]=S
+                        answer(Answers)
+                    }
+                    Counter++
                 } else {
                     Text(text = TextSegmented[i] + " ")
                 }
@@ -178,12 +205,15 @@ fun  CompleteTextView(Question:CompleteText){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun Spiner(Options:List<String>) {
+fun Spiner(Options:List<String>,Index:Int,Saved:String,Answer:(String,Int)->Unit) {
 
     var expanded by remember { mutableStateOf(false) }
-    var Selected by remember { mutableStateOf("Opcion") }
+    var Selected by remember { mutableStateOf(Saved) }
+    if (Selected.isEmpty()){
+        Selected="Opcion"
+    }
 
     Box(
         modifier = Modifier
@@ -221,6 +251,7 @@ fun Spiner(Options:List<String>) {
                     onClick = {
                         Selected = option
                         expanded = false
+                        Answer(option,Index)
                     }
                 )
             }
@@ -238,7 +269,7 @@ fun ActivityPreview() {
         var CompleteText=CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
             listOf("")
         )
-        QuestionView(1,CompleteText)
+        //QuestionView(1,CompleteText)
     }
 }
 
