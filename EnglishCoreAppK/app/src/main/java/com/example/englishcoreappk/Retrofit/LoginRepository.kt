@@ -8,23 +8,24 @@ import retrofit2.Response
 class LoginRepository {
     private val api = RetrofitClient.instance.create(ApiService::class.java)
 
-    fun login(username: String, password: String, callback: (Boolean, String?,Boolean) -> Unit) {
+    fun login(username: String, password: String, callback: (Boolean, String?,Boolean, String?) -> Unit) {
         val loginRequest = LoginRequest(username, password)  // Usa LoginRequest
 
         api.login(loginRequest).enqueue(object : Callback<LoginResponse> {  // Usa LoginResponse
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful && response.body()?.success == true) {
                     // Login exitoso
-                    callback(true, null, response.body()!!.isStudent)
+                    callback(true, null, response.body()!!.isStudent, response.body()?.userDocId ?: "error al obtener ")
+
                 } else {
                     // Error de la API
-                    callback(false, response.body()?.message ?: "Credenciales inválidas",false)
+                    callback(false, response.body()?.message ?: "Credenciales inválidas",false, null)
                 }
             }
 
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                 // Error en la solicitud (problema de red, etc.)
-                callback(false, t.message,false)
+                callback(false, t.message,false, null)
             }
         })
     }

@@ -7,8 +7,8 @@ import retrofit2.Response
 object StudentRepository {
     private val api = RetrofitClient.instance.create(StudentService::class.java)
 
-    fun GetStudentDataRequest(studentID: Int, callback: (StudentData?) -> Unit) {
-        val request = GetStudentDataRequest(StudentID = studentID)
+    fun GetStudentDataRequest(studentID: String, callback: (StudentData?) -> Unit) {
+        val request = GetStudentDataRequest(StudentDocId = studentID)
         api.getStudentData(request).enqueue(object : Callback<StudentData> {
             override fun onResponse(call: Call<StudentData>, response: Response<StudentData>) {
                 if (response.isSuccessful) {

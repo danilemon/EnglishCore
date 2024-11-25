@@ -6,16 +6,15 @@ StudentsR = APIRouter()
 
 @StudentsR.post('/GetStudentData', response_model=StudentData)
 def GetStudent(Data: GetStudentDataRequest):
-    # Cambiamos a '==' para la comparación en Firestore
-    User_Ref = db.collection('users')
-    Query_Ref = User_Ref.where('StudentID', '==', Data.StudentID).get()
+    # Accede directamente al documento usando el ID proporcionado
+    User_Ref = db.collection('users').document(Data.StudentDocId)
+    student_doc = User_Ref.get()
     
-    if not Query_Ref:
+    if not student_doc.exists:
         raise HTTPException(status_code=404, detail="Student not found")
     
-    # Suponiendo que solo hay un estudiante con ese ID, tomamos el primer documento
-    student_data = Query_Ref[0].to_dict()
-
+    # Obtén los datos del documento como un diccionario
+    student_data = student_doc.to_dict()
 
     # Convertimos los datos en un objeto de tipo StudentData
     student = StudentData(
@@ -26,10 +25,11 @@ def GetStudent(Data: GetStudentDataRequest):
         Address=student_data.get('address'),
         Birthday=student_data.get('birthday'),
         Username=student_data.get('username'),
-        # GroupID=student_data.get('GroupID')
+        # GroupID=student_data.get('GroupID')  # Descomenta si usas este campo
     )
 
     return student
+
 
 @StudentsR.put('/UpdateStudentData')
 def UpdateStudent(Data: StudentData):
@@ -39,6 +39,7 @@ def UpdateStudent(Data: StudentData):
     if not Query_Ref:
         raise HTTPException(status_code=404, detail="Student not found")
     
+    # Obtiene la referencia del documento y actualiza
     doc_ref = Query_Ref[0].reference
     doc_ref.update(Data.dict())  # Usa Data.dict() para actualizar con todos los datos
 

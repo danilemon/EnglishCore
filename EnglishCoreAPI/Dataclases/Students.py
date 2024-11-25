@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class GetStudentDataRequest(BaseModel):
-    StudentID:int
+    StudentDocId: str
 
 class StudentData(BaseModel):
     StudentID:int

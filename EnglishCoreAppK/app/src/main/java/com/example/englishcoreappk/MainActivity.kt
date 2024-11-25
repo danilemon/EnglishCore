@@ -33,13 +33,11 @@ import com.example.englishcoreappk.Teachers.Teachers_Menu
 import com.example.englishcoreappk.Students.StudentsDashboard
 import com.example.englishcoreappk.Students.startActivityWithAnimation
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.englishcoreappk.Retrofit.UserData
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-            val splashScreen = installSplashScreen()
-
-
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContent {
@@ -170,14 +168,18 @@ fun Welcome() {
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
 
-                                loginRepository.login(username, password) { success, error , IsStudent->
+                                loginRepository.login(username, password) { success, error , IsStudent, userDocId->
                                     if (success) {
+                                        UserData.setUpUSR(userDocId ?: "error");
+
                                         if(IsStudent){
                                             val intent = Intent(context, StudentsDashboard::class.java)
-                                            context.startActivityWithAnimation(intent)
+
+                                            context.startActivity(intent)
                                         }else{
                                             val intent = Intent(context, Teachers_Menu::class.java)
-                                            context.startActivityWithAnimation(intent)
+
+                                            context.startActivity(intent)
                                         }
                                     } else {
                                         errorMessage = error ?: "Error desconocido"

@@ -62,6 +62,7 @@ import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.platform.LocalContext
 import com.example.englishcoreappk.Retrofit.TeacherRepository
+import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
 
@@ -89,12 +90,12 @@ class StudentsProfile: ComponentActivity() {
         var isEditing by remember { mutableStateOf(false) } // Estado para el modo de edición
         var phoneText by remember { mutableStateOf(TextFieldValue("")) }
         var addressText by remember { mutableStateOf(TextFieldValue("")) }
-
+        val userrrr = UserData.User
 
         Box(modifier = Modifier.fillMaxSize().background(Color(0xffD9D9D9))) {
 
             LaunchedEffect(Unit) {
-                StudentRepository.GetStudentDataRequest(studentID = 1) { studentData ->
+                StudentRepository.GetStudentDataRequest(studentID = userrrr) { studentData ->
                     studentDataState.value = studentData
                     isLoadingProfile.value = false
                 }
@@ -124,7 +125,7 @@ class StudentsProfile: ComponentActivity() {
                                         .clip(CircleShape) // Aplica la forma circular
                                         .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
                                         .clickable { val intent = Intent(context, StudentsDashboard::class.java)
-                                            context.startActivityWithAnimation(intent) }
+                                            context.startActivity(intent) }
                                 )
 
                             }

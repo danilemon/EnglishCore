@@ -8,7 +8,7 @@ interface StudentService {
 }
 
 data class GetStudentDataRequest(
-    val StudentID: Int
+    val StudentDocId: String
 )
 
 data class StudentData(

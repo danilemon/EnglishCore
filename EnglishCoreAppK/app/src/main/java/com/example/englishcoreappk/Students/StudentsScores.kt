@@ -87,7 +87,7 @@ fun ShowStudentScores() {
                             .clip(CircleShape) // Aplica la forma circular
                             .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
                             .clickable { val intent = Intent(context, StudentsDashboard::class.java)
-                                context.startActivityWithAnimation(intent)}
+                                context.startActivity(intent)}
                     )
                     Image(
                         painter = painterResource(id = R.drawable.profile_icon),
@@ -97,7 +97,7 @@ fun ShowStudentScores() {
                             .clip(CircleShape)
                             .align(Alignment.TopStart)
                             .clickable { val intent = Intent(context, StudentsProfile::class.java)
-                                context.startActivityWithAnimation(intent)}
+                                context.startActivity(intent)}
                     )
                 }
             },

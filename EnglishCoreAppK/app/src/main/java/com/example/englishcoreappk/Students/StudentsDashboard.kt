@@ -112,7 +112,7 @@ fun ShowStudentView() {
                             .clip(CircleShape)
                             .align(Alignment.TopStart)
                             .clickable { val intent = Intent(context, StudentsProfile::class.java)
-                                context.startActivityWithAnimation(intent)}
+                                context.startActivity(intent)}
                     )
                 }
             },
