@@ -55,6 +55,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
@@ -234,10 +235,10 @@ fun NavigationHost(navController: NavHostController) {
             ActivitiesScreen()
         }
         composable("Practicas") {
-            var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","https://firebasestorage.googleapis.com/v0/b/englishcore-6cd88.firebasestorage.app/o/Actividades%2FTarea1%2FTarea1-IMG1.jpg?alt=media&token=37aaaf76-d9ff-48c1-857b-4f67ec2d6c07","")
+            var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","","")
             var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
-            var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
-                listOf("")
+            var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , then i {} my friend and we decided to have a {} Competition",listOf<String>("Playing","Saw","Running"),
+                listOf("Playing","Saw","Running")
             )
             var Act= Activity("lol","Actividad 1",1,"Verbos", listOf(OpenQ,ClosedQuestion,CompleteText))
             ActivityWraper(Act)
@@ -257,6 +258,9 @@ fun ActivitiesScreen() {
         modifier=Modifier
             .fillMaxSize()
     ){
+        var ShowActivities by remember { mutableStateOf(false) }
+        var ShowExam by remember { mutableStateOf(false) }
+        var ShowPractice by remember { mutableStateOf(false) }
         Column(
 
             modifier=Modifier
@@ -266,8 +270,11 @@ fun ActivitiesScreen() {
         ){
             Box(modifier = Modifier
                 .weight(1f)
-
-                .padding(5.dp),){
+                .padding(5.dp)
+                .clickable {
+                    ShowActivities=true
+                },)
+            {
             Image(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -297,8 +304,9 @@ fun ActivitiesScreen() {
 
             Box(modifier = Modifier
                 .weight(1f)
-
-                .padding(5.dp),){
+                .padding(5.dp)
+                .clickable { ShowExam=true },)
+            {
                 Image(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -328,7 +336,9 @@ fun ActivitiesScreen() {
 
             Box(modifier = Modifier
                 .weight(1f)
-                .padding(5.dp),){
+                .padding(5.dp)
+                .clickable { ShowPractice=true },)
+            {
                 Image(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -354,6 +364,28 @@ fun ActivitiesScreen() {
                             .align(Alignment.Center) // Alineación del texto en la esquina inferior izquierda
                             .padding(8.dp) // Agrega padding alrededor del texto
                     )}
+            }
+            if(ShowActivities){
+                Dialog(onDismissRequest = { ShowActivities = false }) {
+                    assignActivity(){
+                        ShowActivities=false
+                    }
+                }
+            }
+            if(ShowExam){
+                Dialog(onDismissRequest = { ShowExam =false}){
+                    assignExam(){
+                        ShowExam=false
+                    }
+                }
+            }
+            if(ShowPractice){
+                Dialog(onDismissRequest = { ShowPractice =false}){
+                    assignPractice(){
+                        ShowPractice=false
+                    }
+                }
+
             }
         }
 
