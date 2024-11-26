@@ -55,6 +55,7 @@ import StudentRepository
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -265,20 +266,46 @@ class StudentsProfile: ComponentActivity() {
                                         .padding(top = 16.dp, end = 100.dp)
                                         .clickable { isEditing = !isEditing } // Cambia el estado al hacer clic
                                     )
-                                    if (isEditing)
-                                    {
+                                    if (isEditing) {
                                         Text(
-                                            text= "GUARDAR DATOS",
+                                            text = "GUARDAR DATOS",
                                             fontSize = 18.sp,
-                                            fontWeight = FontWeight(1000),
-                                            color = Color(0xff196f3d ),
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xff196f3d),
                                             textDecoration = TextDecoration.Underline,
-                                            modifier = Modifier.align(Alignment.CenterVertically)
-                                                .padding(top = 16.dp)
+                                            modifier = Modifier.align(Alignment.CenterVertically).padding(top = 16.dp)
+                                                .clickable {
+                                                    val updatedPhone = phoneText.text
+                                                    val updatedAddress = addressText.text
+                                                    StudentRepository.UpdateStudentData(
+                                                        studentDocID = UserData.User, // Asegúrate de tener este campo en el modelo
+                                                        newAddress = updatedAddress,
+                                                        newPhone = updatedPhone
+                                                    ) { success ->
+                                                        var text = ""
+                                                        val duration = Toast.LENGTH_SHORT
+                                                        if (success) {
+                                                            isEditing = false
+                                                            val intent = (context as Activity).intent
+                                                            context.finish()
+                                                            text = "Your data has changed successfully"
+                                                            val toast = Toast.makeText(context, text, duration) // in Activity
 
-// Cambia el estado al hacer clic
+                                                            toast.show()
+
+                                                            context.startActivity(intent)
+
+                                                        } else {
+                                                            text = "An error happened during the data change"
+                                                            val toast = Toast.makeText(context, text, duration) // in Activity
+
+                                                            toast.show()
+                                                        }
+                                                    }
+                                                }
                                         )
                                     }
+
 
                                 }
 

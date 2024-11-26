@@ -11,3 +11,8 @@ class StudentData(BaseModel):
     Address:str
     Birthday:str
     Username:str
+
+class GetStudentReminds(BaseModel):
+    ProfessorName: str
+    RemindContent: str
+    RemindDate: str

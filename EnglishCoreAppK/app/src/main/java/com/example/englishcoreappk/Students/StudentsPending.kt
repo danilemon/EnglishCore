@@ -1,5 +1,7 @@
 package com.example.englishcoreappk.Students
 
+import StudentData
+import StudentReminders
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -25,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.englishcoreappk.R
+import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.Teachers.BottomNavigationBar
 import com.example.englishcoreappk.Teachers.NavigationHost
 import com.example.englishcoreappk.Teachers.ShowView
@@ -66,7 +70,15 @@ class StudentsPending : ComponentActivity() {
 @Composable
 fun ShowStudentPending() {
     val context = LocalContext.current
+// Estados para manejar los datos
+    var remindersList by remember { mutableStateOf<List<StudentReminders>?>(null) }
 
+    // Cargar datos del estudiante y recordatorios
+    LaunchedEffect(UserData.User) {
+        StudentRepository.GetStudentReminders(UserData.User) { reminders ->
+            remindersList = reminders
+        }
+    }
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
@@ -116,16 +128,24 @@ fun ShowStudentPending() {
                     ).fillMaxSize().background(Color.White)
                 )
                 {
-                    Text(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp, text = "Pendientes", modifier = Modifier.align(Alignment.CenterHorizontally).padding(top=16.dp))
-                    LazyColumn(modifier = Modifier.padding(top = 20.dp).background(Color(0xff2e4053)).fillMaxSize())
-                    {
-                        item {
-                            PendingCards( title = "Section 12: Verb to Be",
-                            modifier = Modifier.padding(16.dp))
-                        }
-                        item {
-                            PendingCards( title = "Exam: Verb to Be",
-                                modifier = Modifier.padding(16.dp))
+                    Text(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp, text = "Pendings", modifier = Modifier.align(Alignment.CenterHorizontally).padding(top=16.dp))
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .background(Color(0xff2e4053))
+                            .fillMaxSize()
+                    ) {
+                        remindersList?.forEach { reminder ->
+                            item {
+                                PendingCards(
+                                    title = "Reminder from ${reminder.ProfessorName}",
+                                    content = reminder.Content,
+                                    date = reminder.Date,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        } ?: item {
+                            Text(text = "Loading reminders...", modifier = Modifier.padding(16.dp))
                         }
                     }
                 }
@@ -138,22 +158,24 @@ fun ShowStudentPending() {
 }
 
 @Composable
-fun PendingCards(title: String, modifier: Modifier = Modifier) {
+fun PendingCards(title: String, content: String, date: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp) // Ajusta la altura de las tarjetas
+            .height(100.dp) // Ajusta la altura de las tarjetas
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White) // Coloca un color de fondo por defecto
+            .background(Color.White)
             .clickable { /* Acción cuando se clickea la tarjeta */ }
     ) {
-        Text(
-            text = title,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp, bottom = 6.dp).fillMaxSize(),
-//            style = MaterialTheme.typography.h5
-        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(16.dp)
+        ) {
+            Text(text = title, fontWeight = FontWeight.Bold, color = Color.Black)
+            Text(text = content, color = Color.Gray)
+            Text(text = date, color = Color.LightGray, fontSize = 12.sp)
+        }
     }
 }
 
