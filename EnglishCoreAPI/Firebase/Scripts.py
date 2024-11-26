@@ -109,5 +109,83 @@ def update_group_references_for_students(skip_first=True):
                 })
                 print(f"Usuario {user_doc.id} actualizado con referencia al grupo {group_id}.")
 
+
+def agregar_activities_a_units():
+    # Accede a la colección 'Levels'
+    levels_ref = db.collection("Levels")
+    levels_docs = levels_ref.stream()
+
+    # Recorre cada documento en 'Levels'
+    for level_doc in levels_docs:
+        print(f"Procesando Level: {level_doc.id}")
+        
+        # Accede a la subcolección 'units' de cada documento
+        units_ref = levels_ref.document(level_doc.id).collection("units")
+        units_docs = units_ref.stream()
+
+        # Recorre cada documento en 'units'
+        for unit_doc in units_docs:
+            print(f"  Procesando Unit: {unit_doc.id}")
+            
+            # Agrega la colección 'Activities' dentro de cada 'unit'
+            activities_ref = units_ref.document(unit_doc.id).collection("Activities")
+            activities_ref.add({
+                "activity_name": "Example Activity"
+            })
+
+        
+            print(f"    Colección 'Activities' agregada a Unit: {unit_doc.id}")
+
+def populate_levels_with_activity_data():
+
+    # Referencia al documento único en la colección "activities"
+    activity_doc_ref = db.collection('Activdades').document('oGvaIR55gzsaltnfBSHX')
+    activity_data = activity_doc_ref.get()
+
+    # Verificar que el documento existe
+    if not activity_data.exists:
+        print("El documento 'unique_activity' en 'activities' no existe.")
+        return
+
+    # Convertir a diccionario para manipular
+    activity_data = activity_data.to_dict()
+
+    # Iterar sobre los documentos en la colección "Levels"
+    levels_ref = db.collection('Levels')
+    levels_docs = levels_ref.stream()
+
+    for level_doc in levels_docs:
+        level_id = level_doc.id  # ID del documento en la colección "Levels"
+
+        # Colección "exams" dentro de cada documento de "Levels"
+        exams_ref = levels_ref.document(level_id).collection('exams')
+
+        # Crear tres documentos en "exams" con datos de "activities"
+        for i in range(1, 4):
+            exam_name = f"Exam {i}"
+            exams_ref.add({
+                **activity_data,  # Copia los campos de activities
+                'Nombre': exam_name  # Sobrescribe el campo 'Nombre'
+            })
+
+        # Colección "units" dentro de cada documento de "Levels"
+        units_ref = levels_ref.document(level_id).collection('units')
+        units_docs = units_ref.stream()
+
+        for unit_doc in units_docs:
+            unit_id = unit_doc.id  # ID del documento en "units"
+
+            # Colección "activities" dentro de cada documento de "units"
+            unit_activities_ref = units_ref.document(unit_id).collection('activities')
+
+            # Crear tres documentos en "activities" con datos de "activities"
+            for i in range(1, 4):
+                activity_name = f"Actividad {i}"
+                unit_activities_ref.add({
+                    **activity_data,  # Copia los campos de activities
+                    'Nombre': activity_name  # Sobrescribe el campo 'Nombre'
+                })
+
+    print("Se completó la creación de documentos en 'exams' y 'activities'.")
 # Ejecuta la función
-update_group_references_for_students()
+populate_levels_with_activity_data()

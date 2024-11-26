@@ -3,6 +3,13 @@ from pydantic import BaseModel
 class ActivityRequest(BaseModel):
     ID:str
 
+class ActivityPreview(BaseModel):
+    Name:str
+    ID:str
+
+class Units(BaseModel):
+    Name:str
+    Activities:list
 class Activity(BaseModel):
     Name:str
     Level:int
