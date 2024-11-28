@@ -1,5 +1,6 @@
 package com.example.englishcoreappk.Activities
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import com.example.englishcoreappk.Retrofit.CompleteText
 import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.Question
 import com.example.englishcoreappk.Retrofit.StudentPreview
+import com.example.englishcoreappk.Retrofit.UserAnswer
 
 
 @Composable
@@ -241,24 +243,27 @@ fun ResultsView(Activity: Activity,Answer:MutableList<Any>,Respuestas:MutableLis
 
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean>>,Student:StudentPreview,Score: Float){
+fun ActivityWraperProfesor(Activity: Activity,Student:StudentPreview,Score: Float,UsrAnswers: MutableList<UserAnswer>){
     var Index = remember { mutableStateOf(0) }
-    var Vindex = remember { mutableStateOf(0) }
+    //
 
     var FSocore by remember { mutableStateOf(Score) }
     var CorrectAnswers by remember {mutableStateOf(0)}
+
     UsrAnswers.forEach{i->
-        if(i.second){
-            CorrectAnswers++
+        if(i.Correct){
+           CorrectAnswers++
         }
     }
+    Text(text = "Aciertos:${CorrectAnswers}")
 
     var Q by remember { mutableStateOf(Question(1,"","",""))  }
     var navController = rememberNavController()
 
     val Questions=Activity.Questions
-    var QuestionAnswers:MutableList<Any> = mutableListOf()
+   var QuestionAnswers:MutableList<Any> = mutableListOf()
 
     Questions.forEach{i->
         when(i){
@@ -293,7 +298,7 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
     }
     Scaffold(
         topBar = {
-            Column(modifier=Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
+            Column(modifier=Modifier.wrapContentHeight().fillMaxWidth(), verticalArrangement = Arrangement.Top) {
             Text(text = Student.Name, style = TextStyle(color=Color.Black), fontWeight = FontWeight.Bold)
             Row (modifier = Modifier.fillMaxWidth()
                 .wrapContentHeight(),
@@ -308,7 +313,7 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically){
                 Text(text =(Activity.Name+": "+Activity.Topic), modifier = Modifier.align(Alignment.CenterVertically))
-                Text(text = (Vindex.value+1).toString()+"/"+Activity.Questions.size.toString(), color = Color.Gray)
+                Text(text = (Index.value+1).toString()+"/"+Activity.Questions.size.toString(), color = Color.Gray)
             }
             }
         },
@@ -319,14 +324,13 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
             .wrapContentHeight(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            var Correct by remember { mutableStateOf(UsrAnswers[Index.value].second) }
-            IconButton(onClick = {}) {
+            var Correct by remember { mutableStateOf(UsrAnswers[Index.value].Correct) }
+            IconButton(onClick = {Correct=!Correct}) {
                 if (Correct){
                     Icon(imageVector = ImageVector.vectorResource(id=R.drawable.correct_answer),contentDescription="", tint = Color.Green)
                 }else{
-                    Icon(imageVector = ImageVector.vectorResource(id=R.drawable.incorrect_answer),contentDescription="", tint = Color.Green)
+                    Icon(imageVector = ImageVector.vectorResource(id=R.drawable.incorrect_answer),contentDescription="", tint = Color.Red)
                 }
-
             }
             Row(
                 modifier = Modifier
@@ -339,7 +343,6 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
                 IconButton(onClick = {
                     if (Index.value > 0) {
                         Index.value--
-                        Vindex.value--
                         Q = Questions[Index.value]
                         navController.navigate(Q)
                     }
@@ -359,7 +362,6 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
                 IconButton(onClick = {
                     if (Index.value < Questions.size - 1) {
                         Index.value++
-                        Vindex.value++
                         Q = Questions[Index.value]
                         navController.navigate(Q)
                     }
@@ -372,41 +374,39 @@ fun ActivityWraperProfesor(Activity: Activity,UsrAnswers: List<Pair<Any, Boolean
             }
         }
         }
-    ) {paddingValues ->
+    ) {
+        paddingValues ->
         // Box que ajusta su tamaño según el espacio disponible entre la topBar y la bottomBar
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues) // Usa paddingValues proporcionado por el Scaffold
         ) {
-            NavigationHost(navController,Index,Questions[0],Activity,UserAnswer,QuestionAnswers)
+            NavigationHostProfesor(navController,Index,Questions[0],Activity,QuestionAnswers,UsrAnswers)
         }
     }
 }
 
 @Composable
-fun NavigationHostProfesor(navController: NavHostController, Index: MutableState<Int>, StartQuestion:Question, Act:Activity, Answer:MutableList<Any>, Respuestas:MutableList<Any>) {
-    var Lambda:(Any)->Unit ={Ans->
-        Answer[Index.value]=Ans}
+fun NavigationHostProfesor(navController: NavHostController, Index: MutableState<Int>, StartQuestion:Question, Act:Activity, Answer:MutableList<Any>, UserAnswers:MutableList<UserAnswer>) {
+
     NavHost(navController, startDestination ="StartQuestion"){
         composable("StartQuestion"){
-            QuestionView(Index.value+1,StartQuestion,Lambda,Answer[Index.value])
+            QuestionViewProfesor(Index.value+1,StartQuestion,UserAnswers[Index.value].Answers)
         }
         composable<OpenQuestion>{backStackEntry ->
             val Question:OpenQuestion=backStackEntry.toRoute()
-            QuestionView(Index.value+1,Question,Lambda,Answer[Index.value])
+            QuestionViewProfesor(Index.value+1,Question,UserAnswers[Index.value].Answers)
         }
         composable<ClosedQuestion>{backStackEntry ->
             val Question:ClosedQuestion=backStackEntry.toRoute()
-            QuestionView(Index.value+1,Question,Lambda,Answer[Index.value])
+            QuestionViewProfesor(Index.value+1,Question,UserAnswers[Index.value].Answers)
         }
         composable<CompleteText>{backStackEntry ->
             val Question:CompleteText=backStackEntry.toRoute()
-            QuestionView(Index.value+1,Question,Lambda,Answer[Index.value])
+            QuestionViewProfesor(Index.value+1,Question,UserAnswers[Index.value].Answers)
         }
-        composable("Results"){
-            ResultsView(Act,Answer,Respuestas)
-        }
+
 
     }
 }

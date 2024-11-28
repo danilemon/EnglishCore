@@ -32,7 +32,6 @@ import com.example.englishcoreappk.Retrofit.LoginRepository
 import com.example.englishcoreappk.Teachers.Teachers_Menu
 import com.example.englishcoreappk.Students.StudentsDashboard
 import com.example.englishcoreappk.Students.startActivityWithAnimation
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.englishcoreappk.Retrofit.UserData
 
 
@@ -53,8 +52,8 @@ class MainActivity : ComponentActivity() {
 fun Welcome() {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var username by remember { mutableStateOf("dany") }
-    var password by remember { mutableStateOf("12345678") }
+    var username by remember { mutableStateOf("mauri") }
+    var password by remember { mutableStateOf("hola123") }
     var errorMessage by remember { mutableStateOf("") }
     var Register by remember  { mutableStateOf(true) }
 

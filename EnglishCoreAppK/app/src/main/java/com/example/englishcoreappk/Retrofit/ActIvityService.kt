@@ -1,5 +1,7 @@
 package com.example.englishcoreappk.Retrofit
 
+
+import androidx.compose.runtime.Stable
 import retrofit2.Call
 import retrofit2.http.Body
 import com.google.gson.JsonDeserializationContext
@@ -15,12 +17,28 @@ interface ActIvityService{
     @POST("/GetActivity")
     fun GetActivity(@Body request: ActivityRequest): Call<Activity>
 
+    @POST("/GetGroupActivities")
+    fun GetGroupActs(@Body request: List<ActivityRequest>): Call<MutableList<List<Units>>>
 
+    @POST("/GetGroupExams")
+    fun GetGroupExams(@Body request: ActivityRequest): Call<List<ActivityPreview>>
+
+    
 }
 data class ActivityRequest(
-    val ID: Int
+    val ID: String
 )
 
+data class ActivityPreview(
+    var Name: String,
+    var ID: String
+)
+data class Units(
+    var ID: String,
+    var Name: String,
+    var Activities: List<ActivityPreview>
+)
+@Stable
 data class Activity(
         val ID:String,
         val Name:String,
@@ -28,8 +46,6 @@ data class Activity(
         val Topic:String,
         val Questions:List<Question>
         )
-
-
 @Serializable
 open class Question(
     open val typeQ: Int,
@@ -67,5 +83,11 @@ data class CompleteText(
     val options: List<String>,
     val answers: List<String>
 ) : Question(type, question, helpText, img)
+
+@Stable
+data class UserAnswer(
+    var Correct: Boolean,
+    var Answers: Any
+)
 
 

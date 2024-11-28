@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.englishcoreappk.Retrofit.StudentInfo
+import com.example.englishcoreappk.Retrofit.UserData
 
 class GroupViewModel:ViewModel(){
     var CurrentGroup by mutableStateOf<Groups?>(null)
@@ -78,7 +79,7 @@ fun GroupsNavigationHost(navController: NavHostController,Group: Groups){
         }
         composable("StudentDetails/{id}"){b->
             val idString = b.arguments?.getString("id") // Obtén el ID como String
-            val id = idString?.toIntOrNull() // Convierte a Int, maneja el caso de null
+            val id = idString?.toString() // Convierte a Int, maneja el caso de null
                 ShowStudentInfo(id!!, Group)
         }
         composable("Attendance"){
@@ -101,9 +102,10 @@ fun GroupsScreen(navController: NavController) {
     ) {
         // Llama a GetGroupsRequest cuando se compone el Composable
         LaunchedEffect(Unit) {
-            TeacherRepository.GetGroupsRequest(1) { groups ->
+            TeacherRepository.GetGroupsRequest(UserData.User) { groups ->
                 groupsState.value = groups // Actualiza el estado con los grupos obtenidos
                 isLoading.value = false // Cambia el estado de carga
+                UserData.SetupGroups(groups)
             }
         }
 
@@ -170,7 +172,7 @@ fun GroupMenu(Group: Groups,navController: NavController){
         verticalArrangement = Arrangement.Top
     ) {
 
-            Text(text = "Nivel - ${Group?.ID}",
+            Text(text = "Nivel - ${Group?.Level}",
                 style = TextStyle(
                     fontSize = 25.sp, // Cambiar tamaño a 20sp
                     fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
@@ -267,7 +269,7 @@ fun GroupList(Group: Groups,navController: NavController){
         verticalArrangement = Arrangement.Top
     ) {
 
-        Text(text = "Nivel - ${Group?.ID}",
+        Text(text = "Nivel - ${Group?.Level}",
             style = TextStyle(
                 fontSize = 25.sp, // Cambiar tamaño a 20sp
                 fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
@@ -357,7 +359,7 @@ fun ListItem(Student:StudentPreview,StudentInfo:()->Unit){
 }
 
 @Composable
-fun ShowStudentInfo(StudentID: Int,Group: Groups){
+fun ShowStudentInfo(StudentID: String,Group: Groups){
     val isLoading = remember { mutableStateOf(true) }
     val Student = remember{ mutableStateOf<StudentInfo?>(null) }
         //remember {mutableStateOf<StudentInfo?>(null)}
@@ -436,7 +438,7 @@ fun AttendanceList(Group: Groups){
         verticalArrangement = Arrangement.Top
     ) {
 
-        Text(text = "Nivel - ${Group?.ID}",
+        Text(text = "Nivel - ${Group?.Level}",
             style = TextStyle(
                 fontSize = 25.sp, // Cambiar tamaño a 20sp
                 fontWeight = FontWeight.ExtraBold // Cambiar grosor a Bold
@@ -532,7 +534,7 @@ fun AttendanceItem(Student:StudentPreview,Attendance:(Boolean)->Unit){
 @Composable
 @Preview(showBackground = true)
 fun GroupPreview() {
-    var S=StudentPreview(1,"Daniel Lopez A")
+    var S=StudentPreview("","Daniel Lopez A")
     EnglishCoreAppKTheme {
         AttendanceItem(S){
 

@@ -10,8 +10,7 @@ class ActivitiesService:
         UnitsList=[]
         for unit in Units_Docs:
             unit_data=unit.to_dict()
-           
-            Unit_S=Units(Name=unit_data['Name'],Activities=[])
+            Unit_S=Units(ID=unit.id,Name=unit_data['Name'],Activities=[])
             unit_id = unit.id  # ID del documento actual
             unit_ref = Units_ref.document(unit_id)
             activities_ref = unit_ref.collection('activities')
@@ -27,12 +26,12 @@ class ActivitiesService:
         Group_ref= db.collection("Groups").document(ID)
         Group_Doc=Group_ref.get()
         Level_Ref=Group_Doc.get("Level")
-        Exam_ref=Level_Ref.collection("Exams")
+        Exam_ref=Level_Ref.collection("exams")
         Exams_Docs=Exam_ref.stream()
         ExamsList=[]
         for exam in Exams_Docs:
             Exam_Data=exam.to_dict()
-            Exm=ActivityPreview(Exam_Data["Nombre"],ID=exam.id)
+            Exm=ActivityPreview(Name=Exam_Data["Nombre"],ID=exam.id)
             ExamsList.append(Exm)
         return(ExamsList)
 

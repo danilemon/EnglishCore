@@ -36,9 +36,11 @@ import com.example.englishcoreappk.Retrofit.ClosedQuestion
 import com.example.englishcoreappk.Retrofit.CompleteText
 import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.Question
+import kotlin.String
+import kotlin.collections.List
 
 @Composable
-fun QuestionView(index:Int, Question: Question,R:Any){
+fun QuestionViewProfesor(index:Int, Question: Question,R:Any){
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
         verticalArrangement = Arrangement.Top) {
@@ -83,7 +85,11 @@ fun QuestionView(index:Int, Question: Question,R:Any){
                     ClosedQuestionView(Question,Answer)
                 }
                 is CompleteText ->{
-
+                    var Answer: List<String> =List(Question.answers.size){""}
+                    if(R is List<*>){
+                        Answer=R as  List<String>
+                    }
+                    CompleteTextView(Question,Answer)
                 }
             }
         }

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from Dataclases.Activities import *
 from Firebase.firebase import db
+from Services.Activities import ActivitiesService
 
 Activities=APIRouter()
 
@@ -31,3 +32,16 @@ def OpenQuestionCase(Data):
 
 def CompleteTextCase(Data):
     return CompleteText(Type=3,Question=Data.get("Pregunta",None),HelpText=Data.get("TextoSecundario",None),Img=Data.get("Imagen",None),Text=Data.get("TextoAcompletar",None),Options=Data.get("Options",None),Answers=Data.get("Respuesta",None))
+
+@Activities.post("/GetGroupActivities")
+def GetGroupActs(Data:list[ActivityRequest]):
+    ReturnList=[]
+    for Group in Data:
+        Units=ActivitiesService.GetGroupActivities(Group.ID)
+        ReturnList.append(Units)
+    return ReturnList
+
+@Activities.post("/GetGroupExams")
+def GetGroupExms(Data:ActivityRequest):
+    ReturnList=ActivitiesService.GetGroupExams(Data.ID)
+    return ReturnList

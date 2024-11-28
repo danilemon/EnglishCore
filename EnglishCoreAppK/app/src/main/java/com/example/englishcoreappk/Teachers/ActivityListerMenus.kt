@@ -1,5 +1,6 @@
 package com.example.englishcoreappk.Teachers
 
+import android.widget.Spinner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,12 +21,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,13 +41,44 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.englishcoreappk.Helpers.Spiner
+import com.example.englishcoreappk.Helpers.SpinerItem
+import com.example.englishcoreappk.Retrofit.ActivityPreview
+import com.example.englishcoreappk.Retrofit.ActivityRepository
+import com.example.englishcoreappk.Retrofit.ActivityRequest
+import com.example.englishcoreappk.Retrofit.Groups
+import com.example.englishcoreappk.Retrofit.Units
+import com.example.englishcoreappk.Retrofit.UserData
+import okhttp3.Callback
 
 
 @Composable
 fun assignActivity(Dismiss:()->Unit){
+    var isLoading by remember { mutableStateOf(true) }
+    var UnitsGroup by remember { mutableStateOf<MutableList<List<Units>>>(mutableListOf()) }
+
+    var SelectedGroup by remember { mutableStateOf< Pair<Groups?,Int>>(Pair(null,0))}
+    var SelectedUnit by remember { mutableStateOf<Units?>(null)}
+    var SelectedActivity by remember { mutableStateOf<ActivityPreview?>(null)}
+
+    var GroupsItems by remember { mutableStateOf<MutableList<SpinerItem>>(mutableListOf()) }
+    var UnitItems by remember { mutableStateOf<MutableList<SpinerItem>>(mutableListOf()) }
+    var ActivitiesItems by remember { mutableStateOf<MutableList<SpinerItem>>(mutableListOf()) }
+    LaunchedEffect(Unit) {
+        GetGroupsData { i->
+            isLoading=false
+            UnitsGroup=i
+            UserData.TeachersGroups.forEach { i->
+                GroupsItems.add(SpinerItem(i.ID!!,"${i.Level.toString()} / ${i.Days} / ${i.Hours}"))
+            }
+        }
+    }
     Box(modifier = Modifier.wrapContentHeight()
         .width(400.dp).clip(RoundedCornerShape(16.dp)
             ).background(Color.White)){
+        if(isLoading){
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center) )
+        }else{
         Column(Modifier.wrapContentHeight(),
             verticalArrangement = Arrangement.Top) {
             Box(
@@ -66,6 +100,31 @@ fun assignActivity(Dismiss:()->Unit){
                 modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Grupo",
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
+                )
+                Spiner(Options = GroupsItems){Index->
+                    SelectedGroup= Pair(UserData.TeachersGroups[Index],Index)
+                    SelectedUnit=null
+                    SelectedActivity=null
+                    UnitItems.clear()
+                    UnitsGroup[Index].forEach{i->
+                        UnitItems.add(SpinerItem(i.ID,i.Name))
+                    }
+                    ActivitiesItems.clear()
+
+                }
+            }
+            Spacer(Modifier.height(15.dp))
+            Row(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween, // Distribuye con espacio entre grupos
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -79,7 +138,14 @@ fun assignActivity(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción 1", "Opción 2"), Index = 0, Saved = "Opción 1")
+                    Spiner(Options = UnitItems){Index->
+                        SelectedUnit=UnitsGroup[SelectedGroup.second][Index]
+                        SelectedActivity=null
+                        ActivitiesItems.clear()
+                        SelectedUnit!!.Activities.forEach{i->
+                            ActivitiesItems.add(SpinerItem(i.ID,i.Name))
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(16.dp)) // Espacio entre el primer grupo y el segundo
@@ -94,24 +160,12 @@ fun assignActivity(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción A", "Opción B"), Index = 0, Saved = "Opción A")
+                    Spiner(Options = ActivitiesItems){Index->
+                        SelectedActivity=SelectedUnit!!.Activities[Index]
+                    }
                 }
             }
-            Spacer(Modifier.height(15.dp))
-            Row(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "Grupo",
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
-                )
-                Spiner(Options = listOf("Grupo 1", "Grupo 2"), Index = 0, Saved = "Grupo 1")
-            }
+
 
             Button(modifier = Modifier.fillMaxWidth()
                 .padding(20.dp)
@@ -122,6 +176,7 @@ fun assignActivity(Dismiss:()->Unit){
                     color = Color.White // Color del texto
                 )
             }
+        }
         }
     }
 }
@@ -164,7 +219,7 @@ fun assignExam(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 16.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción 1", "Opción 2"), Index = 0, Saved = "Opción 1")
+                    //Spiner(Options = listOf("Opción 1", "Opción 2"), Index = 0, Saved = "Opción 1")
                 }
 
                 Spacer(modifier = Modifier.width(16.dp)) // Espacio entre el primer grupo y el segundo
@@ -179,7 +234,7 @@ fun assignExam(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 16.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción A", "Opción B"), Index = 0, Saved = "Opción A")
+                    //Spiner(Options = listOf("Opción A", "Opción B"), Index = 0, Saved = "Opción A")
                 }
             }
             Spacer(Modifier.height(15.dp))
@@ -195,7 +250,7 @@ fun assignExam(Dismiss:()->Unit){
                     fontSize = 16.sp,
                     modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
                 )
-                Spiner(Options = listOf("Grupo 1", "Grupo 2"), Index = 0, Saved = "Grupo 1")
+              //  Spiner(Options = listOf("Grupo 1", "Grupo 2"), Index = 0, Saved = "Grupo 1")
             }
             var Min by remember{mutableStateOf(60)}
             var Tries by remember{mutableStateOf(1)}
@@ -270,7 +325,7 @@ fun assignPractice(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción 1", "Opción 2"), Index = 0, Saved = "Opción 1")
+                   // Spiner(Options = listOf("Opción 1", "Opción 2"), Index = 0, Saved = "Opción 1")
                 }
 
                 Spacer(modifier = Modifier.width(16.dp)) // Espacio entre el primer grupo y el segundo
@@ -285,7 +340,7 @@ fun assignPractice(Dismiss:()->Unit){
                         fontSize = 16.sp,
                         modifier = Modifier.padding(end = 8.dp) // Espacio entre texto y Spinner
                     )
-                    Spiner(Options = listOf("Opción A", "Opción B"), Index = 0, Saved = "Opción A")
+                   // Spiner(Options = listOf("Opción A", "Opción B"), Index = 0, Saved = "Opción A")
                 }
             }
             Spacer(Modifier.height(15.dp))
@@ -305,62 +360,36 @@ fun assignPractice(Dismiss:()->Unit){
 
 
 
-@Composable
-fun Spiner(Options:List<String>,Index:Int,Saved:String) {
 
-    var expanded by remember { mutableStateOf(false) }
-    var Selected by remember { mutableStateOf("---") }
-
-
-    Box(
-        modifier = Modifier
-            .width(75.dp)
-            .border(1.dp, Color.Gray,) // Borde similar a un Spinner
-            .clickable {
-                expanded = !expanded
-            } // Asegura que el tamaño del menú se ajuste al contenido
-    ) {
-        // Componente que actúa como el botón desplegable
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = Selected,
-                fontSize = 14.sp,
-                modifier = Modifier.weight(1f) // Alinea el texto a la izquierda
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Dropdown Icon",
-                tint = Color.Gray
-            )
-        }
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.wrapContentWidth()
-        ) {
-            Options.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option) },
-                    onClick = {
-                        Selected = option
-                        expanded = false
-                    }
-                )
-            }
-        }
+fun GetGroupsData(callback: (MutableList<List<Units>>)-> Unit){
+    var Groups = UserData.TeachersGroups
+    var UnitsList: MutableList<List<Units>> = mutableListOf()
+    var GroupsIds: MutableList<ActivityRequest> =mutableListOf()
+    Groups.forEach{i->
+        GroupsIds.add(ActivityRequest(i.ID!!))
     }
+    ActivityRepository.GetGroupActss(GroupsIds){i:MutableList<List<Units>> ->
+        UnitsList=i
+        callback(UnitsList)
+    }
+
 }
 
-
+fun GetExams(callback: (MutableList<List<ActivityPreview>>)-> Unit){
+    var Groups = UserData.TeachersGroups
+    var GroupsExam: MutableList<List<ActivityPreview>> = mutableListOf()
+    Groups.forEach{i->
+        ActivityRepository.GetGroupExms(i.ID!!){E:List<ActivityPreview>->
+            GroupsExam.add(E)
+        }
+    }
+    callback(GroupsExam)
+}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewAct(){
-    assignExam(){
+    assignActivity(){
 
     }
 }

@@ -1,3 +1,3 @@
 from Services.Activities import ActivitiesService
 
-print(ActivitiesService.GetGroup('HMmvyGl9pDHaZCHLDUMQ'))
+print(ActivitiesService.GetGroupExams('HMmvyGl9pDHaZCHLDUMQ'))

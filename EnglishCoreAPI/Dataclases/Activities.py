@@ -8,6 +8,7 @@ class ActivityPreview(BaseModel):
     ID:str
 
 class Units(BaseModel):
+    ID:str
     Name:str
     Activities:list
 class Activity(BaseModel):
