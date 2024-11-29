@@ -172,7 +172,11 @@ fun assignActivity(Dismiss:()->Unit){
 
             Button(modifier = Modifier.fillMaxWidth()
                 .padding(20.dp)
-                .height(50.dp), onClick = {Dismiss()},colors = ButtonDefaults.buttonColors(
+                .height(50.dp), onClick = {
+                    ActivityRepository.AsignActivity(SelectedGroup.first!!.ID!!,SelectedUnit!!.ID,SelectedActivity!!.ID){
+
+                    }
+                },colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFDB162F)),) {
                 Text(
                     text = "Guardar",

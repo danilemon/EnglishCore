@@ -83,4 +83,22 @@ object ActivityRepository {
         })
 
     }
+
+    fun AsignActivity(GroupID: String,UnitID: String,ActivityID: String,callback:(String)-> Unit){
+        var Data=AsignActivityPck(GroupID,UnitID,ActivityID)
+        api.AssignActivity(Data).enqueue(object: Callback<String>{
+            override fun onResponse(
+                call: Call<String?>,
+                response: Response<String?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+    }
 }

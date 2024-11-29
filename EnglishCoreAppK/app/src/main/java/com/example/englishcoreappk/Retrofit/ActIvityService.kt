@@ -1,6 +1,7 @@
 package com.example.englishcoreappk.Retrofit
 
 
+import android.R
 import androidx.compose.runtime.Stable
 import retrofit2.Call
 import retrofit2.http.Body
@@ -23,11 +24,13 @@ interface ActIvityService{
 
     @POST("/GetPractices")
     fun GetPractices(@Body request: ActivityRequest): Call<PracticesPck>
+
+    @POST("/AsiggnActivity")
+    fun AssignActivity(@Body request: AsignActivityPck): Call<String>
 }
 data class ActivityRequest(
     val ID: String
 )
-
 data class ActivityPreview(
     var Name: String,
     var ID: String
@@ -37,10 +40,15 @@ data class Units(
     var Name: String,
     var Activities: List<ActivityPreview>
 )
-
 data class PracticesPck(
     var Students:List<StudentPreview>,
     var Practices:List<ActivityPreview>
+)
+
+data class AsignActivityPck(
+    var GroupID: String,
+    var UnitID: String,
+    var ActivityID: String
 )
 @Stable
 data class Activity(

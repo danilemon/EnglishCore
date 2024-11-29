@@ -60,5 +60,11 @@ def AssignActivity(Data:AsignActivityPck):
     Group_Ref=db.collection("Groups").document(Data.GroupID)
     Group_Doc=Group_Ref.get()
     level_ref=Group_Doc.get("Level")
-    
-    pass
+    Units_Colection=level_ref.collection("units")
+    Unit_ref=Units_Colection.document(Data.UnitID)
+    Activities_Collection=Unit_ref.collection("activities")
+    Activity_ref=Activities_Collection.document(Data.ActivityID)
+    Asigned_Colection=Group_Ref.collection("AsignedActivities")
+    NAsigment={"Activity":Activity_ref}
+    doc_ref = Asigned_Colection.add(NAsigment)
+    return {"message": "Asignada correctamente"}
