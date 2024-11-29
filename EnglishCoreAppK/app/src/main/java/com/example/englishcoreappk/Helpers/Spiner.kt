@@ -38,6 +38,10 @@ fun Spiner(Options:List<SpinerItem>,Result:(Index: Int)-> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var Selected by remember { mutableStateOf("---") }
 
+    if(Options.isEmpty()){
+        Selected="---"
+    }
+
 
     Box(
         modifier = Modifier

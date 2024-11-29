@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from Dataclases.Teachers import StudetnsPreview
 
 class ActivityRequest(BaseModel):
     ID:str
@@ -11,6 +12,17 @@ class Units(BaseModel):
     ID:str
     Name:str
     Activities:list
+
+class PracticesPck(BaseModel):
+    Students:list[StudetnsPreview]
+    Practices:list[ActivityPreview]
+
+class AsignActivityPck(BaseModel):
+    GroupID:str
+    UnitID:str
+    ActivityID:str
+
+
 class Activity(BaseModel):
     Name:str
     Level:int

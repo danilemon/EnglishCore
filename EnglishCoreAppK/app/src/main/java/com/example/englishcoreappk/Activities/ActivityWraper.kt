@@ -411,7 +411,6 @@ fun NavigationHostProfesor(navController: NavHostController, Index: MutableState
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun WraperPreview(){

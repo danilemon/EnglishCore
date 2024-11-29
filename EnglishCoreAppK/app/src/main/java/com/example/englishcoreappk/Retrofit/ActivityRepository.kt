@@ -1,5 +1,6 @@
 package com.example.englishcoreappk.Retrofit
 
+import okhttp3.Request
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,24 +43,44 @@ object ActivityRepository {
         })
     }
 
-    fun GetGroupExms(ID: String, callback: (List<ActivityPreview>)-> Unit){
-        val ActRqst=ActivityRequest(ID)
-        api.GetGroupExams(ActRqst).enqueue(object: Callback<List<ActivityPreview>>{
+    fun GetGroupExms(Request: MutableList<ActivityRequest>, callback: (MutableList<List<ActivityPreview>>)-> Unit){
+        api.GetGroupExams(Request).enqueue(object: Callback<MutableList<List<ActivityPreview>>>{
             override fun onResponse(
-                call: Call<List<ActivityPreview>?>,
-                response: Response<List<ActivityPreview>?>
+                call: Call<MutableList<List<ActivityPreview>>?>,
+                response: Response<MutableList<List<ActivityPreview>>?>
             ) {
                 var Acts=response.body()!!
                 callback(Acts)
             }
 
             override fun onFailure(
-                call: Call<List<ActivityPreview>?>,
+                call: Call<MutableList<List<ActivityPreview>>?>,
+                t: Throwable
+            ) {
+            }
+        })
+    }
+
+    fun GetPractices(callback: (PracticesPck) -> Unit){
+        var Ruquest= ActivityRequest(UserData.User)
+        api.GetPractices(Ruquest).enqueue(object: Callback<PracticesPck>{
+            override fun onResponse(
+                call: Call<PracticesPck?>,
+                response: Response<PracticesPck?>
+            ) {
+                var Practices=response.body()!!
+                callback(Practices)
+            }
+
+            override fun onFailure(
+                call: Call<PracticesPck?>,
                 t: Throwable
             ) {
                 TODO("Not yet implemented")
             }
 
+
         })
+
     }
 }

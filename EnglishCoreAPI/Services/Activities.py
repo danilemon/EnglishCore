@@ -1,4 +1,5 @@
 from Dataclases.Activities import ActivityPreview,Units
+from Dataclases.Teachers import StudetnsPreview
 from Firebase.firebase import db
 class ActivitiesService:
     def GetGroupActivities(ID:str):
@@ -34,10 +35,32 @@ class ActivitiesService:
             Exm=ActivityPreview(Name=Exam_Data["Nombre"],ID=exam.id)
             ExamsList.append(Exm)
         return(ExamsList)
-
-
-        
-
-
-
     
+    def GetTeacherStudents(ID:str):
+        User_ref=db.collection('users').document(ID)
+        User_doc=User_ref.get()
+        Groups_ref=User_doc.get("Groups")
+        StudentDic={}
+        for Group in Groups_ref:
+            Group_Doc=Group.get()
+            Students=Group_Doc.get('StudentsIDs')
+            for Student_Doc in Students:
+                Student_Data=Student_Doc.get().to_dict()
+                Student=StudetnsPreview(ID=Student_Doc.get().id,Name=Student_Data.get('Name')+" "+Student_Data.get('LastName'))
+                if Student_Doc.id not in StudentDic:
+                    StudentDic[Student_Doc.id]=Student
+        FinalList=[]
+        for StudentOBJ in StudentDic.values():
+            FinalList.append(StudentOBJ)
+        return(FinalList)
+    
+    def GetTeacherPractices(ID:str):
+        User_ref=db.collection('users').document(ID)
+        Practices_Ref=User_ref.collection("Practices")
+        Practice_List=[]
+        for Practice in Practices_Ref.stream():
+            Practice_Data=Practice.to_dict()
+            Practice=ActivityPreview(ID=Practice.id,Name=Practice_Data["Nombre"])
+            Practice_List.append(Practice)
+        return(Practice_List)
+        

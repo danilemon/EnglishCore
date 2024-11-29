@@ -324,7 +324,7 @@ fun ActivitiesScreen() {
                             )
                         )
                 ){
-                Text(text = "Actividades",
+                Text(text = "Examanes",
                     color=Color.White,
                     fontSize = 30.sp,
                     modifier = Modifier

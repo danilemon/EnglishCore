@@ -42,6 +42,23 @@ def GetGroupActs(Data:list[ActivityRequest]):
     return ReturnList
 
 @Activities.post("/GetGroupExams")
-def GetGroupExms(Data:ActivityRequest):
-    ReturnList=ActivitiesService.GetGroupExams(Data.ID)
+def GetGroupExms(Data:list[ActivityRequest]):
+    ReturnList=[]
+    for Group in Data:
+        Units=ActivitiesService.GetGroupExams(Group.ID)
+        ReturnList.append(Units)
     return ReturnList
+
+@Activities.post("/GetPractices")
+def GetPractices(Data:ActivityRequest):
+    Practices=ActivitiesService.GetTeacherPractices(Data.ID)
+    Students=ActivitiesService.GetTeacherStudents(Data.ID)
+    return(PracticesPck(Students=Students,Practices=Practices))
+
+@Activities.post("/AsiggnActivity")
+def AssignActivity(Data:AsignActivityPck):
+    Group_Ref=db.collection("Groups").document(Data.GroupID)
+    Group_Doc=Group_Ref.get()
+    level_ref=Group_Doc.get("Level")
+    
+    pass

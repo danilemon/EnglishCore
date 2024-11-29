@@ -10,8 +10,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import kotlinx.serialization.Serializable
 import retrofit2.http.POST
-import java.lang.reflect.Type
-
 interface ActIvityService{
 
     @POST("/GetActivity")
@@ -21,9 +19,10 @@ interface ActIvityService{
     fun GetGroupActs(@Body request: List<ActivityRequest>): Call<MutableList<List<Units>>>
 
     @POST("/GetGroupExams")
-    fun GetGroupExams(@Body request: ActivityRequest): Call<List<ActivityPreview>>
+    fun GetGroupExams(@Body request: List<ActivityRequest>): Call<MutableList<List<ActivityPreview>>>
 
-    
+    @POST("/GetPractices")
+    fun GetPractices(@Body request: ActivityRequest): Call<PracticesPck>
 }
 data class ActivityRequest(
     val ID: String
@@ -37,6 +36,11 @@ data class Units(
     var ID: String,
     var Name: String,
     var Activities: List<ActivityPreview>
+)
+
+data class PracticesPck(
+    var Students:List<StudentPreview>,
+    var Practices:List<ActivityPreview>
 )
 @Stable
 data class Activity(
