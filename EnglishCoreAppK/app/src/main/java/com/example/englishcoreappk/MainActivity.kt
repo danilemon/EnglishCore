@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
 fun Welcome() {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var username by remember { mutableStateOf("mauri") }
-    var password by remember { mutableStateOf("hola123") }
+    var username by remember { mutableStateOf("gustavo") }
+    var password by remember { mutableStateOf("12345678") }
     var errorMessage by remember { mutableStateOf("") }
     var Register by remember  { mutableStateOf(true) }
 

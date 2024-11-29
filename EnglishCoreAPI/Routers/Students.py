@@ -48,7 +48,7 @@ def UpdateStudent(studentDocID: str, updatedFields: Dict[str, str]):
 
 
 @StudentsR.post('/GetStudentReminders', response_model=List[GetStudentReminds])
-def GetStudentReminds(Data: GetStudentDataRequest):
+def fetch_student_reminders(Data: GetStudentDataRequest):
     # Accede al documento del usuario
     print(f"StudentDocId recibido: {Data.StudentDocId}")
 
@@ -67,10 +67,16 @@ def GetStudentReminds(Data: GetStudentDataRequest):
     reminders_list = []
     for reminder in reminders:
         reminder_data = reminder.to_dict()
-
         # Obtén el ID del profesor desde el recordatorio
+        title= reminder_data.get('Title', '')
         professor_id = reminder_data.get('ProfessorID', '')
+        content= reminder_data.get('Content', '')
+        date=reminder_data.get('Date', '')
         print(f"ID DEL PROFE recibido: {professor_id}")
+        print(f"Contenido: {content}")
+        print(f"Fecha: {date}")
+
+
         # Si hay un ID de profesor, busca su documento
         professor_name = "Unknown"  # Valor por defecto si no se encuentra el profesor
         if professor_id:
@@ -78,17 +84,19 @@ def GetStudentReminds(Data: GetStudentDataRequest):
             professor_doc = professor_ref.get()
 
             if professor_doc.exists:
-                professor_name = professor_doc.to_dict().get('Name', "Unknown")
+                professor_name = professor_doc.to_dict().get('Name','')
         
         # Agrega el recordatorio al listado
         reminders_list.append(
             GetStudentReminds(
+                Title=title,
                 ProfessorName=professor_name,
-                RemindContent=reminder_data.get('Content', ''),
-                RemindDate=reminder_data.get('Date', '')
+                Content=content,
+                Date=date
             )
         )
     
+
     # Si no se encontraron recordatorios
     if not reminders_list:
         raise HTTPException(status_code=404, detail="No reminders found for the given student")

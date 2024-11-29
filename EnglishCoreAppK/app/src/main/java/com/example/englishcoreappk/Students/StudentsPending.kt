@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,99 +71,165 @@ class StudentsPending : ComponentActivity() {
 @Composable
 fun ShowStudentPending() {
     val context = LocalContext.current
-// Estados para manejar los datos
-    var remindersList by remember { mutableStateOf<List<StudentReminders>?>(null) }
+    val userrrr = UserData.User
+    var isLoadingProfile = remember { mutableStateOf(true) } // Estado para cargar
+    var remindersList by remember { mutableStateOf<List<StudentReminders>?>(emptyList()) }
+    var selectedReminder by remember { mutableStateOf<StudentReminders?>(null) }
+
 
     // Cargar datos del estudiante y recordatorios
-    LaunchedEffect(UserData.User) {
-        StudentRepository.GetStudentReminders(UserData.User) { reminders ->
-            remindersList = reminders
-        }
-    }
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            topBar = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(70.dp) // altura de la barra superior
-                        .background(Color(0xffD9D9D9))
-                        .padding(top = 5.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.englishcorelogo),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(50.dp) // Tamaño de la imagen
-                            .clip(CircleShape) // Aplica la forma circular
-                            .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
-                            .clickable { val intent = Intent(context, StudentsDashboard::class.java)
-                                context.startActivityWithAnimation(intent)}
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.profile_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .clip(CircleShape)
-                            .align(Alignment.TopStart)
-                            .clickable { val intent = Intent(context, StudentsProfile::class.java)
-                                context.startActivityWithAnimation(intent)}
-                    )
-                }
-            },
 
 
-            ) {contentPadding ->
-            Box(
-                modifier = Modifier.fillMaxSize().padding(contentPadding)
-                    .background(Color(0xffD9D9D9))
-            )
-            {
-                Column(
-                    modifier = Modifier.clip(
-                        RoundedCornerShape(
-                            topStart = 40.dp,
-                            topEnd = 40.dp
-                        )
-                    ).fillMaxSize().background(Color.White)
-                )
-                {
-                    Text(fontWeight = FontWeight.ExtraBold, fontSize = 25.sp, text = "Pendings", modifier = Modifier.align(Alignment.CenterHorizontally).padding(top=16.dp))
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(top = 20.dp)
-                            .background(Color(0xff2e4053))
-                            .fillMaxSize()
-                    ) {
-                        remindersList?.forEach { reminder ->
-                            item {
-                                PendingCards(
-                                    title = "Reminder from ${reminder.ProfessorName}",
-                                    content = reminder.Content,
-                                    date = reminder.Date,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                            }
-                        } ?: item {
-                            Text(text = "Loading reminders...", modifier = Modifier.padding(16.dp))
+
+
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xffD9D9D9))) {
+
+
+        LaunchedEffect(Unit) {
+            StudentRepository.GetStudentReminders(studentDocID = userrrr) { reminders ->
+                println("Reminders recibidos del servidor: $reminders")
+
+                if (reminders == null || reminders.isEmpty()) {
+                    println("No se encontraron recordatorios o los datos son nulos.")
+                    remindersList = emptyList()
+                } else {
+                    // Filtrar y limpiar datos nulos
+                    remindersList = reminders.mapNotNull { reminder ->
+                        if (reminder.ProfessorName != null && reminder.Content != null && reminder.Date != null) {
+                            reminder
+                        } else {
+                            println("Recordatorio inválido encontrado: $reminder")
+                            null
                         }
                     }
                 }
+                isLoadingProfile.value = false
             }
+        }
+
+        if (isLoadingProfile.value) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
 
 
+            Scaffold(
+                topBar = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(70.dp) // altura de la barra superior
+                            .background(Color(0xffD9D9D9))
+                            .padding(top = 5.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.englishcorelogo),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(50.dp) // Tamaño de la imagen
+                                .clip(CircleShape) // Aplica la forma circular
+                                .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
+                                .clickable {
+                                    val intent = Intent(context, StudentsDashboard::class.java)
+                                    context.startActivityWithAnimation(intent)
+                                }
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.profile_icon),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .align(Alignment.TopStart)
+                                .clickable {
+                                    val intent = Intent(context, StudentsProfile::class.java)
+                                    context.startActivityWithAnimation(intent)
+                                }
+                        )
+                    }
+                },
+
+
+                ) { contentPadding ->
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(contentPadding)
+                        .background(Color(0xffD9D9D9))
+                )
+                {
+                    Column(
+                        modifier = Modifier.clip(
+                            RoundedCornerShape(
+                                topStart = 40.dp,
+                                topEnd = 40.dp
+                            )
+                        ).fillMaxSize().background(Color.White)
+                    )
+                    {
+                        Text(
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 25.sp,
+                            text = "Pendings",
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                                .padding(top = 16.dp)
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .background(Color(0xff2e4053))
+                                .fillMaxSize()
+                        ) {
+                            if (remindersList.isNullOrEmpty()) {
+                                item {
+                                    Text(
+                                        text = "No pending reminders.",
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                            .align(Alignment.CenterHorizontally)
+                                    )
+                                }
+                            } else {
+                                remindersList?.forEach { reminder ->
+                                    item {
+                                        PendingCards(
+                                            professorname = reminder.ProfessorName,
+                                            title = reminder.Title,
+                                            date = reminder.Date,
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .fillMaxWidth()
+                                                .clickable {
+                                                    // Abre el diálogo con los detalles del recordatorio
+                                                    selectedReminder = reminder
+                                                }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            // Mostrar el diálogo cuando se selecciona un recordatorio
+            selectedReminder?.let { reminder ->
+                ReminderDetailsDialog(reminder = reminder) {
+                    // Cierra el diálogo
+                    selectedReminder = null
+                }
+            }
         }
     }
 
 }
 
 @Composable
-fun PendingCards(title: String, content: String, date: String, modifier: Modifier = Modifier) {
+fun PendingCards(professorname: String, title: String, date: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(100.dp) // Ajusta la altura de las tarjetas
+            .height(130.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White)
             .clickable { /* Acción cuando se clickea la tarjeta */ }
@@ -172,13 +239,34 @@ fun PendingCards(title: String, content: String, date: String, modifier: Modifie
                 .align(Alignment.CenterStart)
                 .padding(16.dp)
         ) {
-            Text(text = title, fontWeight = FontWeight.Bold, color = Color.Black)
-            Text(text = content, color = Color.Gray)
+            Text(text = professorname, fontWeight = FontWeight.Bold, color = Color.Black)
+            Text(text = title, color = Color.Gray)
             Text(text = date, color = Color.LightGray, fontSize = 12.sp)
         }
     }
 }
-
+@Composable
+fun ReminderDetailsDialog(reminder: StudentReminders, onDismiss: () -> Unit) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text(text = "Reminder Details", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        },
+        text = {
+            Column {
+                Text(text = "Professor: ${reminder.ProfessorName}", fontSize = 16.sp)
+                Text(text = "Title: ${reminder.Title}", fontSize = 16.sp)
+                Text(text = "Date: ${reminder.Date}", fontSize = 16.sp)
+                Text(text = "Content: ${reminder.Content}", fontSize = 16.sp)
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.Button(onClick = { onDismiss() }) {
+                Text(text = "Close")
+            }
+        }
+    )
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -187,5 +275,4 @@ fun PreviewPending() {
         ShowStudentPending()
     }
 }
-
 

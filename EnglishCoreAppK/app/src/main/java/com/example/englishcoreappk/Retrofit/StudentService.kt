@@ -7,11 +7,13 @@ import retrofit2.http.Path
 interface StudentService {
     @POST("/GetStudentData")
     fun getStudentData(@Body request: GetStudentDataRequest): Call<StudentData>
+
     @PUT("/UpdateStudentData/{studentDocID}")
     fun updateStudentData(
         @Path("studentDocID") studentDocID: String,
         @Body updatedFields: Map<String, String>
     ): Call<Unit>
+
     @POST("/GetStudentReminders")
     fun getStudentReminders(@Body request: GetStudentDataRequest): Call<List<StudentReminders>>
 
@@ -33,6 +35,7 @@ data class StudentData(
 )
 
 data class StudentReminders(
+    val Title: String,
     val ProfessorName: String,
     val Content: String,
     val Date: String

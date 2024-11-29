@@ -80,183 +80,183 @@ class StudentsProfile: ComponentActivity() {
     }
 }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @Composable
-    fun ShowProfileView() {
-        val context = LocalContext.current
-        var isLoadingProfile = remember { mutableStateOf(true) } // Estado para cargar
-        var userProgress by remember { mutableStateOf(0.5) }
-        val studentDataState = remember { mutableStateOf<StudentData?>(null) }
-        var isEditing by remember { mutableStateOf(false) } // Estado para el modo de edición
-        var phoneText by remember { mutableStateOf(TextFieldValue("")) }
-        var addressText by remember { mutableStateOf(TextFieldValue("")) }
-        val userrrr = UserData.User
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun ShowProfileView() {
+    val context = LocalContext.current
+    var isLoadingProfile = remember { mutableStateOf(true) } // Estado para cargar
+    var userProgress by remember { mutableStateOf(0.5) }
+    val studentDataState = remember { mutableStateOf<StudentData?>(null) }
+    var isEditing by remember { mutableStateOf(false) } // Estado para el modo de edición
+    var phoneText by remember { mutableStateOf(TextFieldValue("")) }
+    var addressText by remember { mutableStateOf(TextFieldValue("")) }
+    val userrrr = UserData.User
 
-        Box(modifier = Modifier.fillMaxSize().background(Color(0xffD9D9D9))) {
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xffD9D9D9))) {
 
-            LaunchedEffect(Unit) {
-                StudentRepository.GetStudentDataRequest(studentID = userrrr) { studentData ->
-                    studentDataState.value = studentData
-                    isLoadingProfile.value = false
-                }
+        LaunchedEffect(Unit) {
+            StudentRepository.GetStudentDataRequest(studentID = userrrr) { studentData ->
+                studentDataState.value = studentData
+                isLoadingProfile.value = false
             }
+        }
 
-            if (isLoadingProfile.value) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            else{
-                studentDataState.value?.let { student ->
+        if (isLoadingProfile.value) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+        else{
+            studentDataState.value?.let { student ->
 
-                    Scaffold(
-                        topBar = {
-                            Box(
+                Scaffold(
+                    topBar = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(70.dp) // altura de la barra superior
+                                .background(Color(0xffD9D9D9))
+                                .padding(top = 5.dp)
+
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.englishcorelogo),
+                                contentDescription = null,
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(70.dp) // altura de la barra superior
-                                    .background(Color(0xffD9D9D9))
-                                    .padding(top = 5.dp)
+                                    .size(50.dp) // Tamaño de la imagen
+                                    .clip(CircleShape) // Aplica la forma circular
+                                    .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
+                                    .clickable { val intent = Intent(context, StudentsDashboard::class.java)
+                                        context.startActivity(intent) }
+                            )
 
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.englishcorelogo),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(50.dp) // Tamaño de la imagen
-                                        .clip(CircleShape) // Aplica la forma circular
-                                        .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
-                                        .clickable { val intent = Intent(context, StudentsDashboard::class.java)
-                                            context.startActivity(intent) }
+                        }
+                    },
+
+
+                    ) { contentPadding ->
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(contentPadding)
+                            .background(Color(0xffD9D9D9))
+                    )
+                    {
+                        Column(
+                            modifier = Modifier.clip(
+                                RoundedCornerShape(
+                                    topStart = 40.dp,
+                                    topEnd = 40.dp
                                 )
+                            ).fillMaxSize().background(Color.White)
+                        ) {
+                            Box(
+                                modifier = Modifier.fillMaxWidth().align(Alignment.Start)
+                                    .height(100.dp)
+                            )
+                            {
+                                Box(
+                                    modifier = Modifier.align(Alignment.CenterStart)
+                                        .height(80.dp).width(200.dp).padding(start = 30.dp)
+                                )
+                                {
+                                    Text(
+                                        text = "${student.Name} ${student.LastName}", // Añade un espacio entre Name y LastName
+                                        fontSize = 25.sp,
+                                        fontWeight = FontWeight(900),
+                                        color = Color.Black,
+                                        textAlign = TextAlign.Justify,
+                                        softWrap = true, // Habilita el ajuste de línea
+                                        modifier = Modifier.fillMaxWidth() // Asegura que el texto ocupe todo el ancho disponible
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                        .fillMaxHeight().width(200.dp).padding(30.dp)
+                                )
+                                {
+                                    Text(
+                                        text = "${(userProgress * 100).toInt()}%",
+                                        fontSize = 18.sp,
+                                        color = Color.Black,
+                                        fontWeight = FontWeight(600),
+                                        modifier = Modifier.align(Alignment.CenterVertically)
+                                            .padding(end = 10.dp)
+                                    )
+                                    CircularProgressIndicator(
+                                        trackColor = Color.LightGray,
+                                        color = Color(0xff2e4053),
+                                        progress = userProgress.toFloat(),
+                                        modifier = Modifier.width(70.dp).height(70.dp)
+                                            .padding(end = 30.dp)
+                                    )
+
+                                }
+
 
                             }
-                        },
-
-
-                        ) { contentPadding ->
-                        Box(
-                            modifier = Modifier.fillMaxSize().padding(contentPadding)
-                                .background(Color(0xffD9D9D9))
-                        )
-                        {
                             Column(
-                                modifier = Modifier.clip(
-                                    RoundedCornerShape(
-                                        topStart = 40.dp,
-                                        topEnd = 40.dp
-                                    )
-                                ).fillMaxSize().background(Color.White)
-                            ) {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth().align(Alignment.Start)
-                                        .height(100.dp)
-                                )
-                                {
-                                    Box(
-                                        modifier = Modifier.align(Alignment.CenterStart)
-                                            .height(80.dp).width(200.dp).padding(start = 30.dp)
-                                    )
-                                    {
-                                        Text(
-                                            text = "${student.Name} ${student.LastName}", // Añade un espacio entre Name y LastName
-                                            fontSize = 25.sp,
-                                            fontWeight = FontWeight(900),
-                                            color = Color.Black,
-                                            textAlign = TextAlign.Justify,
-                                            softWrap = true, // Habilita el ajuste de línea
-                                            modifier = Modifier.fillMaxWidth() // Asegura que el texto ocupe todo el ancho disponible
-                                        )
-                                    }
-                                    Row(
-                                        modifier = Modifier.align(Alignment.CenterEnd)
-                                            .fillMaxHeight().width(200.dp).padding(30.dp)
-                                    )
-                                    {
-                                        Text(
-                                            text = "${(userProgress * 100).toInt()}%",
-                                            fontSize = 18.sp,
-                                            color = Color.Black,
-                                            fontWeight = FontWeight(600),
-                                            modifier = Modifier.align(Alignment.CenterVertically)
-                                                .padding(end = 10.dp)
-                                        )
-                                        CircularProgressIndicator(
-                                            trackColor = Color.LightGray,
-                                            color = Color(0xff2e4053),
-                                            progress = userProgress.toFloat(),
-                                            modifier = Modifier.width(70.dp).height(70.dp)
-                                                .padding(end = 30.dp)
-                                        )
+                                modifier = Modifier.fillMaxWidth().height(if (isEditing) 350.dp else 250.dp)
+                                    .background(Color(0xff21618c)).padding(16.dp)
 
-                                    }
-
-
-                                }
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().height(if (isEditing) 350.dp else 250.dp)
-                                        .background(Color(0xff276127)).padding(16.dp)
-
-                                )
-                                {
-                                    CompositionLocalProvider(LocalContentColor provides Color.White) {
-                                        Text(
-                                            text = "INFORMACIÓN",
-                                            fontSize = 18.sp,
-                                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                                                .padding(top = 20.dp)
-                                        )
-                                        Spacer(modifier = Modifier.height(8.dp))
-
-                                        Text(
-                                            text = "Registro: ${student.StudentID}",
-                                            modifier = Modifier.padding(start = 8.dp)
-                                        )
-                                        Text(
-                                            text = "Grupo: ${student.GroupID} ",
-                                            modifier = Modifier.padding(start = 8.dp)
-                                        )
-                                        if (isEditing) {
-                                            // Campos de texto para edición
-                                            OutlinedTextField(
-                                                value = phoneText,
-                                                onValueChange = { phoneText = it },
-                                                label = { Text("Teléfono") },
-                                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                                    containerColor = Color.White,
-
-                                                ),
-                                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                                            )
-                                            OutlinedTextField(
-                                                value = addressText,
-                                                onValueChange = { addressText = it },
-                                                label = { Text("Dirección") },
-                                                colors = TextFieldDefaults.outlinedTextFieldColors(
-                                                    containerColor = Color.White,
-
-                                                ),
-                                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-                                            )
-                                        } else {
-                                            // Textos normales si no está en edición
-                                            Text(
-                                                text = "Teléfono: ${student.Phone}",
-                                                modifier = Modifier.padding(start = 8.dp)
-                                            )
-                                            Text(
-                                                text = "Dirección: ${student.Address}",
-                                                modifier = Modifier.padding(start = 8.dp)
-                                            )
-                                        }
-                                        Text(
-                                            text = "Fecha de nacimiento: ${student.Birthday}",
-                                            modifier = Modifier.padding(start = 8.dp)
-                                        )
-
-                                    }
-                                }
-                                Row (modifier=Modifier.height(40.dp).fillMaxWidth().align(Alignment.CenterHorizontally).padding(start = 20.dp)){
+                            )
+                            {
+                                CompositionLocalProvider(LocalContentColor provides Color.White) {
                                     Text(
+                                        text = "INFORMACIÓN",
+                                        fontSize = 18.sp,
+                                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                                            .padding(top = 20.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Text(
+                                        text = "Registro: ${student.StudentID}",
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                    Text(
+                                        text = "Grupo: ${student.GroupID} ",
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+                                    if (isEditing) {
+                                        // Campos de texto para edición
+                                        OutlinedTextField(
+                                            value = phoneText,
+                                            onValueChange = { phoneText = it },
+                                            label = { Text("Teléfono") },
+                                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                                containerColor = Color.White,
+
+                                                ),
+                                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                                        )
+                                        OutlinedTextField(
+                                            value = addressText,
+                                            onValueChange = { addressText = it },
+                                            label = { Text("Dirección") },
+                                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                                containerColor = Color.White,
+
+                                                ),
+                                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                                        )
+                                    } else {
+                                        // Textos normales si no está en edición
+                                        Text(
+                                            text = "Teléfono: ${student.Phone}",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                        Text(
+                                            text = "Dirección: ${student.Address}",
+                                            modifier = Modifier.padding(start = 8.dp)
+                                        )
+                                    }
+                                    Text(
+                                        text = "Fecha de nacimiento: ${student.Birthday}",
+                                        modifier = Modifier.padding(start = 8.dp)
+                                    )
+
+                                }
+                            }
+                            Row (modifier=Modifier.height(40.dp).fillMaxWidth().align(Alignment.CenterHorizontally).padding(start = 20.dp)){
+                                Text(
                                     if (isEditing) "CANCELAR" else "EDITAR DATOS",
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight(1000),
@@ -265,83 +265,82 @@ class StudentsProfile: ComponentActivity() {
                                     modifier = Modifier.align(Alignment.CenterVertically)
                                         .padding(top = 16.dp, end = 100.dp)
                                         .clickable { isEditing = !isEditing } // Cambia el estado al hacer clic
-                                    )
-                                    if (isEditing) {
-                                        Text(
-                                            text = "GUARDAR DATOS",
-                                            fontSize = 18.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(0xff196f3d),
-                                            textDecoration = TextDecoration.Underline,
-                                            modifier = Modifier.align(Alignment.CenterVertically).padding(top = 16.dp)
-                                                .clickable {
-                                                    val updatedPhone = phoneText.text
-                                                    val updatedAddress = addressText.text
-                                                    StudentRepository.UpdateStudentData(
-                                                        studentDocID = UserData.User, // Asegúrate de tener este campo en el modelo
-                                                        newAddress = updatedAddress,
-                                                        newPhone = updatedPhone
-                                                    ) { success ->
-                                                        var text = ""
-                                                        val duration = Toast.LENGTH_SHORT
-                                                        if (success) {
-                                                            isEditing = false
-                                                            val intent = (context as Activity).intent
-                                                            context.finish()
-                                                            text = "Your data has changed successfully"
-                                                            val toast = Toast.makeText(context, text, duration) // in Activity
+                                )
+                                if (isEditing) {
+                                    Text(
+                                        text = "GUARDAR DATOS",
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xff196f3d),
+                                        textDecoration = TextDecoration.Underline,
+                                        modifier = Modifier.align(Alignment.CenterVertically).padding(top = 16.dp)
+                                            .clickable {
+                                                val updatedPhone = phoneText.text
+                                                val updatedAddress = addressText.text
+                                                StudentRepository.UpdateStudentData(
+                                                    studentDocID = UserData.User, // Asegúrate de tener este campo en el modelo
+                                                    newAddress = updatedAddress,
+                                                    newPhone = updatedPhone
+                                                ) { success ->
+                                                    var text = ""
+                                                    val duration = Toast.LENGTH_SHORT
+                                                    if (success) {
+                                                        isEditing = false
+                                                        val intent = (context as Activity).intent
+                                                        context.finish()
+                                                        text = "Your data has changed successfully"
+                                                        val toast = Toast.makeText(context, text, duration) // in Activity
 
-                                                            toast.show()
+                                                        toast.show()
 
-                                                            context.startActivity(intent)
+                                                        context.startActivity(intent)
 
-                                                        } else {
-                                                            text = "An error happened during the data change"
-                                                            val toast = Toast.makeText(context, text, duration) // in Activity
+                                                    } else {
+                                                        text = "An error happened during the data change"
+                                                        val toast = Toast.makeText(context, text, duration) // in Activity
 
-                                                            toast.show()
-                                                        }
+                                                        toast.show()
                                                     }
                                                 }
-                                        )
-                                    }
-
-
+                                            }
+                                    )
                                 }
-
-                                Image(
-                                    painter = painterResource(id = R.drawable.bigbang_img),
-                                    contentDescription = null,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                        .padding(top = 40.dp)
-                                )
 
 
                             }
+
+                            Image(
+                                painter = painterResource(id = R.drawable.bigbang_img),
+                                contentDescription = null,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                                    .padding(top = 40.dp)
+                            )
+
+
                         }
-
-
                     }
+
+
                 }
-            } ?:run{
-                Text(text = "Hubo un problema al cargar los datos", color= Color.Red, modifier = Modifier.align(Alignment.Center))
             }
-
-
+        } ?:run{
+            Text(text = "Hubo un problema al cargar los datos", color= Color.Red, modifier = Modifier.align(Alignment.Center))
         }
-
-
 
 
     }
 
 
-    @Preview(showBackground = true)
-    @Composable
-    fun PreviewProfile() {
-        EnglishCoreAppKTheme {
-            ShowProfileView()
-        }
-    }
 
+
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewProfile() {
+    EnglishCoreAppKTheme {
+        ShowProfileView()
+    }
+}
 

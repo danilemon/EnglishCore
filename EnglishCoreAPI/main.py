@@ -1,13 +1,14 @@
 import socket
 from fastapi import FastAPI
 import uvicorn
+from Routers import Students
 from Routers import Login
 from Routers import Teachers
 from Routers import Activities
 
 app = FastAPI()
 
-
+app.include_router(Students.StudentsR)
 app.include_router(Teachers.TeachersR)
 app.include_router(Login.Login)
 app.include_router(Activities.Activities)
