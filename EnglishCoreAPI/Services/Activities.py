@@ -1,4 +1,4 @@
-from Dataclases.Activities import ActivityPreview,Units
+from Dataclases.Activities import *
 from Dataclases.Teachers import StudetnsPreview
 from Firebase.firebase import db
 class ActivitiesService:
@@ -63,4 +63,50 @@ class ActivitiesService:
             Practice=ActivityPreview(ID=Practice.id,Name=Practice_Data["Nombre"])
             Practice_List.append(Practice)
         return(Practice_List)
-        
+    
+    def GetAssignedActivities(ID:str):
+        Group_ref=db.collection("Groups").document(ID)
+        Acts_ref=Group_ref.collection("AsignedActivities")
+        AsiggnedActs=[]
+        for act in Acts_ref.stream():
+            data=act.to_dict()
+            Act=data["Activity"].get().to_dict()
+            Collection_ref=act.reference.collection("Answers")
+            if any( Collection_ref.limit(1).stream()):
+                ActPre=AsignedView(HasAnswers=True,Act=ActivityPreview(Name=Act.get("Nombre"),ID=act.id))
+            else:
+                ActPre=AsignedView(HasAnswers=False,Act=ActivityPreview(Name=Act.get("Nombre"),ID=act.id))
+            AsiggnedActs.append(ActPre)
+        return AsiggnedActs
+    def GetAssignedExams(ID:str):
+        Group_ref=db.collection("Groups").document(ID)
+        Exams_ref=Group_ref.collection("AsignedExams")
+        AsiggnedExams=[]
+        for Exam in Exams_ref.stream():
+            data=Exam.to_dict()
+            Exam_doc=data["Activity"].get().to_dict()
+            Collection_ref=Exam.reference.collection("Answers")
+            if any( Collection_ref.limit(1).stream()):
+                ExamPre=AsignedView(HasAnswers=True,Act=ActivityPreview(Name=Exam_doc.get("Nombre"),ID=Exam.id))
+            else:
+                ExamPre=AsignedView(HasAnswers=False,Act=ActivityPreview(Name=Exam_doc.get("Nombre"),ID=Exam.id))
+            AsiggnedExams.append(ExamPre)
+        return AsiggnedExams
+    
+    def GetAssignedPractices(ID:str):
+        User_Doc=db.collection("users").document(ID).get()
+        Assigned=User_Doc.get("AsignedPractices")
+        AssignedPractices=[]
+        if(Assigned is None):
+            return AssignedPractices
+        for Practice in Assigned:
+            Practice_Doc=Practice.get()
+            Act=Practice_Doc.get("Practice").get().to_dict()
+            Collection_ref=Practice.collection("Answers")
+            if any( Collection_ref.limit(1).stream()):
+                PracPre=AsignedView(HasAnswers=True,Act=ActivityPreview(Name=Act.get("Nombre"),ID=Practice_Doc.id))
+            else:
+                PracPre=AsignedView(HasAnswers=False,Act=ActivityPreview(Name=Act.get("Nombre"),ID=Practice_Doc.id))
+            AssignedPractices.append(PracPre)
+        return AssignedPractices
+            

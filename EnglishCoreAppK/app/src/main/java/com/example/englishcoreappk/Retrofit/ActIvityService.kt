@@ -27,6 +27,21 @@ interface ActIvityService{
 
     @POST("/AsiggnActivity")
     fun AssignActivity(@Body request: AsignActivityPck): Call<String>
+
+    @POST("/AsiggnExam")
+    fun AssignExam(@Body request: AsignExamPck): Call<String>
+
+    @POST("/AsiggnPractice")
+    fun AssignPractice(@Body request: AsignPracticePck): Call<String>
+
+    @POST("/GetAssignedActivities")
+    fun GetAssignedActivities(@Body request: ActivityRequest): Call<List<AsignedView>>
+
+    @POST("/GetAssignedExams")
+    fun GetAssignedExams(@Body request: ActivityRequest): Call<List<AsignedView>>
+
+    @POST("/GetAssignedExams")
+    fun GetAssignedPractices(@Body request: ActivityRequest): Call<List<AsignedView>>
 }
 data class ActivityRequest(
     val ID: String
@@ -34,6 +49,10 @@ data class ActivityRequest(
 data class ActivityPreview(
     var Name: String,
     var ID: String
+)
+data class AsignedView(
+    var HasAnswers: Boolean,
+    var Act: ActivityPreview
 )
 data class Units(
     var ID: String,
@@ -44,11 +63,22 @@ data class PracticesPck(
     var Students:List<StudentPreview>,
     var Practices:List<ActivityPreview>
 )
-
 data class AsignActivityPck(
     var GroupID: String,
-    var UnitID: String,
+    var UnitID: String="",
     var ActivityID: String
+)
+data class AsignPracticePck(
+    var TeacherID: String,
+    var StudentID: String,
+    var PracticeID: String
+)
+data class AsignExamPck(
+    var GroupID: String,
+    var ExamID: String,
+    var Minutes: Int,
+    var Tries: Int,
+    var Date: String
 )
 @Stable
 data class Activity(

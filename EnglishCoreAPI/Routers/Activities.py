@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from Dataclases.Activities import *
 from Firebase.firebase import db
 from Services.Activities import ActivitiesService
+from google.cloud import firestore
 
 Activities=APIRouter()
 
@@ -67,4 +68,43 @@ def AssignActivity(Data:AsignActivityPck):
     Asigned_Colection=Group_Ref.collection("AsignedActivities")
     NAsigment={"Activity":Activity_ref}
     doc_ref = Asigned_Colection.add(NAsigment)
-    return {"message": "Asignada correctamente"}
+    return "Asignada correctamente"
+
+@Activities.post("/AsiggnExam")
+def AssignExam(Data:AsignExamPck):
+    Group_Ref=db.collection("Groups").document(Data.GroupID)
+    Group_Doc=Group_Ref.get()
+    level_ref=Group_Doc.get("Level")
+    Exam_Colection=level_ref.collection("exams")
+    Exam_ref=Exam_Colection.document(Data.ExamID)
+    Asigned_Colection=Group_Ref.collection("AsignedExams")
+    NAsigment={"Activity":Exam_ref,"Tries":Data.Tries,"Date":Data.Date,"Min":Data.Minutes}
+    Asigned_Colection.add(NAsigment)
+    return "Asignada correctamente"
+
+@Activities.post("/AsiggnPractice")
+def AssignPractice(Data:AsignPracticePck):
+    Teacher_ref=db.collection("users").document(Data.TeacherID)
+    Student_ref=db.collection("users").document(Data.StudentID)
+    Practice_ref=Teacher_ref.collection("Practices").document(Data.PracticeID)
+    NAsigment={"Practice":Practice_ref}
+    Asignment_Ref=Student_ref.collection("Practices").add(NAsigment)
+    Teacher_ref.update({
+        "AsignedPractices":firestore.ArrayUnion([Asignment_Ref[1]])
+    })  
+    return "Asignada correctamente"
+
+@Activities.post("/GetAssignedActivities")
+def GetAssignedActivities(Data:ActivityRequest):
+    Asigned=ActivitiesService.GetAssignedActivities(Data.ID)
+    return Asigned
+
+@Activities.post("/GetAssignedExams")
+def GetAssignedExams(Data:ActivityRequest):
+    Asigned=ActivitiesService.GetAssignedExams(Data.ID)
+    return Asigned
+
+@Activities.post("/GetAssignedPractices")
+def GetAssignedPractices(Data:ActivityRequest):
+    Asigned=ActivitiesService.GetAssignedPractices(Data.ID)
+    return Asigned

@@ -95,7 +95,100 @@ object ActivityRepository {
             }
 
             override fun onFailure(call: Call<String?>, t: Throwable) {
-                TODO("Not yet implemented")
+                print("A")
+            }
+        })
+    }
+
+    fun AsignExam(GroupID: String, ActivityID: String, Tries: Int, Min: Int, Date: String, callback:(String)-> Unit){
+        var Data= AsignExamPck(GroupID,ActivityID,Min,Tries,Date)
+        api.AssignExam(Data).enqueue(object: Callback<String>{
+            override fun onResponse(
+                call: Call<String?>,
+                response: Response<String?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                print("A")
+            }
+        })
+    }
+
+    fun AsignPractice(TeacherID: String, StudentID: String, PracticeID: String, callback:(String)-> Unit){
+        var Data= AsignPracticePck(TeacherID,StudentID,PracticeID)
+        api.AssignPractice(Data).enqueue(object: Callback<String>{
+            override fun onResponse(
+                call: Call<String?>,
+                response: Response<String?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                print("A")
+            }
+        })
+    }
+
+    fun GetActsAsigned(GroupID: String,callback: (List<AsignedView>) -> Unit){
+        var Request=ActivityRequest(GroupID)
+        api.GetAssignedActivities(Request).enqueue(object: Callback<List<AsignedView>> {
+            override fun onResponse(
+                call: Call<List<AsignedView>?>,
+                response: Response<List<AsignedView>?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(
+                call: Call<List<AsignedView>?>,
+                t: Throwable
+            ) {
+                callback(emptyList())
+            }
+
+        })
+
+    }
+
+    fun GetExamAsigned(GroupID: String,callback: (List<AsignedView>) -> Unit){
+        var Request=ActivityRequest(GroupID)
+        api.GetAssignedExams(Request).enqueue(object: Callback<List<AsignedView>> {
+            override fun onResponse(
+                call: Call<List<AsignedView>?>,
+                response: Response<List<AsignedView>?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(
+                call: Call<List<AsignedView>?>,
+                t: Throwable
+            ) {
+                callback(emptyList())
+            }
+
+        })
+
+    }
+
+    fun GetPracticesAsigned(GroupID: String,callback: (List<AsignedView>) -> Unit){
+        var Request=ActivityRequest(GroupID)
+        api.GetAssignedPractices(Request).enqueue(object: Callback<List<AsignedView>> {
+            override fun onResponse(
+                call: Call<List<AsignedView>?>,
+                response: Response<List<AsignedView>?>
+            ) {
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(
+                call: Call<List<AsignedView>?>,
+                t: Throwable
+            ) {
+                callback(emptyList())
             }
 
         })

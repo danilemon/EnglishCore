@@ -19,8 +19,24 @@ class PracticesPck(BaseModel):
 
 class AsignActivityPck(BaseModel):
     GroupID:str
-    UnitID:str
+    UnitID:str=""
     ActivityID:str
+
+class AsignExamPck(BaseModel):
+    GroupID:str
+    ExamID:str
+    Minutes:int
+    Tries:int
+    Date:str
+
+class AsignPracticePck(BaseModel):
+    TeacherID:str
+    StudentID:str
+    PracticeID:str
+
+class AsignedView(BaseModel):
+    Act:ActivityPreview
+    HasAnswers:bool
 
 
 class Activity(BaseModel):
