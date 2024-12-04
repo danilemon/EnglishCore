@@ -35,7 +35,7 @@ interface ActIvityService{
     fun AssignPractice(@Body request: AsignPracticePck): Call<String>
 
     @POST("/GetAssignedActivities")
-    fun GetAssignedActivities(@Body request: ActivityRequest): Call<List<AsignedView>>
+    fun GetAssignedActivities(@Body request: ActivityRequest): Call<List<UnitViews>>
 
     @POST("/GetAssignedExams")
     fun GetAssignedExams(@Body request: ActivityRequest): Call<List<AsignedView>>
@@ -50,15 +50,20 @@ data class ActivityPreview(
     var Name: String,
     var ID: String
 )
+
+//Views de actividades asignadas
+data class UnitViews(
+    val Name: String,
+    val ID: String,
+    val Acts: List<AsignedView>
+)
 data class AsignedView(
     var HasAnswers: Boolean,
     var Act: ActivityPreview
 )
-data class Units(
-    var ID: String,
-    var Name: String,
-    var Activities: List<ActivityPreview>
-)
+
+
+//PAaquetes oara asignar actividades
 data class PracticesPck(
     var Students:List<StudentPreview>,
     var Practices:List<ActivityPreview>
@@ -80,6 +85,13 @@ data class AsignExamPck(
     var Tries: Int,
     var Date: String
 )
+data class Units(
+    var ID: String,
+    var Name: String,
+    var Activities: List<ActivityPreview>
+)
+
+//Actividades
 @Stable
 data class Activity(
         val ID:String,

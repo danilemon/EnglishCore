@@ -34,10 +34,15 @@ class AsignPracticePck(BaseModel):
     StudentID:str
     PracticeID:str
 
+class UnitViews(BaseModel):
+    Unit:int
+    Name:str
+    ID:str
+    Acts:list
+
 class AsignedView(BaseModel):
     Act:ActivityPreview
     HasAnswers:bool
-
 
 class Activity(BaseModel):
     Name:str

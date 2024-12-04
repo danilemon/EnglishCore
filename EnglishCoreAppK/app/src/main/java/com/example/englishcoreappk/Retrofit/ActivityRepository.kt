@@ -132,18 +132,18 @@ object ActivityRepository {
         })
     }
 
-    fun GetActsAsigned(GroupID: String,callback: (List<AsignedView>) -> Unit){
+    fun GetActsAsigned(GroupID: String,callback: (List<UnitViews>) -> Unit){
         var Request=ActivityRequest(GroupID)
-        api.GetAssignedActivities(Request).enqueue(object: Callback<List<AsignedView>> {
+        api.GetAssignedActivities(Request).enqueue(object: Callback<List<UnitViews>> {
             override fun onResponse(
-                call: Call<List<AsignedView>?>,
-                response: Response<List<AsignedView>?>
+                call: Call<List<UnitViews>?>,
+                response: Response<List<UnitViews>?>
             ) {
                 callback(response.body()!!)
             }
 
             override fun onFailure(
-                call: Call<List<AsignedView>?>,
+                call: Call<List<UnitViews>?>,
                 t: Throwable
             ) {
                 callback(emptyList())

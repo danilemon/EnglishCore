@@ -33,7 +33,7 @@ data class SpinerItem(
 )
 
 @Composable
-fun Spiner(Options:List<SpinerItem>,Result:(Index: Int)-> Unit) {
+fun Spiner(Options:List<SpinerItem>, Mod: Modifier= Modifier, Result:(Index: Int)-> Unit) {
 
     var expanded by remember { mutableStateOf(false) }
     var Selected by remember { mutableStateOf("---") }
@@ -42,14 +42,17 @@ fun Spiner(Options:List<SpinerItem>,Result:(Index: Int)-> Unit) {
         Selected="---"
     }
 
+    val BaseModifier=Mod
+        .width(75.dp)
+        .border(1.dp, Color.Gray,) // Borde similar a un Spinner
+        .clickable {
+            expanded = !expanded
+        }
+
+
 
     Box(
-        modifier = Modifier
-            .width(75.dp)
-            .border(1.dp, Color.Gray,) // Borde similar a un Spinner
-            .clickable {
-                expanded = !expanded
-            } // Asegura que el tamaño del menú se ajuste al contenido
+        modifier = BaseModifier // Asegura que el tamaño del menú se ajuste al contenido
     ) {
         // Componente que actúa como el botón desplegable
         Row(

@@ -53,6 +53,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.englishcoreappk.Activities.AsignedActsView
 import com.example.englishcoreappk.Retrofit.StudentInfo
 import com.example.englishcoreappk.Retrofit.UserData
 
@@ -85,11 +86,16 @@ fun GroupsNavigationHost(navController: NavHostController,Group: Groups){
         composable("Attendance"){
             AttendanceList(Group)
         }
+        composable("AsignedActivities"){
+            AsignedActsView(Group.ID!!,false,true)
+        }
+        composable("AsignedExams"){
+            AsignedActsView(Group.ID!!,true,false)
+        }
     }
 
 
 }
-
 
 @Composable
 fun GroupsScreen(navController: NavController) {
@@ -161,8 +167,6 @@ fun GroupItem(Group: Groups,BGcolor:Int,GroupMenu:()->Unit){
 
 }
 
-
-
 @Composable
 fun GroupMenu(Group: Groups,navController: NavController){
 
@@ -198,7 +202,7 @@ fun GroupMenu(Group: Groups,navController: NavController){
                     .background(Color(0xffDB162F))
                     .clickable {
                         navController.navigate("StudentsList")
-                               },
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Lista de alumnos", color = Color.Black,style = TextStyle(
@@ -233,7 +237,10 @@ fun GroupMenu(Group: Groups,navController: NavController){
                     .fillMaxWidth() // Asegura que el Box ocupe todo el ancho
                     .padding(10.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xff3A6EA5)),
+                    .background(Color(0xff3A6EA5))
+                    .clickable {
+                        navController.navigate("AsignedActivities")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Tareas", color = Color.Black,style = TextStyle(
@@ -247,7 +254,10 @@ fun GroupMenu(Group: Groups,navController: NavController){
                     .fillMaxWidth() // Asegura que el Box ocupe todo el ancho
                     .padding(10.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xff3A6EA5)),
+                    .background(Color(0xff3A6EA5))
+                    .clickable{
+                        navController.navigate("AsignedExams")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = "Examenes", color = Color.Black,style = TextStyle(
@@ -343,9 +353,11 @@ fun ListItem(Student:StudentPreview,StudentInfo:()->Unit){
                     .size(20.dp) // Tamaño del círculo
 
             ) {
-                Canvas(modifier = Modifier.fillMaxSize().clickable {
-                    StudentInfo()
-                }) {
+                Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .clickable {
+                        StudentInfo()
+                    }) {
                     drawCircle(
                         color = Color.Black, // Color del borde
                         radius = size.minDimension / 2, // Radio del círculo
@@ -380,7 +392,9 @@ fun ShowStudentInfo(StudentID: String,Group: Groups){
                 ) {
                     Text(Student.value?.Name ?: "",modifier = Modifier.weight(1f))
                     Spacer(Modifier.height(20.dp))
-                    Row(modifier=Modifier.fillMaxWidth().weight(1f)){
+                    Row(modifier= Modifier
+                        .fillMaxWidth()
+                        .weight(1f)){
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp),modifier = Modifier.weight(1f)) {
                             Text("Telefono:")
                             Text(Student.value?.Cellphone?:"")
@@ -395,7 +409,9 @@ fun ShowStudentInfo(StudentID: String,Group: Groups){
                     Spacer(Modifier.height(20.dp))
                     Text("Informacion del grupo",modifier = Modifier.weight(1f))
                     Spacer(Modifier.height(20.dp))
-                    Row(modifier=Modifier.fillMaxWidth().weight(1f),
+                    Row(modifier= Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)){
 
                         Text(text = buildAnnotatedString {
@@ -478,9 +494,11 @@ fun AttendanceList(Group: Groups){
                         }
                     }
                 }
-                Button(modifier = Modifier.fillMaxWidth(0.7f)
+                Button(modifier = Modifier
+                    .fillMaxWidth(0.7f)
                     .padding(20.dp)
-                    .height(50.dp).align(Alignment.BottomCenter)
+                    .height(50.dp)
+                    .align(Alignment.BottomCenter)
                     , onClick = {},) { Text(
                     text = "Guardar",
                     color = Color.White // Color del texto
@@ -499,8 +517,8 @@ fun AttendanceItem(Student:StudentPreview,Attendance:(Boolean)->Unit){
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            .border(2.dp,Color.Black)
-            .background( Color(0xffC4C6E7) ) // Aumenté la altura para mejor visualización
+            .border(2.dp, Color.Black)
+            .background(Color(0xffC4C6E7)) // Aumenté la altura para mejor visualización
     ) {
         Box(
             Modifier.fillMaxSize()

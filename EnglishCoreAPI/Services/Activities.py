@@ -66,18 +66,28 @@ class ActivitiesService:
     
     def GetAssignedActivities(ID:str):
         Group_ref=db.collection("Groups").document(ID)
-        Acts_ref=Group_ref.collection("AsignedActivities")
-        AsiggnedActs=[]
-        for act in Acts_ref.stream():
+        Asigned_Acts_ref=Group_ref.collection("AsignedActivities")
+        AsiggnedActs={}
+        for act in Asigned_Acts_ref.stream():
             data=act.to_dict()
             Act=data["Activity"].get().to_dict()
+            Act_ref=data["Activity"]
+            Unit_Ref=Act_ref.parent.parent
             Collection_ref=act.reference.collection("Answers")
+            if Unit_Ref.id in AsiggnedActs:
+                Unit=AsiggnedActs[Unit_Ref.id]
+            else:
+                Unit_Doc= Unit_Ref.get()
+                Unit=UnitViews(Name=Unit_Doc.get("Name"),Unit=Unit_Doc.get("Unit"),ID=Unit_Doc.id,Acts=[]) 
+                AsiggnedActs[Unit.ID]=Unit
             if any( Collection_ref.limit(1).stream()):
                 ActPre=AsignedView(HasAnswers=True,Act=ActivityPreview(Name=Act.get("Nombre"),ID=act.id))
             else:
                 ActPre=AsignedView(HasAnswers=False,Act=ActivityPreview(Name=Act.get("Nombre"),ID=act.id))
-            AsiggnedActs.append(ActPre)
-        return AsiggnedActs
+            Unit.Acts.append(ActPre)
+        return list(AsiggnedActs.values())
+    
+
     def GetAssignedExams(ID:str):
         Group_ref=db.collection("Groups").document(ID)
         Exams_ref=Group_ref.collection("AsignedExams")
