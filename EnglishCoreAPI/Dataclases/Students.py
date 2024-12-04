@@ -15,5 +15,10 @@ class StudentData(BaseModel):
 class GetStudentReminds(BaseModel):
     Title: str
     ProfessorName: str
-    Content: str
     Date: str
+
+class GetStudentTickets(BaseModel):
+    TicketID: int
+    Date: str
+    Description: str
+    ImageURL: str

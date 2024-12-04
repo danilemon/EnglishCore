@@ -17,6 +17,9 @@ interface StudentService {
     @POST("/GetStudentReminders")
     fun getStudentReminders(@Body request: GetStudentDataRequest): Call<List<StudentReminders>>
 
+    @POST("/GetStudentTickets")
+    fun getStudentTickets(@Body request: GetStudentDataRequest): Call<List<StudentTickets>>
+
 }
 
 data class GetStudentDataRequest(
@@ -37,6 +40,12 @@ data class StudentData(
 data class StudentReminders(
     val Title: String,
     val ProfessorName: String,
-    val Content: String,
     val Date: String
+)
+
+data class StudentTickets(
+    val TicketID: Int,
+    val Date: String,
+    val Description: String,
+    val ImageURL: String
 )

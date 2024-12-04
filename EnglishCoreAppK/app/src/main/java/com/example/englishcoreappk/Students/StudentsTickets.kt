@@ -1,30 +1,39 @@
 package com.example.englishcoreappk.Students
 
-import StudentData
 import StudentReminders
+import StudentTickets
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,44 +46,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.Retrofit.UserData
-import com.example.englishcoreappk.Teachers.BottomNavigationBar
-import com.example.englishcoreappk.Teachers.NavigationHost
-import com.example.englishcoreappk.Teachers.ShowView
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
-class StudentsPending : ComponentActivity() {
+object SelectedImageManager {
+    val selectedImageUri = mutableStateOf<String?>(null)
+}
+
+class StudentsTickets: ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             EnglishCoreAppKTheme {
-                PreviewPending()
+                ShowReceiptsView()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data?.data?.toString()
+            selectedImageUri?.let {
+                // Guarda la URI en un estado compartido o pásala a tu Composable
+                SelectedImageManager.selectedImageUri.value = it
             }
         }
     }
 }
 
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ShowStudentPending() {
+fun ShowReceiptsView(){
     val context = LocalContext.current
     val userrrr = UserData.User
     var isLoadingProfile = remember { mutableStateOf(true) } // Estado para cargar
-    var remindersList by remember { mutableStateOf<List<StudentReminders>?>(emptyList()) }
-    var selectedReminder by remember { mutableStateOf<StudentReminders?>(null) }
+    var ticketsList by remember { mutableStateOf<List<StudentTickets>?>(emptyList()) }
+    var selectedReminder by remember { mutableStateOf<StudentTickets?>(null) }
 
 
     // Cargar datos del estudiante y recordatorios
@@ -86,19 +106,19 @@ fun ShowStudentPending() {
 
 
         LaunchedEffect(Unit) {
-            StudentRepository.GetStudentReminders(studentDocID = userrrr) { reminders ->
-                println("Reminders recibidos del servidor: $reminders")
+            StudentRepository.GetStudentTickets(studentDocID = userrrr) { tickets ->
+                println("Reminders recibidos del servidor: $tickets")
 
-                if (reminders == null || reminders.isEmpty()) {
+                if (tickets == null || tickets.isEmpty()) {
                     println("No se encontraron recordatorios o los datos son nulos.")
-                    remindersList = emptyList()
+                    ticketsList = emptyList()
                 } else {
                     // Filtrar y limpiar datos nulos
-                    remindersList = reminders.mapNotNull { reminder ->
-                        if (reminder.ProfessorName != null && reminder.Title != null && reminder.Date != null) {
-                            reminder
+                    ticketsList = tickets.mapNotNull { ticket ->
+                        if (ticket.Description != null && ticket.ImageURL != null && ticket.Date != null) {
+                            ticket
                         } else {
-                            println("Recordatorio inválido encontrado: $reminder")
+                            println("Recordatorio inválido encontrado: $ticket")
                             null
                         }
                     }
@@ -148,6 +168,18 @@ fun ShowStudentPending() {
                     }
                 },
 
+                floatingActionButton = {
+                    ExtendedFloatingActionButton(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
+                            (context as? Activity)?.startActivityForResult(intent, 1001)
+                        },
+                        icon = { Icon(Icons.Filled.Add, "Extended floating action button.") },
+                        text = { Text(text = "Upload a ticket") },
+                    )
+                }
+
+
 
                 ) { contentPadding ->
                 Box(
@@ -167,7 +199,7 @@ fun ShowStudentPending() {
                         Text(
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = 25.sp,
-                            text = "Pendings",
+                            text = "Tickets",
                             color = Color.Black,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                                 .padding(top = 16.dp)
@@ -175,13 +207,48 @@ fun ShowStudentPending() {
                         LazyColumn(
                             modifier = Modifier
                                 .padding(top = 20.dp)
-                                .background(Color(0xff2e4053))
+                                .background(Color(0xff34495e))
                                 .fillMaxSize()
                         ) {
-                            if (remindersList.isNullOrEmpty()) {
+                            item{
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    // Mostrar y eliminar la imagen seleccionada
+                                    SelectedImageManager.selectedImageUri.value?.let { uri ->
+                                        Image(
+                                            painter = rememberImagePainter(data = uri),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .size(200.dp)
+                                                .padding(16.dp)
+                                        )
+                                    Row(modifier = Modifier.padding(6.dp)) {
+                                        Button(
+                                            onClick = { "HELLO" },
+                                            modifier = Modifier.padding(top = 8.dp)
+                                        ) {
+                                            Text("Upload ticket")
+                                        }
+                                        Button(
+                                        onClick = { SelectedImageManager.selectedImageUri.value = null },
+                                        modifier = Modifier.padding(top = 8.dp).background(Color.Transparent)
+                                    ) {
+                                        Text("Cancel upload", color = Color.White)
+                                    }
+
+                                         }
+
+                                    } ?: run {
+                                        Text("There's not an image selected yet", Modifier.padding(16.dp), color = Color.White)
+                                    }
+                                }
+                        }
+                            if (ticketsList.isNullOrEmpty()) {
                                 item {
                                     Text(
-                                        text = "No pending reminders.",
+                                        text = "You haven't uploaded a ticket yet.",
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                         modifier = Modifier
@@ -191,87 +258,68 @@ fun ShowStudentPending() {
                                     )
                                 }
                             } else {
-                                remindersList?.forEach { reminder ->
+                                ticketsList?.forEach { reminder ->
                                     item {
-                                        PendingCards(
-                                            professorname = reminder.ProfessorName,
-                                            title = reminder.Title,
+                                        StudentTickets(
+                                            title = reminder.Description,
                                             date = reminder.Date,
                                             modifier = Modifier
                                                 .padding(8.dp)
                                                 .fillMaxWidth()
-                                                .clickable {
-                                                    // Abre el diálogo con los detalles del recordatorio
-                                                    selectedReminder = reminder
-                                                }
                                         )
                                     }
                                 }
                             }
+
                         }
                     }
                 }
 
             }
-            // Mostrar el diálogo cuando se selecciona un recordatorio
-            selectedReminder?.let { reminder ->
-                ReminderDetailsDialog(reminder = reminder) {
-                    // Cierra el diálogo
-                    selectedReminder = null
-                }
-            }
         }
     }
 
 }
 
 @Composable
-fun PendingCards(professorname: String, title: String, date: String, modifier: Modifier = Modifier) {
+fun StudentTickets(title: String, date: String, modifier: Modifier)
+{
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(130.dp)
+            .height(130.dp) // Ajusta la altura de las tarjetas
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White)
+            .background(Color.White) // Coloca un color de fondo por defecto
             .clickable { /* Acción cuando se clickea la tarjeta */ }
     ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(16.dp)
-        ) {
-            Text(text = professorname, fontWeight = FontWeight.Bold, color = Color.Black)
-            Text(text = title, color = Color.Gray)
-            Text(text = date, color = Color.LightGray, fontSize = 12.sp)
+
+        Column(modifier = Modifier
+            .align(Alignment.CenterStart)
+            .padding(16.dp))
+        {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+
+            )
+
+            Text(
+                text = date,
+                color = Color.Gray
+            )
         }
+
     }
 }
-@Composable
-fun ReminderDetailsDialog(reminder: StudentReminders, onDismiss: () -> Unit) {
-    androidx.compose.material3.AlertDialog(
-        onDismissRequest = { onDismiss() },
-        title = {
-            Text(text = "Reminder Details", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        },
-        text = {
-            Column {
-                Text(text = "Professor: ${reminder.ProfessorName}", fontSize = 16.sp)
-                Text(text = "Title: ${reminder.Title}", fontSize = 16.sp)
-                Text(text = "Date: ${reminder.Date}", fontSize = 16.sp) }
-        },
-        confirmButton = {
-            androidx.compose.material3.Button(onClick = { onDismiss() }) {
-                Text(text = "Close")
-            }
-        }
-    )
-}
+
+
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewPending() {
+fun PreviewTickets() {
     EnglishCoreAppKTheme {
-        ShowStudentPending()
+        ShowReceiptsView()
     }
 }
 

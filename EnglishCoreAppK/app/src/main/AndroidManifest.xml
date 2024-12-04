@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
 
@@ -46,6 +47,10 @@
             android:theme="@style/Theme.EnglishCoreAppK"/>
 
         <activity android:name=".Students.StudentsScores"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+
+        <activity android:name=".Students.StudentsTickets"
             android:exported="false"
             android:theme="@style/Theme.EnglishCoreAppK"/>
 

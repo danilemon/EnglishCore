@@ -75,4 +75,31 @@ object StudentRepository {
         })
     }
 
+    fun GetStudentTickets(studentDocID: String, callback: (List<StudentTickets>?) -> Unit) {
+        // Construir el cuerpo de la solicitud
+        val request = GetStudentDataRequest(StudentDocId = studentDocID)
+
+        // Llamar al endpoint de la API
+        api.getStudentTickets(request).enqueue(object : Callback<List<StudentTickets>> {
+            override fun onResponse(
+                call: Call<List<StudentTickets>>,
+                response: Response<List<StudentTickets>>
+            ) {
+                if (response.isSuccessful) {
+                    // Devolver la lista de recordatorios
+                    val ticketsList = response.body()
+                    callback(ticketsList)
+                } else {
+                    // Devolver null en caso de error
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<List<StudentTickets>>, t: Throwable) {
+                // Devolver null si falla la solicitud
+                callback(null)
+            }
+        })
+    }
+
 }

@@ -188,6 +188,18 @@ fun ShowStudentView() {
                             }
                         )
                     }
+
+                    item {
+                        SectionCard(
+                            title = "TICKETS",
+                            imageResource = R.drawable.harvard,
+                            modifier = Modifier.padding(16.dp),
+                            onClick = {
+                                val intent = Intent(context, StudentsTickets::class.java)
+                                context.startActivity(intent)
+                            }
+                        )
+                    }
                 }
             }
 

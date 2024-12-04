@@ -1,6 +1,6 @@
 from typing import Dict, List
 from fastapi import APIRouter, HTTPException
-from Dataclases.Students import GetStudentDataRequest, StudentData, GetStudentReminds
+from Dataclases.Students import GetStudentDataRequest, StudentData, GetStudentReminds, GetStudentTickets
 from Firebase.firebase import db
 
 StudentsR = APIRouter()
@@ -70,10 +70,8 @@ def fetch_student_reminders(Data: GetStudentDataRequest):
         # Obtén el ID del profesor desde el recordatorio
         title= reminder_data.get('Title', '')
         professor_id = reminder_data.get('ProfessorID', '')
-        content= reminder_data.get('Content', '')
         date=reminder_data.get('Date', '')
         print(f"ID DEL PROFE recibido: {professor_id}")
-        print(f"Contenido: {content}")
         print(f"Fecha: {date}")
 
 
@@ -91,7 +89,6 @@ def fetch_student_reminders(Data: GetStudentDataRequest):
             GetStudentReminds(
                 Title=title,
                 ProfessorName=professor_name,
-                Content=content,
                 Date=date
             )
         )
@@ -102,3 +99,48 @@ def fetch_student_reminders(Data: GetStudentDataRequest):
         raise HTTPException(status_code=404, detail="No reminders found for the given student")
     
     return reminders_list
+
+@StudentsR.post('/GetStudentTickets', response_model=List[GetStudentTickets])
+def fetch_student_tickets(Data: GetStudentDataRequest):
+    # Accede al documento del usuario
+    print(f"StudentDocId recibido: {Data.StudentDocId}")
+
+    User_Ref = db.collection('users').document(Data.StudentDocId)
+    student_doc = User_Ref.get()
+
+    # Verifica si el documento existe
+    if not student_doc.exists:
+        print("Documento del estudiante no encontrado.")
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Accede a la subcolección 'reminders'
+    Tickets_Ref = User_Ref.collection('tickets')
+    tickets = Tickets_Ref.stream()
+
+    tickets_list = []
+    for ticket in tickets:
+        ticket_data = ticket.to_dict()
+        # Obtén el ID del profesor desde el recordatorio
+        ticketid= ticket_data.get('TicketID', '')
+        description = ticket_data.get('Description', '')
+        date=ticket_data.get('Date', '')
+        imageurl=ticket_data.get('ImageURL','')
+        print(f"Fecha: {date}")
+
+        
+        # Agrega el recordatorio al listado
+        tickets_list.append(
+            GetStudentTickets(
+                TicketID=ticketid,
+                Date=date,
+                Description=description,
+                ImageURL=imageurl
+            )
+        )
+    
+
+    # Si no se encontraron recordatorios
+    if not tickets_list:
+        raise HTTPException(status_code=404, detail="No tickets found for the given student")
+    
+    return tickets_list
