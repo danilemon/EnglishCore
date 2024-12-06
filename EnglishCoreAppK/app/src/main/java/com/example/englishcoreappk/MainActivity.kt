@@ -1,6 +1,7 @@
 package com.example.englishcoreappk
 
-
+import com.google.firebase.FirebaseApp
+import com.google.firebase.storage.FirebaseStorage
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
                 Welcome()
             }
         }
+        FirebaseApp.initializeApp(this)
+        val storage = FirebaseStorage.getInstance()
     }
 }
 
@@ -52,8 +55,8 @@ class MainActivity : ComponentActivity() {
 fun Welcome() {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var username by remember { mutableStateOf("mauri") }
-    var password by remember { mutableStateOf("hola123") }
+    var username by remember { mutableStateOf("gustavo") }
+    var password by remember { mutableStateOf("12345678") }
     var errorMessage by remember { mutableStateOf("") }
     var Register by remember  { mutableStateOf(true) }
 

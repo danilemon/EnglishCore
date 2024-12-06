@@ -1,4 +1,10 @@
+import android.net.Uri
 import com.example.englishcoreappk.Retrofit.RetrofitClient
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,5 +81,33 @@ object StudentRepository {
         })
     }
 
-}
+    fun GetStudentTickets(studentDocID: String, callback: (List<GetStudentTickets>?) -> Unit) {
+        // Construir el cuerpo de la solicitud
+        val request = GetStudentDataRequest(StudentDocId = studentDocID)
 
+        // Llamar al endpoint de la API
+        api.getStudentTickets(request).enqueue(object : Callback<List<GetStudentTickets>> {
+            override fun onResponse(
+                call: Call<List<GetStudentTickets>>,
+                response: Response<List<GetStudentTickets>>
+            ) {
+                if (response.isSuccessful) {
+                    // Devolver la lista de recordatorios
+                    val ticketsList = response.body()
+                    callback(ticketsList)
+                } else {
+                    // Devolver null en caso de error
+                    callback(null)
+                }
+            }
+
+            override fun onFailure(call: Call<List<GetStudentTickets>>, t: Throwable) {
+                // Devolver null si falla la solicitud
+                callback(null)
+            }
+        })
+    }
+
+
+
+}
