@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
 class GetGroupsRequest(BaseModel):
-    ID:int
+    ID:str
 
 class Groups(BaseModel):
-    ID:int
+    ID:str
     Days:str
     Hours:str
     Level:int
@@ -12,10 +12,10 @@ class Groups(BaseModel):
     TeacherID:int
 
 class StudetnsPreview(BaseModel):
-    ID:int
+    ID:str
     Name:str
 class StudentInfo(BaseModel):
-    ID:int
+    ID:str
     Name:str
     Cellphone:str
     Adrress:str

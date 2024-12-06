@@ -1,4 +1,5 @@
 package com.example.englishcoreappk.Retrofit
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -9,15 +10,15 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.0.4:5000"  // Cambia esto por la URL de tu API
-    val gson = GsonBuilder()
-        .registerTypeAdapter(Question::class.java, QuestionDeserializer())
+    private const val BASE_URL = "http://192.168.0.2:5000"  // Cambia esto por la URL de tu API
+    val gson: Gson = GsonBuilder()
+        .registerTypeAdapter(Question::class.java, QuestionDeserializer()) // Registra el deserializador
         .create()
 
     val instance: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))  // Usa Gson si tus respuestas están en formato JSON
+            .addConverterFactory(GsonConverterFactory.create(gson)) // Usa el Gson personalizado
             .build()
     }
 }

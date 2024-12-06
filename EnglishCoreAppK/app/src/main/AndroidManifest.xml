@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,13 +20,42 @@
             android:name=".Activities.TestActivity"
             android:exported="true"
             android:label="@string/title_activity_test"
+            android:theme="@style/Theme.EnglishCoreAppK" />
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true"
             android:theme="@style/Theme.EnglishCoreAppK" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Students.StudentsLevel"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"
+            />
+        <activity android:name=".Activities.ActivitiesList"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+
+        <activity android:name=".Activities.SectionList"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+        <activity android:name=".Students.StudentsPending"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+
+        <activity android:name=".Students.StudentsScores"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
+
+        <activity
+            android:name=".Students.StudentsDashboard"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK" />
+        <activity android:name=".Students.StudentsProfile"
+            android:exported="false"
+            android:theme="@style/Theme.EnglishCoreAppK"/>
         <activity
             android:name=".Teachers.Teachers_Menu"
             android:exported="false"
@@ -33,9 +63,17 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.EnglishCoreAppK"/>
+            android:theme="@style/Theme.EnglishCoreAppK" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 
 
     </application>
 
 </manifest>
+

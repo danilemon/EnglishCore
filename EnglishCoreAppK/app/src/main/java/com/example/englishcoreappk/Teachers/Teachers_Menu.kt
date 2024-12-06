@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,11 +61,16 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.example.englishcoreappk.Activities.ActivityWraper
+import com.example.englishcoreappk.Activities.ActivityWraperProfesor
+import com.example.englishcoreappk.Activities.AsignedActsView
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.Retrofit.Activity
 import com.example.englishcoreappk.Retrofit.ClosedQuestion
 import com.example.englishcoreappk.Retrofit.CompleteText
 import com.example.englishcoreappk.Retrofit.OpenQuestion
+import com.example.englishcoreappk.Retrofit.StudentPreview
+
+import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
 
@@ -235,13 +241,8 @@ fun NavigationHost(navController: NavHostController) {
             ActivitiesScreen()
         }
         composable("Practicas") {
-            var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","","")
-            var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
-            var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , then i {} my friend and we decided to have a {} Competition",listOf<String>("Playing","Saw","Running"),
-                listOf("Playing","Saw","Running")
-            )
-            var Act= Activity("lol","Actividad 1",1,"Verbos", listOf(OpenQ,ClosedQuestion,CompleteText))
-            ActivityWraper(Act)
+            // Creación de las preguntas
+            PracticeScreen()
         }
     }
 }
@@ -325,7 +326,7 @@ fun ActivitiesScreen() {
                             )
                         )
                 ){
-                Text(text = "Actividades",
+                Text(text = "Examanes",
                     color=Color.White,
                     fontSize = 30.sp,
                     modifier = Modifier
@@ -394,7 +395,42 @@ fun ActivitiesScreen() {
 
 @Composable
 fun PracticeScreen() {
-    Text(text = "Pantalla de configuración", modifier = Modifier.fillMaxSize())
+//    val openQ = OpenQuestion(1, "What is the meaning of the word", "Run", "", "")
+//    val closedQ = ClosedQuestion(2, "What is the meaning of this word", "Run", "",
+//        listOf("Correr", "Volar", "Nadar", "Comer", "Hablar"), "Correr")
+//    val completeTextQ = CompleteText(3, "Complete the following text", "use the words in the box", "",
+//        "Yesterday I was {} in the park, then I {} my friend and we decided to have a {} competition",
+//        listOf("Playing", "Saw", "Running"), listOf("Playing", "Saw", "Running"))
+//
+//// Creación de la actividad con las preguntas
+//
+//    val activity =
+//        Activity(
+//            "lol",
+//            "Actividad 1",
+//            1,
+//            "Verbos",
+//            listOf(openQ, closedQ, completeTextQ)
+//        )
+//
+//
+//    val answers = remember {
+//        mutableListOf(
+//            UserAnswer(true,"Correr"),
+//            UserAnswer( true,"Correr"),
+//            UserAnswer( true,listOf("Playing", "Saw", "Running"))
+//        )
+//    }
+//
+//    val student = remember {
+//        StudentPreview("DSADSA", "Daniel Lopez Aguilera")
+//    }
+//
+//// Llamada a la función con los parámetros
+//    ActivityWraperProfesor(activity, student, 10f,answers)
+    AsignedActsView(UserData.User,false,false){
+
+    }
 }
 
 

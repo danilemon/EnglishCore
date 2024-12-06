@@ -19,13 +19,13 @@ class TestActivity : ComponentActivity() {
                 /*val CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
                     listOf("")
                 )*/
-                var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","","")
-                var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
-                var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , then i {} my friend and we decided to have a {} Competition",listOf<String>("Playing","Saw","Running"),
-                    listOf("Playing","Saw","Running")
-                )
-                var Act= Activity("lol","Actividad 1",1,"Verbos", listOf(OpenQ,ClosedQuestion,CompleteText))
-                ActivityWraper(Act)
+//                var OpenQ= OpenQuestion(1,"What is the meaning of the word","Run","","")
+//                var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
+//                var CompleteText= CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , then i {} my friend and we decided to have a {} Competition",listOf<String>("Playing","Saw","Running"),
+//                    listOf("Playing","Saw","Running")
+//                )
+//                var Act= Activity("lol","Actividad 1",1,"Verbos", listOf(OpenQ,ClosedQuestion,CompleteText))
+//                ActivityWraper(Act)
             }
         }
     }

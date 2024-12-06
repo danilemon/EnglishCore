@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.sp
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 import com.example.englishcoreappk.Retrofit.LoginRepository
 import com.example.englishcoreappk.Teachers.Teachers_Menu
+import com.example.englishcoreappk.Students.StudentsDashboard
+import com.example.englishcoreappk.Students.startActivityWithAnimation
+import com.example.englishcoreappk.Retrofit.UserData
 
 
 class MainActivity : ComponentActivity() {
@@ -164,12 +167,17 @@ fun Welcome() {
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
 
-                                loginRepository.login(username, password) { success, error , IsStudent->
+                                loginRepository.login(username, password) { success, error , IsStudent, userDocId->
                                     if (success) {
-                                        if(IsStudent){
+                                        UserData.setUpUSR(userDocId ?: "error");
 
+                                        if(IsStudent){
+                                            val intent = Intent(context, StudentsDashboard::class.java)
+
+                                            context.startActivity(intent)
                                         }else{
                                             val intent = Intent(context, Teachers_Menu::class.java)
+
                                             context.startActivity(intent)
                                         }
                                     } else {
