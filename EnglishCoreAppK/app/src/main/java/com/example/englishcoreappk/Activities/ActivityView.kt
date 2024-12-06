@@ -134,8 +134,8 @@ fun ClosedQuestionView(Question:ClosedQuestion,Saved:String,answer:(Any)->Unit){
     Box(modifier = Modifier.fillMaxSize()){
         FlowRow(modifier=Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalArrangement = Arrangement.Center){
             var Selection by remember { mutableStateOf(Saved) }
-            for(i in 0..(Question.options.size)-1){
-                            var item  = Question.options[i] // La opción de la lista
+            for(i in 0..(Question.Options.size)-1){
+                            var item  = Question.Options[i] // La opción de la lista
                             var Lambda: (String) -> Unit ={ S:String->
                                 Selection=S
                                 answer(S)
@@ -178,8 +178,8 @@ fun LabeledRadioButon(s: String, selected: Boolean,
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun  CompleteTextView(Question:CompleteText,Saved:List<String>,answer:(Any)->Unit){
-    val TextSegmented = Question.text.split(" ").filter { it.isNotEmpty() }
-    val Answers = MutableList<String>(Question.answers.size){""}
+    val TextSegmented = Question.Text.split(" ").filter { it.isNotEmpty() }
+    val Answers = MutableList<String>(Question.Answers.size){""}
     var Counter = 0
     Box(modifier = Modifier.fillMaxSize()) {
         FlowRow(
@@ -192,7 +192,7 @@ fun  CompleteTextView(Question:CompleteText,Saved:List<String>,answer:(Any)->Uni
 
                 if (TextSegmented[i] == "{}") {
 
-                    Spiner(Question.options,Counter,Saved.getOrElse(Counter){""}){S,I->
+                    Spiner(Question.Options,Counter,Saved.getOrElse(Counter){""}){S,I->
                         Answers[I]=S
                         answer(Answers)
                     }
@@ -264,11 +264,11 @@ fun Spiner(Options:List<String>,Index:Int,Saved:String,Answer:(String,Int)->Unit
 @Composable
 fun ActivityPreview() {
     EnglishCoreAppKTheme {
-        var OpenQ=OpenQuestion(1,"What is the meaning of the word","Run","","")
-        var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
-        var CompleteText=CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
-            listOf("")
-        )
+//        var OpenQ=OpenQuestion(1,"What is the meaning of the word","Run","","")
+//        var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
+//        var CompleteText=CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
+//            listOf("")
+//        )
         //QuestionView(1,CompleteText)
     }
 }

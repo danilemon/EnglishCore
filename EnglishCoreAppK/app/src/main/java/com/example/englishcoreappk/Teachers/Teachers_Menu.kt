@@ -62,13 +62,15 @@ import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.example.englishcoreappk.Activities.ActivityWraper
 import com.example.englishcoreappk.Activities.ActivityWraperProfesor
+import com.example.englishcoreappk.Activities.AsignedActsView
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.Retrofit.Activity
 import com.example.englishcoreappk.Retrofit.ClosedQuestion
 import com.example.englishcoreappk.Retrofit.CompleteText
 import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.StudentPreview
-import com.example.englishcoreappk.Retrofit.UserAnswer
+
+import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
 
@@ -393,39 +395,42 @@ fun ActivitiesScreen() {
 
 @Composable
 fun PracticeScreen() {
-    val openQ = OpenQuestion(1, "What is the meaning of the word", "Run", "", "")
-    val closedQ = ClosedQuestion(2, "What is the meaning of this word", "Run", "",
-        listOf("Correr", "Volar", "Nadar", "Comer", "Hablar"), "Correr")
-    val completeTextQ = CompleteText(3, "Complete the following text", "use the words in the box", "",
-        "Yesterday I was {} in the park, then I {} my friend and we decided to have a {} competition",
-        listOf("Playing", "Saw", "Running"), listOf("Playing", "Saw", "Running"))
+//    val openQ = OpenQuestion(1, "What is the meaning of the word", "Run", "", "")
+//    val closedQ = ClosedQuestion(2, "What is the meaning of this word", "Run", "",
+//        listOf("Correr", "Volar", "Nadar", "Comer", "Hablar"), "Correr")
+//    val completeTextQ = CompleteText(3, "Complete the following text", "use the words in the box", "",
+//        "Yesterday I was {} in the park, then I {} my friend and we decided to have a {} competition",
+//        listOf("Playing", "Saw", "Running"), listOf("Playing", "Saw", "Running"))
+//
+//// Creación de la actividad con las preguntas
+//
+//    val activity =
+//        Activity(
+//            "lol",
+//            "Actividad 1",
+//            1,
+//            "Verbos",
+//            listOf(openQ, closedQ, completeTextQ)
+//        )
+//
+//
+//    val answers = remember {
+//        mutableListOf(
+//            UserAnswer(true,"Correr"),
+//            UserAnswer( true,"Correr"),
+//            UserAnswer( true,listOf("Playing", "Saw", "Running"))
+//        )
+//    }
+//
+//    val student = remember {
+//        StudentPreview("DSADSA", "Daniel Lopez Aguilera")
+//    }
+//
+//// Llamada a la función con los parámetros
+//    ActivityWraperProfesor(activity, student, 10f,answers)
+    AsignedActsView(UserData.User,false,false){
 
-// Creación de la actividad con las preguntas
-
-    val activity =
-        Activity(
-            "lol",
-            "Actividad 1",
-            1,
-            "Verbos",
-            listOf(openQ, closedQ, completeTextQ)
-        )
-
-
-    val answers = remember {
-        mutableListOf(
-            UserAnswer(true,"Correr"),
-            UserAnswer( true,"Correr"),
-            UserAnswer( true,listOf("Playing", "Saw", "Running"))
-        )
     }
-
-    val student = remember {
-        StudentPreview("DSADSA", "Daniel Lopez Aguilera")
-    }
-
-// Llamada a la función con los parámetros
-    ActivityWraperProfesor(activity, student, 10f,answers)
 }
 
 

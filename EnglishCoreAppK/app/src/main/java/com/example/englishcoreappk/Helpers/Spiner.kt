@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -33,23 +34,21 @@ data class SpinerItem(
 )
 
 @Composable
-fun Spiner(Options:List<SpinerItem>,Result:(Index: Int)-> Unit) {
-
+fun Spiner(Options:List<SpinerItem>, BoxMod: Modifier= Modifier, TextBoxMod: Modifier = Modifier, Result:(Index: Int)-> Unit) {
     var expanded by remember { mutableStateOf(false) }
     var Selected by remember { mutableStateOf("---") }
-
     if(Options.isEmpty()){
         Selected="---"
     }
-
-
+    val BaseModifier=BoxMod
+        .width(75.dp)
+        .height(25.dp)
+        .border(1.dp, Color.Gray,) // Borde similar a un Spinner
+        .clickable {
+            expanded = !expanded
+        }
     Box(
-        modifier = Modifier
-            .width(75.dp)
-            .border(1.dp, Color.Gray,) // Borde similar a un Spinner
-            .clickable {
-                expanded = !expanded
-            } // Asegura que el tamaño del menú se ajuste al contenido
+        modifier = BaseModifier // Asegura que el tamaño del menú se ajuste al contenido
     ) {
         // Componente que actúa como el botón desplegable
         Row(
@@ -76,7 +75,7 @@ fun Spiner(Options:List<SpinerItem>,Result:(Index: Int)-> Unit) {
             if(Options.isNotEmpty()) {
                 Options.forEachIndexed { i, option ->
                     DropdownMenuItem(
-                        modifier = Modifier.wrapContentWidth().wrapContentHeight(),
+                        modifier = TextBoxMod,
                         text = { Text(option.Sname) },
                         onClick = {
                             Selected = option.Sname

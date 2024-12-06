@@ -187,5 +187,15 @@ def populate_levels_with_activity_data():
                 })
 
     print("Se completó la creación de documentos en 'exams' y 'activities'.")
-# Ejecuta la función
-populate_levels_with_activity_data()
+
+def AgregarRespuestas():
+    Group_ref=db.collection("Groups").document("HMmvyGl9pDHaZCHLDUMQ")
+    Answer=Group_ref.collection("AsignedActivities").document("185aPlUm25MHRr20BQvd").collection("Answers").document("Un8DXcmSVIGVMnVJnYgo")
+    Answer.update({
+        "Answers":[{"1":{"Type":1,"Correct":True,"Value":1}},
+                    {"2":{"Type":2,"Correct":False,"Value":["Runing","Playing","Saw"]}},
+                    {"3":{"Type":3,"Correct":True,"Value":"Run"}}
+        ]
+    })
+    print(Answer)
+AgregarRespuestas()

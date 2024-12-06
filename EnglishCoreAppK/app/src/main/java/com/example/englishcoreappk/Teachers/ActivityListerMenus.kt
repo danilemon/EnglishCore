@@ -1,16 +1,14 @@
 package com.example.englishcoreappk.Teachers
 
-import android.widget.Spinner
-import androidx.compose.foundation.Image
+import android.app.DatePickerDialog
+
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,14 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -38,6 +31,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,10 +48,15 @@ import com.example.englishcoreappk.Retrofit.StudentPreview
 import com.example.englishcoreappk.Retrofit.Units
 import com.example.englishcoreappk.Retrofit.UserData
 
+import java.util.Calendar
+
 
 @Composable
 fun assignActivity(Dismiss:()->Unit){
     var isLoading by remember { mutableStateOf(true) }
+    var Respose by remember { mutableStateOf("") }
+    var Asigned by remember { mutableStateOf(false) }
+
     var UnitsGroup by remember { mutableStateOf<MutableList<List<Units>>>(mutableListOf()) }
 
     var SelectedGroup by remember { mutableStateOf< Pair<Groups?,Int>>(Pair(null,0))}
@@ -95,8 +95,21 @@ fun assignActivity(Dismiss:()->Unit){
                     textAlign = TextAlign.Center // Alineación del texto dentro del espacio
                 )
             }
-            if(isLoading){
+            if(isLoading && !Asigned){
                 CircularProgressIndicator( modifier = Modifier.align(Alignment.CenterHorizontally))
+            }else if(Asigned && isLoading){
+                Text(text = Respose, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                Button(modifier = Modifier.fillMaxWidth()
+                    .padding(20.dp)
+                    .height(50.dp), onClick = {
+                    Dismiss()
+                },colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFDB162F)),) {
+                    Text(
+                        text = "Ok",
+                        color = Color.White // Color del texto
+                    )
+                }
             }else{
             Spacer(Modifier.height(15.dp))
             Row(
@@ -172,7 +185,13 @@ fun assignActivity(Dismiss:()->Unit){
 
             Button(modifier = Modifier.fillMaxWidth()
                 .padding(20.dp)
-                .height(50.dp), onClick = {Dismiss()},colors = ButtonDefaults.buttonColors(
+                .height(50.dp), onClick = {
+                    ActivityRepository.AsignActivity(SelectedGroup.first!!.ID!!,SelectedUnit!!.ID,SelectedActivity!!.ID){it->
+                        Asigned=true
+                        Respose=it
+                        isLoading=true
+                    }
+                },colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFDB162F)),) {
                 Text(
                     text = "Guardar",
@@ -188,10 +207,16 @@ fun assignActivity(Dismiss:()->Unit){
 @Composable
 fun assignExam(Dismiss:()->Unit){
     var isLoading by remember { mutableStateOf(true) }
+    var Respose by remember { mutableStateOf("") }
+    var Asigned by remember { mutableStateOf(false) }
+
+    var SelectDate by remember {mutableStateOf(false)}
     var ExamsList by remember { mutableStateOf<MutableList<List<ActivityPreview>>>(mutableListOf())}
 
     var SelectedGroup by remember { mutableStateOf< Pair<Groups?,Int>>(Pair(null,0))}
     var SelectedExam by remember { mutableStateOf<ActivityPreview?>(null)}
+    var selectedDate by remember { mutableStateOf("No seleccionada") }
+
 
     var GroupsItems by remember { mutableStateOf<MutableList<SpinerItem>>(mutableListOf()) }
     var ExamItems by remember { mutableStateOf< MutableList<SpinerItem>>(mutableListOf())}
@@ -223,7 +248,22 @@ fun assignExam(Dismiss:()->Unit){
                     textAlign = TextAlign.Center // Alineación del texto dentro del espacio
                 )
             }
-            if(!isLoading) {
+            if(isLoading && !Asigned){
+                CircularProgressIndicator( modifier = Modifier.align(Alignment.CenterHorizontally))
+            }else if(Asigned && isLoading){
+                Text(text = Respose, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                Button(modifier = Modifier.fillMaxWidth()
+                    .padding(20.dp)
+                    .height(50.dp), onClick = {
+                    Dismiss()
+                },colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF3A6EA5)),) {
+                    Text(
+                        text = "Ok",
+                        color = Color.White // Color del texto
+                    )
+                }
+            }else {
                 Spacer(Modifier.height(15.dp))
                 Row(
                     modifier = Modifier
@@ -293,12 +333,11 @@ fun assignExam(Dismiss:()->Unit){
                         singleLine = true
                     )
                 }
-
                 Button(
                     modifier = Modifier.fillMaxWidth(0.5f)
                         .padding(20.dp)
                         .height(50.dp).align(Alignment.CenterHorizontally),
-                    onClick = {},
+                    onClick = {SelectDate=true},
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF3A6EA5)
                     ),
@@ -308,11 +347,22 @@ fun assignExam(Dismiss:()->Unit){
                         color = Color.White // Color del texto
                     )
                 }
+                Text(selectedDate)
+                if(SelectDate){
+                ShowDatePicker{it->
+                    SelectDate=false
+                    selectedDate=it
+                }}
                 Button(
                     modifier = Modifier.fillMaxWidth()
                         .padding(20.dp)
                         .height(50.dp),
-                    onClick = { Dismiss() },
+                    onClick = {
+                        ActivityRepository.AsignExam(SelectedGroup.first!!.ID!!,SelectedExam!!.ID,Tries,Min,selectedDate){it->
+                            Asigned=true
+                            Respose=it
+                            isLoading=true
+                    } },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF3A6EA5)
                     ),
@@ -322,8 +372,6 @@ fun assignExam(Dismiss:()->Unit){
                         color = Color.White // Color del texto
                     )
                 }
-            }else{
-                CircularProgressIndicator( modifier = Modifier.align(Alignment.CenterHorizontally))
             }
         }
     }
@@ -332,6 +380,8 @@ fun assignExam(Dismiss:()->Unit){
 @Composable
 fun assignPractice(Dismiss:()->Unit){
     var isLoading by remember { mutableStateOf(true) }
+    var Respose by remember { mutableStateOf("") }
+    var Asigned by remember { mutableStateOf(false) }
     var Practices by remember { mutableStateOf<PracticesPck?>(null) }
 
     var SelectedStudent by remember {mutableStateOf<StudentPreview?>(null)}
@@ -369,7 +419,22 @@ fun assignPractice(Dismiss:()->Unit){
                     textAlign = TextAlign.Center // Alineación del texto dentro del espacio
                 )
             }
-            if(!isLoading) {
+            if(isLoading && !Asigned){
+                CircularProgressIndicator( modifier = Modifier.align(Alignment.CenterHorizontally))
+            }else if(Asigned && isLoading){
+                Text(text = Respose, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                Button(modifier = Modifier.fillMaxWidth()
+                    .padding(20.dp)
+                    .height(50.dp), onClick = {
+                    Dismiss()
+                },colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF74007A)),) {
+                    Text(
+                        text = "Ok",
+                        color = Color.White // Color del texto
+                    )
+                }
+            }else {
                 Spacer(Modifier.height(15.dp))
                 Row(
                     modifier = Modifier
@@ -416,7 +481,11 @@ fun assignPractice(Dismiss:()->Unit){
                     modifier = Modifier.fillMaxWidth()
                         .padding(20.dp)
                         .height(50.dp),
-                    onClick = { Dismiss() },
+                    onClick = { ActivityRepository.AsignPractice(UserData.User,SelectedStudent!!.ID,SelectedPractice!!.ID){it->
+                        Asigned=true
+                        Respose=it
+                        isLoading=true
+                    } },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF74007A)
                     ),
@@ -426,15 +495,10 @@ fun assignPractice(Dismiss:()->Unit){
                         color = Color.White // Color del texto
                     )
                 }
-            }else{
-                CircularProgressIndicator( modifier = Modifier.align(Alignment.CenterHorizontally))
             }
         }
     }
 }
-
-
-
 
 fun GetGroupsData(callback: (MutableList<List<Units>>)-> Unit){
     var Groups = UserData.TeachersGroups
@@ -463,6 +527,24 @@ fun GetExams(callback: (MutableList<List<ActivityPreview>>)-> Unit){
     }
 }
 
+@Composable
+fun ShowDatePicker(onDateSelected: (String) -> Unit) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    // Crea y muestra un DatePickerDialog
+    DatePickerDialog(
+        context,
+        { _, selectedYear, selectedMonth, selectedDay ->
+            val date = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            onDateSelected(date) // Devuelve la fecha seleccionada
+        },
+        year, month, day
+    ).show()
+}
 @Preview(showBackground = true)
 @Composable
 fun PreviewAct(){

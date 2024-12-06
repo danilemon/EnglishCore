@@ -1,5 +1,7 @@
 package com.example.englishcoreappk.Activities
 
+import android.R
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +42,10 @@ import kotlin.String
 import kotlin.collections.List
 
 @Composable
-fun QuestionViewProfesor(index:Int, Question: Question,R:Any){
+fun OpenQuestionViewProfesor(index:Int, Question: OpenQuestion,R:Any,Back:()->Unit){
+    BackHandler {
+        Back()
+    }
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
         verticalArrangement = Arrangement.Top) {
@@ -48,20 +53,20 @@ fun QuestionViewProfesor(index:Int, Question: Question,R:Any){
         Column(modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
             verticalArrangement = Arrangement.Top) {
-            Text(text = index.toString()+". "+Question.questionQ,style = TextStyle(fontWeight = FontWeight.ExtraBold,color= Color.Black,fontSize = 25.sp  ))
+            Text(text = index.toString()+". "+Question.Question,style = TextStyle(fontWeight = FontWeight.ExtraBold,color= Color.Black,fontSize = 25.sp  ))
             Spacer(modifier = Modifier.size(10.dp))
             Box(modifier = Modifier.height(1.dp)
                 .fillMaxWidth()
                 .background(Color.Black))
-            if(Question.helpTextQ.isNotEmpty()){
+            if(Question.HelpText.isNotEmpty() && Question.HelpText !=null){
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(text = Question.helpTextQ, style = TextStyle(color= Color.Gray,fontWeight = FontWeight.Bold,fontSize = 20.sp))
             }
             Spacer(modifier = Modifier.size(10.dp))
-            if(Question.imgQ.isNotEmpty()){
+            if(Question.Img.isNotEmpty() &&  Question.Img!=null){
                 Spacer(modifier = Modifier.size(10.dp))
                 AsyncImage(
-                    model = Question.imgQ,
+                    model = Question.Img,
                     contentDescription = "Imagen desde URL",
                     modifier = Modifier.size(100.dp).weight(1f) // Tamaño ajustable
                 )
@@ -69,33 +74,101 @@ fun QuestionViewProfesor(index:Int, Question: Question,R:Any){
             }
         }
         Box(modifier = Modifier.weight(1.5f).fillMaxWidth()){
-            when(Question){
-                is OpenQuestion ->{
                     var Answer = ""
                     if (R is String){
                         Answer = R
                     }
                     OpenQuestionView(Answer)
-                }
-                is ClosedQuestion ->{
-                    var Answer = ""
-                    if (R is String){
-                        Answer = R
-                    }
-                    ClosedQuestionView(Question,Answer)
-                }
-                is CompleteText ->{
-                    var Answer: List<String> =List(Question.answers.size){""}
-                    if(R is List<*>){
-                        Answer=R as  List<String>
-                    }
-                    CompleteTextView(Question,Answer)
-                }
-            }
         }
-
     }
 }
+
+@Composable
+fun ClosedQuestionQuestionViewProfesor(index:Int, QuestionObj: ClosedQuestion,R:Any,Back:()->Unit){
+    var Question= ClosedQuestion(Type =QuestionObj.Type, Question=QuestionObj.Question, HelpText = QuestionObj.HelpText, Img = QuestionObj.Img, Options = QuestionObj.Options, Answer = QuestionObj.Answer )
+    BackHandler {
+        Back()
+    }
+    Column(modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
+        verticalArrangement = Arrangement.Top) {
+
+        Column(modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
+            verticalArrangement = Arrangement.Top) {
+            Text(text = index.toString()+". "+Question.Question,style = TextStyle(fontWeight = FontWeight.ExtraBold,color= Color.Black,fontSize = 25.sp  ))
+            Spacer(modifier = Modifier.size(10.dp))
+            Box(modifier = Modifier.height(1.dp)
+                .fillMaxWidth()
+                .background(Color.Black))
+            if(Question.HelpText.isNotEmpty() && Question.HelpText !=null){
+                Spacer(modifier = Modifier.size(10.dp))
+                Text(text = Question.helpTextQ, style = TextStyle(color= Color.Gray,fontWeight = FontWeight.Bold,fontSize = 20.sp))
+            }
+            Spacer(modifier = Modifier.size(10.dp))
+            if(Question.Img.isNotEmpty() &&  Question.Img!=null){
+                Spacer(modifier = Modifier.size(10.dp))
+                AsyncImage(
+                    model = Question.Img,
+                    contentDescription = "Imagen desde URL",
+                    modifier = Modifier.size(100.dp).weight(1f) // Tamaño ajustable
+                )
+                Spacer(modifier = Modifier.size(10.dp))
+            }
+        }
+        Box(modifier = Modifier.weight(1.5f).fillMaxWidth()){
+            var Answer = 0
+            if (R is Int){
+                Answer = R
+            }
+            ClosedQuestionView(Question,Answer)
+        }
+    }
+}
+
+@Composable
+fun ClompleteTextQuestionQuestionViewProfesor(index:Int, Question: CompleteText,R:Any,Back:()->Unit){
+    BackHandler {
+        Back()
+    }
+    Column(modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
+        verticalArrangement = Arrangement.Top) {
+
+        Column(modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally, // Centra horizontalmente
+            verticalArrangement = Arrangement.Top) {
+            Text(text = index.toString()+". "+Question.Question,style = TextStyle(fontWeight = FontWeight.ExtraBold,color= Color.Black,fontSize = 25.sp  ))
+            Spacer(modifier = Modifier.size(10.dp))
+            Box(modifier = Modifier.height(1.dp)
+                .fillMaxWidth()
+                .background(Color.Black))
+            if(Question.HelpText.isNotEmpty() && Question.HelpText !=null){
+                Spacer(modifier = Modifier.size(10.dp))
+                Text(text = Question.helpTextQ, style = TextStyle(color= Color.Gray,fontWeight = FontWeight.Bold,fontSize = 20.sp))
+            }
+            Spacer(modifier = Modifier.size(10.dp))
+            if(Question.Img.isNotEmpty() &&  Question.Img!=null){
+                Spacer(modifier = Modifier.size(10.dp))
+                AsyncImage(
+                    model = Question.Img,
+                    contentDescription = "Imagen desde URL",
+                    modifier = Modifier.size(100.dp).weight(1f) // Tamaño ajustable
+                )
+                Spacer(modifier = Modifier.size(10.dp))
+            }
+        }
+        Box(modifier = Modifier.weight(1.5f).fillMaxWidth()){
+            var Answer: List<String> =List(Question.Answers.size){""}
+            if(R is List<*>){
+                Answer=R as  List<String>
+            }
+            CompleteTextView(Question,Answer)
+        }
+    }
+}
+
+
 @Composable
 fun OpenQuestionView(S:String){
     Box(modifier = Modifier.fillMaxSize()) {
@@ -106,14 +179,14 @@ fun OpenQuestionView(S:String){
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ClosedQuestionView(Question:ClosedQuestion,Answer:String){
+fun ClosedQuestionView(Question:ClosedQuestion,Answer: Int){
 
     Box(modifier = Modifier.fillMaxSize()){
         FlowRow(modifier=Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalArrangement = Arrangement.Center){
             var Selection  = Answer
-            for(i in 0..(Question.options.size)-1){
-                var item  = Question.options[i] // La opción de la lista
-                LabeledRadioButon(item, selected = item==Selection)
+            for(i in 0..(Question.Options.size)-1){
+                var item  = Question.Options[i] // La opción de la lista
+                LabeledRadioButon(item, selected = i==Answer)
             }
         }
     }
@@ -148,8 +221,8 @@ fun LabeledRadioButon(s: String, selected: Boolean,
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun  CompleteTextView(Question:CompleteText,Answwers:List<String>){
-    val TextSegmented = Question.text.split(" ").filter { it.isNotEmpty() }
-    val Answers = MutableList<String>(Question.answers.size){""}
+    val TextSegmented = Question.Text.split(" ").filter { it.isNotEmpty() }
+    val Answers = MutableList<String>(Question.Answers.size){""}
     var Counter = 0
     Box(modifier = Modifier.fillMaxSize()) {
         FlowRow(
