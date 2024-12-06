@@ -1,7 +1,53 @@
 from Dataclases.Activities import *
 from Dataclases.Teachers import StudetnsPreview
+from Dataclases.Teachers import StudetnsPreview
 from Firebase.firebase import db
+from google.cloud.firestore import DocumentReference
 class ActivitiesService:
+
+    def GetActivity(Activity_Ref:DocumentReference):
+        Questions=Activity_Ref.collection("Preguntas").get()
+        QuestionsList=[]
+        for Question in Questions:
+            Question_Data=Question.to_dict()
+            match Question_Data["Tipo"]:
+                case 1:
+                    QuestionsList.append(ActivitiesService.OpenQuestionCase(Question_Data))
+                case 2:
+                    QuestionsList.append(ActivitiesService.ClosedQuestionCase(Question_Data))
+                case 3:
+                    QuestionsList.append(ActivitiesService.CompleteTextCase(Question_Data))
+        Data=Activity_Ref.get().to_dict()
+        Final_Activity=Activity(ID="",Name=Data["Nombre"],Level=Data["Nivel"],Topic=Data["Tema"],Questions=QuestionsList)
+        print(Data)
+        return Final_Activity
+    
+    def GetAnswers(Answers):
+        StudentsActs=[]
+        for AnswerDoc in Answers:
+            Student_Doc=AnswerDoc.get("User")
+            AnsList=AnswerDoc.get("Answers")
+            Student_Data=Student_Doc.get().to_dict()
+            UserP=StudetnsPreview(ID=Student_Doc.id,Name=Student_Data.get('Name')+" "+Student_Data.get('LastName'))
+            AnswerList=[]
+            for Ans in AnsList:
+                data=next(iter(Ans.values()))
+                Response=ActivityAnswer(Type=data["Type"],value=data["Value"],Correct=data["Correct"])
+                AnswerList.append(Response)
+            Student_act=StudentAnswers(ID=AnswerDoc.id,student=UserP,Answers=AnswerList)
+            StudentsActs.append(Student_act)
+        return StudentsActs
+
+    def OpenQuestionCase(Data):
+        return OpenQuestion(Type=1,Question=Data.get("Pregunta",None),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None))
+
+    def ClosedQuestionCase(Data):
+        return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",None))
+
+    def CompleteTextCase(Data):
+        return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]))
+
+
     def GetGroupActivities(ID:str):
         Group_ref= db.collection("Groups").document(ID)
         Group_Doc=Group_ref.get()
@@ -87,7 +133,6 @@ class ActivitiesService:
             Unit.Acts.append(ActPre)
         return list(AsiggnedActs.values())
     
-
     def GetAssignedExams(ID:str):
         Group_ref=db.collection("Groups").document(ID)
         Exams_ref=Group_ref.collection("AsignedExams")

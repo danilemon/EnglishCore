@@ -69,7 +69,7 @@ import com.example.englishcoreappk.Retrofit.ClosedQuestion
 import com.example.englishcoreappk.Retrofit.CompleteText
 import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.StudentPreview
-import com.example.englishcoreappk.Retrofit.UserAnswer
+
 import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
 
@@ -428,7 +428,9 @@ fun PracticeScreen() {
 //
 //// Llamada a la función con los parámetros
 //    ActivityWraperProfesor(activity, student, 10f,answers)
-    AsignedActsView(UserData.User,false,false)
+    AsignedActsView(UserData.User,false,false){
+
+    }
 }
 
 

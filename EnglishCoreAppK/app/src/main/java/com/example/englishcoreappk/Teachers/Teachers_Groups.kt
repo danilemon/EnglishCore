@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.englishcoreappk.Activities.AsignedActsView
+import com.example.englishcoreappk.Retrofit.ActivityRepository
 import com.example.englishcoreappk.Retrofit.StudentInfo
 import com.example.englishcoreappk.Retrofit.UserData
 
@@ -68,6 +69,7 @@ class GroupViewModel:ViewModel(){
     fun GetGroup(): Groups? {
         return CurrentGroup
     }
+
 }
 @Composable
 fun GroupsNavigationHost(navController: NavHostController,Group: Groups){
@@ -87,10 +89,12 @@ fun GroupsNavigationHost(navController: NavHostController,Group: Groups){
             AttendanceList(Group)
         }
         composable("AsignedActivities"){
-            AsignedActsView(Group.ID!!,false,true)
+            AsignedActivities(Group,navController)
         }
         composable("AsignedExams"){
-            AsignedActsView(Group.ID!!,true,false)
+            AsignedActsView(Group.ID!!,true,false){
+
+            }
         }
     }
 
@@ -547,6 +551,7 @@ fun AttendanceItem(Student:StudentPreview,Attendance:(Boolean)->Unit){
         }
     }
 }
+
 
 
 @Composable

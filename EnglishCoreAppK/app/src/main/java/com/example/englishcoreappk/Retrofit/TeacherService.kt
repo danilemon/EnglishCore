@@ -5,6 +5,8 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.Call
 import android.os.Parcelable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 
 import kotlinx.serialization.Serializable
 
@@ -32,6 +34,7 @@ data class Groups(
     val StartDate: String? = null,
     val TeacherID: Int? = null
 )
+@Stable
 data class StudentPreview(
     val ID: String,
     val Name: String

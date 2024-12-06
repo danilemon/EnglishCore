@@ -23,6 +23,30 @@ object ActivityRepository {
 
     }
 
+    fun GetAnsweredActivity(GroupID: String,ActivityID: String,callback:(AnsweredActivity)->Unit){
+        var Request=GetActivityAnwersPck(GroupID,ActivityID)
+        api.GetAnsweredActivity(Request).enqueue(object:  Callback<AnsweredActivity>{
+            override fun onResponse(
+                call: Call<AnsweredActivity?>,
+                response: Response<AnsweredActivity?>
+            ) {
+                var R=response.body()!!
+                callback(response.body()!!)
+            }
+
+            override fun onFailure(
+                call: Call<AnsweredActivity?>,
+                t: Throwable
+            ) {
+                println("Failed to fetch data from server")
+                t.printStackTrace()
+            }
+
+        })
+
+    }
+
+    //Obtener datos para asignar
     fun GetGroupActss(Request: MutableList<ActivityRequest>, callback: (MutableList<List<Units>>)-> Unit){
         api.GetGroupActs(Request).enqueue(object: Callback<MutableList<List<Units>>>{
             override fun onResponse(
@@ -84,6 +108,7 @@ object ActivityRepository {
 
     }
 
+    //Asignar
     fun AsignActivity(GroupID: String,UnitID: String,ActivityID: String,callback:(String)-> Unit){
         var Data=AsignActivityPck(GroupID,UnitID,ActivityID)
         api.AssignActivity(Data).enqueue(object: Callback<String>{
@@ -132,6 +157,8 @@ object ActivityRepository {
         })
     }
 
+
+    //Obtener asignados
     fun GetActsAsigned(GroupID: String,callback: (List<UnitViews>) -> Unit){
         var Request=ActivityRequest(GroupID)
         api.GetAssignedActivities(Request).enqueue(object: Callback<List<UnitViews>> {

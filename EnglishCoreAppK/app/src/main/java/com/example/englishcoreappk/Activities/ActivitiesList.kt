@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -151,70 +152,70 @@ fun ShowActivities() {
 
 }
 
+//@Composable
+//fun ExamsContent() {
+//    Box(
+//        modifier = Modifier.fillMaxSize(),
+//        contentAlignment = Alignment.TopCenter
+//    ) {
+//        Column {
+//            Text(
+//                text = "BASICS-Grammar",
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 20.sp,
+//                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+//            )
+//            Text(
+//                text = "Exams",
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 15.sp,
+//                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
+//            )
+//            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
+//                item { ExamsCards(title = "Exam 1" ) }
+//                item { ExamsCards(title = "Exam 2") }
+//                item { ExamsCards(title = "Exam 3") }
+//                item { ExamsCards(title = "Exam 4") }
+//                item { ExamsCards(title = "Exam 5") }
+//            }
+//        }
+//
+//    }
+//}
+//
+//
+//@Composable
+//fun ExercisesContent() {
+//    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+//        Column{
+//            Text(
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 20.sp,
+//                text = "BASICS-Grammar",
+//                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
+//            )
+//            Text(
+//                fontWeight = FontWeight.Bold,
+//                fontSize = 15.sp,
+//                text = "Exercises",
+//                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
+//            )
+//            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
+//                item { ExercisesCards(title = "Exercise 1" ) }
+//                item { ExercisesCards(title = "Exercise 2") }
+//                item { ExercisesCards(title = "Exercise 3") }
+//                item { ExercisesCards(title = "Exercise 4") }
+//                item { ExercisesCards(title = "Exercise 5") }
+//            }
+//        }
+//
+//
+//}
+//}
+
+
 @Composable
-fun ExamsContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        Column {
-            Text(
-                text = "BASICS-Grammar",
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = "Exams",
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
-            )
-            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
-                item { ExamsCards(title = "Exam 1" ) }
-                item { ExamsCards(title = "Exam 2") }
-                item { ExamsCards(title = "Exam 3") }
-                item { ExamsCards(title = "Exam 4") }
-                item { ExamsCards(title = "Exam 5") }
-            }
-        }
-
-    }
-}
-
-
-@Composable
-fun ExercisesContent() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-        Column{
-            Text(
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
-                text = "BASICS-Grammar",
-                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally)
-            )
-            Text(
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                text = "Exercises",
-                modifier = Modifier.padding(top = 6.dp).align(Alignment.CenterHorizontally)
-            )
-            LazyColumn(modifier = Modifier.fillMaxSize().background(Color.White).padding(top = 20.dp)) {
-                item { ExercisesCards(title = "Exercise 1" ) }
-                item { ExercisesCards(title = "Exercise 2") }
-                item { ExercisesCards(title = "Exercise 3") }
-                item { ExercisesCards(title = "Exercise 4") }
-                item { ExercisesCards(title = "Exercise 5") }
-            }
-        }
-
-
-}
-}
-
-
-@Composable
-fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean) {
+fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean,Next:(Act: String)-> Unit) {
 
     var Loading by remember { mutableStateOf(true) }
     var ActsList by remember { mutableStateOf<MutableList<AsignedView>>(mutableListOf()) }
@@ -258,7 +259,7 @@ fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean) {
                         UnitsList.forEach { it ->
                             Items.add(SpinerItem(it.ID, it.Name))
                         }
-                        Spiner(Items,Mod= Modifier.align(Alignment.CenterStart).padding(start = 10.dp)){i->
+                        Spiner(Items,BoxMod= Modifier.align(Alignment.CenterStart).padding(start = 10.dp)){i->
                             ActsList=UnitsList[i].Acts as MutableList<AsignedView>
                         }
                         Text(
@@ -277,12 +278,31 @@ fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean) {
                 }
                 LazyColumn (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top){
                     itemsIndexed(ActsList){index,item ->
+                        val context = LocalContext.current
                         if(Act){
-                            ExercisesCards(item.Act.Name)
+                            ExercisesCards(item.Act.Name){
+                                if(!item.HasAnswers){
+                                            Toast.makeText(context,"La actividad no tiene respuestas",Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Next(item.Act.ID)
+                                }
+                            }
                         }else if(Exam){
-                            ExamsCards(item.Act.Name)
+                            ExamsCards(item.Act.Name){
+                                if(!item.HasAnswers){
+                                    Toast.makeText(context,"La actividad no tiene respuestas",Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Next(item.Act.ID)
+                                }
+                            }
                         }else{
-                            ExercisesCards(item.Act.Name)
+                            ExercisesCards(item.Act.Name){
+                                if(!item.HasAnswers){
+                                    Toast.makeText(context,"La actividad no tiene respuestas",Toast.LENGTH_SHORT).show()
+                                }else{
+                                    Next(item.Act.ID)
+                                }
+                            }
                         }
                     }
                 }
@@ -292,14 +312,14 @@ fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean) {
 }
 
 @Composable
-fun ExercisesCards(title: String, modifier: Modifier = Modifier) {
+fun ExercisesCards(title: String, modifier: Modifier = Modifier,ShowAct:  ()->Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp) // Ajusta la altura de las tarjetas
             .padding(5.dp)
             .background(Color(0xff34495e)) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
+            .clickable { ShowAct() }
     ) {
         Text(
             text = title,
@@ -311,14 +331,14 @@ fun ExercisesCards(title: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ExamsCards(title: String, modifier: Modifier = Modifier) {
+fun ExamsCards(title: String, modifier: Modifier = Modifier,ShowAct:()->Unit) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(50.dp) // Ajusta la altura de las tarjetas
             .padding(5.dp)
             .background(Color(0xff2e86c1)) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
+            .clickable { ShowAct() }
     ) {
         Text(
             text = title,
