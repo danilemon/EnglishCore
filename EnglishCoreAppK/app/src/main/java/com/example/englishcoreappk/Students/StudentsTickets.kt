@@ -1,11 +1,15 @@
 package com.example.englishcoreappk.Students
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.UUID
 
-import StudentReminders
-import StudentTickets
+import GetStudentTickets
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -25,17 +29,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +59,7 @@ import coil.compose.rememberImagePainter
 import com.example.englishcoreappk.R
 import com.example.englishcoreappk.Retrofit.UserData
 import com.example.englishcoreappk.ui.theme.EnglishCoreAppKTheme
+import kotlinx.serialization.descriptors.PrimitiveKind
 
 object SelectedImageManager {
     val selectedImageUri = mutableStateOf<String?>(null)
@@ -85,6 +89,57 @@ class StudentsTickets: ComponentActivity() {
     }
 }
 
+fun uploadImageToFirebase(uri: String, userDocId: String, onComplete: (String?) -> Unit) {
+    // Genera un nombre único para el archivo
+    val fileName = UUID.randomUUID().toString() + ".jpg"
+
+    // Referencia a la ubicación en Firebase Storage
+    val storageRef = FirebaseStorage.getInstance().reference.child("tickets_images/$userDocId/$fileName")
+
+    // Subir la imagen
+    storageRef.putFile(Uri.parse(uri))
+        .addOnSuccessListener {
+            // Obtener la URL de la imagen subida
+            storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                // Retornar la URL de la imagen subida
+                onComplete(downloadUri.toString())
+            }
+        }
+        .addOnFailureListener { exception ->
+            // Manejar el error
+            onComplete(null)
+        }
+}
+
+fun saveTicketToFirestore(userDocId: String, imageUrl: String, description: String) {
+    val db = FirebaseFirestore.getInstance()
+
+    // Obtener el ID del ticket (puedes usar un UUID o un ID autogenerado por Firestore)
+    val ticketId = UUID.randomUUID().toString()
+
+    // Crear el documento con la URL de la imagen, descripción y fecha
+    val ticketData = hashMapOf(
+        "Description" to description,
+        "ImageURL" to imageUrl,
+        "Date" to System.currentTimeMillis() // Usamos la fecha actual como timestamp
+    )
+
+    // Guardar en la subcolección "tickets" del usuario
+    db.collection("users") // La colección de usuarios
+        .document(userDocId) // Documento del usuario
+        .collection("tickets") // Subcolección "tickets"
+        .document(ticketId) // ID del ticket
+        .set(ticketData)
+        .addOnSuccessListener {
+            // El ticket se guardó correctamente
+            println("Ticket guardado en Firestore")
+        }
+        .addOnFailureListener { e ->
+            // Manejar el error
+            println("Error al guardar el ticket: ${e.message}")
+        }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -92,10 +147,34 @@ class StudentsTickets: ComponentActivity() {
 fun ShowReceiptsView(){
     val context = LocalContext.current
     val userrrr = UserData.User
-    var isLoadingProfile = remember { mutableStateOf(true) } // Estado para cargar
-    var ticketsList by remember { mutableStateOf<List<StudentTickets>?>(emptyList()) }
-    var selectedReminder by remember { mutableStateOf<StudentTickets?>(null) }
+    var isLoadingProfile = remember { mutableStateOf(false) } // Estado para cargar
+    var ticketsList by remember { mutableStateOf<List<GetStudentTickets>?>(emptyList()) }
+    var ticketDesc by remember { mutableStateOf(TextFieldValue("")) }
+    var enlargedImageUrl by remember { mutableStateOf<String?>(null) }
+    val selectedImageUri = SelectedImageManager.selectedImageUri.value
 
+    if (enlargedImageUrl != null) {
+        androidx.compose.ui.window.Dialog(
+            onDismissRequest = { enlargedImageUrl = null }
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.3f)) // Fondo semitransparente
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
+                Image(
+                    painter = rememberImagePainter(data = enlargedImageUrl),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .padding(16.dp)
+                )
+            }
+        }
+    }
 
     // Cargar datos del estudiante y recordatorios
 
@@ -224,16 +303,36 @@ fun ShowReceiptsView(){
                                                 .size(200.dp)
                                                 .padding(16.dp)
                                         )
-                                    Row(modifier = Modifier.padding(6.dp)) {
+                                    Row(modifier = Modifier.padding(10.dp)) {
+                                        OutlinedTextField(value= ticketDesc,
+                                                onValueChange = { ticketDesc = it },
+                                            label = { Text("Description") })
+                                    }
+                                    Row(modifier = Modifier.padding(10.dp)) {
                                         Button(
-                                            onClick = { "HELLO" },
-                                            modifier = Modifier.padding(top = 8.dp)
+                                            onClick = {   if (selectedImageUri != null) {
+                                                isLoadingProfile.value = true
+                                                // Subir la imagen a Firebase Storage
+                                                uploadImageToFirebase(selectedImageUri, userrrr) { imageUrl ->
+                                                    isLoadingProfile.value = false
+                                                    if (imageUrl != null) {
+                                                        // Si la imagen se sube correctamente, guardamos el ticket en Firestore
+                                                        saveTicketToFirestore(userrrr, imageUrl, ticketDesc.text)
+                                                        Toast.makeText(context,"The ticket has been uploaded successfully", Toast.LENGTH_SHORT)
+                                                    } else {
+                                                        // Manejo de error si no se pudo subir la imagen
+                                                        println("Error al subir la imagen.")
+                                                    }
+                                                }
+                                            }
+                                                      },
+                                            modifier = Modifier.padding(end = 8.dp)
                                         ) {
                                             Text("Upload ticket")
                                         }
                                         Button(
                                         onClick = { SelectedImageManager.selectedImageUri.value = null },
-                                        modifier = Modifier.padding(top = 8.dp).background(Color.Transparent)
+                                        modifier = Modifier.padding(start = 8.dp).background(Color.Transparent)
                                     ) {
                                         Text("Cancel upload", color = Color.White)
                                     }
@@ -241,11 +340,12 @@ fun ShowReceiptsView(){
                                          }
 
                                     } ?: run {
-                                        Text("There's not an image selected yet", Modifier.padding(16.dp), color = Color.White)
+                                        Text("Select a photo for uploading a ticket", Modifier.padding(16.dp), color = Color.White)
                                     }
                                 }
                         }
                             if (ticketsList.isNullOrEmpty()) {
+
                                 item {
                                     Text(
                                         text = "You haven't uploaded a ticket yet.",
@@ -258,17 +358,21 @@ fun ShowReceiptsView(){
                                     )
                                 }
                             } else {
-                                ticketsList?.forEach { reminder ->
+                                ticketsList?.forEach { ticket ->
                                     item {
                                         StudentTickets(
-                                            title = reminder.Description,
-                                            date = reminder.Date,
+                                            title = ticket.Description,
+                                            date = ticket.Date,
+                                            imageUrl = ticket.ImageURL, // Aquí pasamos la URL de la imagen
                                             modifier = Modifier
                                                 .padding(8.dp)
                                                 .fillMaxWidth()
+                                                .clickable { enlargedImageUrl = ticket.ImageURL } // Detecta el tap
+
                                         )
                                     }
                                 }
+
                             }
 
                         }
@@ -281,37 +385,52 @@ fun ShowReceiptsView(){
 
 }
 
+
 @Composable
-fun StudentTickets(title: String, date: String, modifier: Modifier)
-{
-    Box(
+fun StudentTickets(title: String, date: String, imageUrl: String, modifier: Modifier) {
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .height(130.dp) // Ajusta la altura de las tarjetas
             .clip(RoundedCornerShape(20.dp))
-            .background(Color.White) // Coloca un color de fondo por defecto
-            .clickable { /* Acción cuando se clickea la tarjeta */ }
-    ) {
+            .background(Color.White)
+            .padding(16.dp) // Añadir padding para que no quede pegado a los bordes
 
-        Column(modifier = Modifier
-            .align(Alignment.CenterStart)
-            .padding(16.dp))
-        {
+    ) {
+        // Imagen
+        Image(
+            painter = rememberImagePainter(data = imageUrl),
+            contentDescription = null,
+            modifier = Modifier
+                .size(100.dp) // Tamaño de la imagen
+                .clip(RoundedCornerShape(10.dp)) // Forma de la imagen
+        )
+
+        // Espaciado entre la imagen y el texto
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .align(Alignment.CenterVertically) // Alinea el texto verticalmente con la imagen
+        ) {
+            // Título del ticket
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
-
+                color = Color.Black,
+                maxLines = 2 // Limitar a una línea
             )
 
+            // Fecha del ticket
             Text(
                 text = date,
-                color = Color.Gray
+                color = Color.Gray,
+                maxLines = 1 // Limitar a una línea
             )
         }
-
     }
+
 }
+
 
 
 

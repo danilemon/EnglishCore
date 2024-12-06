@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from fastapi import UploadFile  # or use a specialized type
+
 
 class GetStudentDataRequest(BaseModel):
     StudentDocId: str
@@ -22,3 +24,10 @@ class GetStudentTickets(BaseModel):
     Date: str
     Description: str
     ImageURL: str
+
+class UploadTickets(BaseModel):
+    ImageFile: UploadFile
+    ImageURL: str
+    TicketID: int
+    Date: str
+    Description: str

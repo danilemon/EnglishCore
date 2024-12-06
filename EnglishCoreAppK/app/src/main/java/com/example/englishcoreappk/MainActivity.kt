@@ -1,6 +1,7 @@
 package com.example.englishcoreappk
 
-
+import com.google.firebase.FirebaseApp
+import com.google.firebase.storage.FirebaseStorage
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
                 Welcome()
             }
         }
+        FirebaseApp.initializeApp(this)
+        val storage = FirebaseStorage.getInstance()
     }
 }
 

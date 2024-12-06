@@ -1,8 +1,9 @@
 from typing import Dict, List
-from fastapi import APIRouter, HTTPException
-from Dataclases.Students import GetStudentDataRequest, StudentData, GetStudentReminds, GetStudentTickets
-from Firebase.firebase import db
-
+from fastapi import APIRouter, HTTPException, UploadFile, Form
+from Dataclases.Students import GetStudentDataRequest, StudentData, GetStudentReminds, GetStudentTickets, UploadTickets
+from Firebase.firebase import db, storage
+from datetime import datetime
+import uuid
 StudentsR = APIRouter()
 
 @StudentsR.post('/GetStudentData', response_model=StudentData)
@@ -144,3 +145,64 @@ def fetch_student_tickets(Data: GetStudentDataRequest):
         raise HTTPException(status_code=404, detail="No tickets found for the given student")
     
     return tickets_list
+
+@StudentsR.post('/UploadStudentTickets')
+async def upload_student_ticket(
+    StudentDocId: str = Form(...),  # Parámetro para el ID del estudiante
+    Description: str = Form(...),  # Descripción del ticket
+    ImageFile: UploadFile = UploadFile(...),  # Archivo del ticket
+):
+    try:
+        # Validar que el estudiante existe
+        user_ref = db.collection('users').document(StudentDocId)
+        student_doc = user_ref.get()
+
+        if not student_doc.exists:
+            raise HTTPException(status_code=404, detail="Student not found")
+
+        # Subir imagen a Firebase Storage
+        public_url = await upload_image_to_firebase(StudentDocId, ImageFile)
+
+        # Generar datos del ticket
+        ticket_data = {
+            'TicketID': str(uuid.uuid4()),  # Generar un UUID único
+            'Date': datetime.now().isoformat(),
+            'Description': Description,
+            'ImageURL': public_url,
+        }
+
+        # Añadir el ticket a la subcolección del usuario
+        user_ref.collection('tickets').add(ticket_data)
+
+
+        return {
+            "message": "Ticket uploaded successfully",
+            **ticket_data
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error uploading ticket: {str(e)}")
+
+
+# Función para subir la imagen a Firebase Storage
+async def upload_image_to_firebase(student_id: str, image_file: UploadFile) -> str:
+    try:
+        # Crear un nombre único para el archivo
+        file_extension = image_file.filename.split('.')[-1]
+        unique_filename = f"tickets/{student_id}/{uuid.uuid4()}.{file_extension}"
+
+        # Leer el contenido del archivo
+        contents = await image_file.read()
+
+        # Subir el archivo a Firebase Storage
+        bucket = storage.bucket()
+        blob = bucket.blob(unique_filename)
+        blob.upload_from_string(contents, content_type=image_file.content_type)
+
+        # Hacer público el archivo
+        blob.make_public()
+
+        return blob.public_url
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error uploading image: {str(e)}")
