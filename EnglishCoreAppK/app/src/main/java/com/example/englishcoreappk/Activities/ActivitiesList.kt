@@ -99,8 +99,10 @@ fun ShowActivities() {
                             .size(50.dp) // Tamaño de la imagen
                             .clip(CircleShape) // Aplica la forma circular
                             .align(Alignment.TopCenter)  // Alinea la imagen en el centro del Box
-                            .clickable { val intent = Intent(context, StudentsDashboard::class.java)
-                                context.startActivityWithAnimation(intent)}
+                            .clickable {
+                                val intent = Intent(context, StudentsDashboard::class.java)
+                                context.startActivityWithAnimation(intent)
+                            }
                     )
                     Image(
                         painter = painterResource(id = R.drawable.return_icon),
@@ -109,8 +111,10 @@ fun ShowActivities() {
                             .size(50.dp)
                             .clip(CircleShape)
                             .align(Alignment.TopStart)
-                            .clickable { val intent = Intent(context, SectionList::class.java)
-                                context.startActivityWithAnimation(intent)}
+                            .clickable {
+                                val intent = Intent(context, SectionList::class.java)
+                                context.startActivityWithAnimation(intent)
+                            }
                     )
                 }
             },
@@ -126,7 +130,9 @@ fun ShowActivities() {
 
             ) {contentPadding ->
             Box(
-                modifier = Modifier.fillMaxSize().padding(contentPadding)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(contentPadding)
                     .background(Color(0xffD9D9D9))
             )
             {
@@ -249,7 +255,9 @@ fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean,Next:(Act: String)-> U
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
             Column(modifier = Modifier.fillMaxSize()) {
-                Box(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()) {
                     if (Act) {
                         var Items by remember {
                             mutableStateOf<MutableList<SpinerItem>>(
@@ -259,18 +267,27 @@ fun AsignedActsView(ID: String,Exam: Boolean,Act: Boolean,Next:(Act: String)-> U
                         UnitsList.forEach { it ->
                             Items.add(SpinerItem(it.ID, it.Name))
                         }
-                        Spiner(Items,BoxMod= Modifier.align(Alignment.CenterStart).padding(start = 10.dp)){i->
+                        Spiner(Items,BoxMod= Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 10.dp)){i->
                             ActsList=UnitsList[i].Acts as MutableList<AsignedView>
                         }
                         Text(
                             HeaderText,
-                            modifier = Modifier.wrapContentSize().align(Alignment.Center).padding(horizontal = 20.dp).offset(x = 10.dp),
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.Center)
+                                .padding(horizontal = 20.dp)
+                                .offset(x = 10.dp),
                             fontWeight = FontWeight.Bold
                         )
                     }else{
                         Text(
                             HeaderText,
-                            modifier = Modifier.wrapContentSize().align(Alignment.Center).padding(horizontal = 20.dp),
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.Center)
+                                .padding(horizontal = 20.dp),
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -325,7 +342,9 @@ fun ExercisesCards(title: String, modifier: Modifier = Modifier,ShowAct:  ()->Un
             text = title,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 20.dp),
         )
     }
 }
@@ -344,7 +363,9 @@ fun ExamsCards(title: String, modifier: Modifier = Modifier,ShowAct:()->Unit) {
             text = title,
             fontWeight = FontWeight.Bold,
             color = Color.White,
-            modifier = Modifier.align(Alignment.CenterStart).padding(start = 20.dp),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(start = 20.dp),
         )
     }
 }

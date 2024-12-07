@@ -4,5 +4,6 @@
     <string name="A">A</string>
     <string name="title_activity_view">ActivityView</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_student_asigned_views">StudentAsignedViews</string>
 
 </resources>

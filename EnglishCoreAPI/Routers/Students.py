@@ -17,7 +17,9 @@ def GetStudent(Data: GetStudentDataRequest):
     
     # Obtén los datos del documento como un diccionario
     student_data = student_doc.to_dict()
-
+    
+    Group_Doc=student_doc.get("GroupID").get()
+    
     # Convertimos los datos en un objeto de tipo StudentData
     student = StudentData(
         StudentID=student_data.get('StudentID'),
@@ -27,7 +29,7 @@ def GetStudent(Data: GetStudentDataRequest):
         Address=student_data.get('address'),
         Birthday=student_data.get('birthday'),
         Username=student_data.get('username'),
-        # GroupID=student_data.get('GroupID')  # Descomenta si usas este campo
+        GroupID=Group_Doc.id # Descomenta si usas este campo
     )
 
     return student

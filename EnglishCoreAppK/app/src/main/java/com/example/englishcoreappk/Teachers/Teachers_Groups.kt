@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -53,8 +52,8 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.englishcoreappk.Activities.AsignedActivities
 import com.example.englishcoreappk.Activities.AsignedActsView
-import com.example.englishcoreappk.Retrofit.ActivityRepository
 import com.example.englishcoreappk.Retrofit.StudentInfo
 import com.example.englishcoreappk.Retrofit.UserData
 
@@ -89,7 +88,7 @@ fun GroupsNavigationHost(navController: NavHostController,Group: Groups){
             AttendanceList(Group)
         }
         composable("AsignedActivities"){
-            AsignedActivities(Group,navController)
+            AsignedActivities(Group)
         }
         composable("AsignedExams"){
             AsignedActsView(Group.ID!!,true,false){

@@ -110,32 +110,32 @@ fun ShowStudentLevel() {
                     LazyColumn (modifier = Modifier.fillMaxSize().background(Color.White)){
                         item {
                             LevelCards(title = "1. BASICS", LevlColor = Color(0xffaed6f1), onClick = {
-                                val intent = Intent(context, SectionList::class.java)
+                                val intent = Intent(context, StudentAsignedViews::class.java)
                                 context.startActivity(intent)
                             })
                         }
                         item {
                             LevelCards(title = "2. INTERMEDIATE", LevlColor = Color(0xff5dade2), onClick = {
-                                val intent = Intent(context, SectionList::class.java)
+                                val intent = Intent(context, StudentAsignedViews::class.java)
                                 context.startActivity(intent)
                             })
 
                         }
                         item {
                             LevelCards(title = "3. ADVANCED", LevlColor = Color(0xff2e86c1), onClick = {
-                                val intent = Intent(context, SectionList::class.java)
+                                val intent = Intent(context, StudentAsignedViews::class.java)
                                 context.startActivity(intent)
                             })
                         }
                         item {
                             LevelCards(title = "4. EXPERT", LevlColor = Color(0xff21618c), onClick = {
-                                val intent = Intent(context, SectionList::class.java)
+                                val intent = Intent(context, StudentAsignedViews::class.java)
                                 context.startActivity(intent)
                             })
                         }
                         item {
                             LevelCards(title = "5. MASTER", LevlColor = Color(0xff34495e), onClick = {
-                                val intent = Intent(context, SectionList::class.java)
+                                val intent = Intent(context, StudentAsignedViews::class.java)
                                 context.startActivity(intent)
                             })
                         }

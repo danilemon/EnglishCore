@@ -136,12 +136,11 @@ fun ClosedQuestionView(Question:ClosedQuestion,Saved:String,answer:(Any)->Unit){
             var Selection by remember { mutableStateOf(Saved) }
             for(i in 0..(Question.Options.size)-1){
                             var item  = Question.Options[i] // La opción de la lista
-                            var Lambda: (String) -> Unit ={ S:String->
+                            var Lambda: (String, Int) -> Unit ={ S:String, Index: Int->
                                 Selection=S
-                                answer(S)
-
+                                answer(Index)
                             }
-                            LabeledRadioButon(item, selected = item==Selection, onClick = Lambda)
+                            LabeledRadioButon(item, selected = item==Selection, onClick = Lambda, Index = i)
                         }
             }
         }
@@ -149,8 +148,8 @@ fun ClosedQuestionView(Question:ClosedQuestion,Saved:String,answer:(Any)->Unit){
 
 @Composable
 fun LabeledRadioButon(s: String, selected: Boolean,
-                      onClick: ((String) -> Unit),
-                      enabled: Boolean=true ){
+                      onClick: ((String, Int) -> Unit),
+                      enabled: Boolean=true, Index: Int){
     Row(
         modifier = Modifier
             .height(56.dp),
@@ -159,14 +158,14 @@ fun LabeledRadioButon(s: String, selected: Boolean,
         RadioButton(
             selected = selected,
             onClick = {
-                onClick(s)
+                onClick(s,Index)
                       },
             enabled = enabled
         )
         Text(
             text = s,
             modifier = Modifier.padding(start = 8.dp).selectable(selected = selected,
-                onClick = {onClick(s)},
+                onClick = {onClick(s,Index)},
                 enabled = enabled)
         )
 

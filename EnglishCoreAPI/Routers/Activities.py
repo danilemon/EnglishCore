@@ -3,12 +3,25 @@ from Dataclases.Activities import *
 from Firebase.firebase import db
 from Services.Activities import ActivitiesService
 from google.cloud import firestore
+from fastapi.responses import JSONResponse
+
 
 Activities=APIRouter()
 
+#Obtener Actividades
 @Activities.post('/GetActivity')
-def GetActivity(Data:ActivityRequest):
-    pass
+def GetActivity(Data:GetActivity):
+    Group_Ref=db.collection("Groups").document(Data.GroupID)
+    Collection_ref=Group_Ref.collection("AsignedActivities")
+    AsignedAct_Doc=Collection_ref.document(Data.ActID).get()
+    Answers=AsignedAct_Doc.reference.collection("Answers")
+    HasAnswer=Answers.document(Data.UsrID).get()
+    if HasAnswer.exists:
+        return JSONResponse(content={"message": "Actividad ya respondida"},status_code=400)
+    Act_Ref=AsignedAct_Doc.get("Activity")
+    ModeldAct:Activity=ActivitiesService.GetActivity(Act_Ref)
+    ModeldAct.ID=Data.ActID
+    return ModeldAct
 
 @Activities.post("/GetAnsweredActivity")
 def GetAnsweredActivity(Data:GetActivityAnwersPck):
@@ -22,7 +35,7 @@ def GetAnsweredActivity(Data:GetActivityAnwersPck):
     Response=AnsweredActivity(Act=ModeldAct,StudentsAnswers=StudentsAnswers)
     return Response
 
-
+#Obtener listado de actividades
 @Activities.post("/GetGroupActivities")
 def GetGroupActs(Data:list[ActivityRequest]):
     ReturnList=[]
@@ -45,6 +58,7 @@ def GetPractices(Data:ActivityRequest):
     Students=ActivitiesService.GetTeacherStudents(Data.ID)
     return(PracticesPck(Students=Students,Practices=Practices))
 
+#Asignar actividades
 @Activities.post("/AsiggnActivity")
 def AssignActivity(Data:AsignActivityPck):
     Group_Ref=db.collection("Groups").document(Data.GroupID)
@@ -83,6 +97,7 @@ def AssignPractice(Data:AsignPracticePck):
     })  
     return "Asignada correctamente"
 
+#Obtener actividades Asignadas
 @Activities.post("/GetAssignedActivities")
 def GetAssignedActivities(Data:ActivityRequest):
     Asigned=ActivitiesService.GetAssignedActivities(Data.ID)
@@ -97,3 +112,25 @@ def GetAssignedExams(Data:ActivityRequest):
 def GetAssignedPractices(Data:ActivityRequest):
     Asigned=ActivitiesService.GetAssignedPractices(Data.ID)
     return Asigned
+
+#Subir Respuestas
+@Activities.post("/UploadActivityAnswers")
+def UploadActivityAnswers(Data:UploadAnswers):
+    Group_Ref=db.collection("Groups").document(Data.GroupID)
+    Collection_ref=Group_Ref.collection("AsignedActivities")
+    AsignedAct_Doc=Collection_ref.document(Data.ActID).get()
+    Answers=AsignedAct_Doc.reference.collection("Answers")
+    NewAnswers=Answers.document(Data.UsrID)
+    AnswerMaps=[]
+    for index,Answer in enumerate(Data.Answers):
+       
+        Map={ str(index):{"Type":Answer.Type,"Correct":Answer.Correct,"Value":Answer.value}}
+        AnswerMaps.append(Map)
+    User=db.collection("users").document(Data.UsrID)
+    Data={
+        "Answers":AnswerMaps,
+        "User":User,
+        "Score":Data.Score
+    }
+    NewAnswers.set(Data)
+    return "Ok"

@@ -27,7 +27,7 @@ class ActivitiesService:
         for AnswerDoc in Answers:
             Student_Doc=AnswerDoc.get("User")
             AnsList=AnswerDoc.get("Answers")
-            Student_Data=Student_Doc.get().to_dict()
+            Student_Data=Student_Doc.get()
             UserP=StudetnsPreview(ID=Student_Doc.id,Name=Student_Data.get('Name')+" "+Student_Data.get('LastName'))
             AnswerList=[]
             for Ans in AnsList:

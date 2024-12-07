@@ -12,10 +12,10 @@ import retrofit2.http.POST
 interface ActIvityService{
     //Obtener Actividades
     @POST("/GetActivity")
-    fun GetActivity(@Body request: ActivityRequest): Call<Activity>
+    fun GetActivity(@Body request: GetActivity): Call<Activity>
 
     @POST("/GetAnsweredActivity")
-    fun GetAnsweredActivity(@Body request: GetActivityAnwersPck):Call<AnsweredActivity>
+    fun GetAnsweredActivity(@Body request: GetActivityAnwers):Call<AnsweredActivity>
 
     //Obtener datos para asignar
     @POST("/GetGroupActivities")
@@ -47,6 +47,9 @@ interface ActIvityService{
     @POST("/GetAssignedPractices")
     fun GetAssignedPractices(@Body request: ActivityRequest): Call<List<AsignedView>>
 
+    //Subir Respuestas
+    @POST("/UploadActivityAnswers")
+    fun UploadActivityAnswers(@Body request: UploadAnswers): Call<String>
 
 }
 
@@ -55,15 +58,29 @@ data class ActivityRequest(
     val ID: String
 )
 
-data class GetActivityAnwersPck(
+data class GetActivityAnwers(
     val GroupID: String,
     val ActID: String
+)
+
+data class GetActivity(
+    val GroupID: String,
+    val ActID: String,
+    val UsrID: String
+)
+
+data class UploadAnswers(
+    val GroupID: String,
+    val ActID: String,
+    val UsrID: String,
+    val Score: Int,
+    val Answers: List<ActivityAnswer>
 )
 
 
 data class ActivityPreview(
     var Name: String,
-    var ID: String
+    var ID: String,
 )
 
 //Views de actividades asignadas
@@ -117,9 +134,12 @@ data class Activity(
         )
 @Serializable
 open class Question(
+
     open val questionQ: String,
     open val helpTextQ: String,
-    open val imgQ: String
+    open val imgQ: String,
+    open val typeq: Int
+
 )
 
 @Serializable
@@ -132,7 +152,8 @@ data class OpenQuestion(
 ) : Question(
     questionQ = Question,
     helpTextQ = HelpText,
-    imgQ = Img
+    imgQ = Img,
+    typeq = Type
 )
 
 @Serializable
@@ -146,7 +167,9 @@ data class ClosedQuestion(
 ) : Question(
     questionQ = Question,   // Asignar explícitamente a questionQ
     helpTextQ = HelpText,   // Asignar explícitamente a helpTextQ
-    imgQ = Img              // Asignar explícitamente a imgQ
+    imgQ = Img,
+    typeq = Type
+    // Asignar explícitamente a imgQ
 )
 
 @Serializable
@@ -161,7 +184,8 @@ data class CompleteText(
 ) : Question(
     questionQ = Question,   // Asignar explícitamente a questionQ
     helpTextQ = HelpText,   // Asignar explícitamente a helpTextQ
-    imgQ = Img              // Asignar explícitamente a imgQ
+    imgQ = Img,
+    typeq = Type              // Asignar explícitamente a imgQ
 )
 
 

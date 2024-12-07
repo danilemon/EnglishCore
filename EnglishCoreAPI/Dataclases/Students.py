@@ -13,6 +13,7 @@ class StudentData(BaseModel):
     Address:str
     Birthday:str
     Username:str
+    GroupID:str
 
 class GetStudentReminds(BaseModel):
     Title: str

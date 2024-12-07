@@ -50,6 +50,7 @@ import androidx.navigation.toRoute
 import com.example.englishcoreappk.Helpers.Spiner
 import com.example.englishcoreappk.Helpers.SpinerItem
 import com.example.englishcoreappk.R
+import com.example.englishcoreappk.Retrofit.ActIvityService
 import com.example.englishcoreappk.Retrofit.Activity
 import com.example.englishcoreappk.Retrofit.ClosedQuestion
 import com.example.englishcoreappk.Retrofit.CompleteText
@@ -57,17 +58,25 @@ import com.example.englishcoreappk.Retrofit.OpenQuestion
 import com.example.englishcoreappk.Retrofit.Question
 import com.example.englishcoreappk.Retrofit.StudentPreview
 import com.example.englishcoreappk.Retrofit.ActivityAnswer
+import com.example.englishcoreappk.Retrofit.ActivityRepository
 import com.example.englishcoreappk.Retrofit.AnsweredActivity
 import com.example.englishcoreappk.Retrofit.Answers
 import com.example.englishcoreappk.Retrofit.StudentAnswers
+import com.example.englishcoreappk.Retrofit.UploadAnswers
+import com.example.englishcoreappk.Retrofit.UserData
 
+data class AnswersPkt(
+    val Activity: Activity,
+    val Answer:MutableList<Any>,
+    val Respuestas:MutableList<Any>
+)
 
 @Composable
-fun ActivityWraper(Activity: Activity){
+fun ActivityWraper(Activity: Activity,Finish:(Ans:AnswersPkt)-> Unit){
     var Index = remember { mutableStateOf(0) }
     var Vindex = remember { mutableStateOf(0) }
 
-    var Q by remember { mutableStateOf(Question("","",""))  }
+    var Q by remember { mutableStateOf(Question("","","",0))  }
     var navController = rememberNavController()
 
     val Questions=Activity.Questions
@@ -138,7 +147,9 @@ fun ActivityWraper(Activity: Activity){
                 }
 
                 // Botón Central
-                Button(onClick = { navController.navigate("Results") }) {
+                Button(onClick = {
+                    Finish(AnswersPkt(Activity,UserAnswer,QuestionAnswers))
+                }) {
                     Text("Botón Central")
                 }
 
@@ -188,21 +199,28 @@ fun NavigationHost(navController: NavHostController, Index: MutableState<Int>, S
             val Question:CompleteText=backStackEntry.toRoute()
             QuestionView(Index.value+1,Question,Lambda,Answer[Index.value])
         }
-        composable("Results"){
-            ResultsView(Act,Answer,Respuestas)
-        }
+
 
     }
 }
 
 @Composable
-fun ResultsView(Activity: Activity,Answer:MutableList<Any>,Respuestas:MutableList<Any>){
+fun ResultsView(Activity: Activity, Answer:MutableList<Any>, Respuestas:MutableList<Any>, GroupID: String, GoBack: () -> Unit){
     var Score =  0
+    var Correct=MutableList(Answer.size){false}
+
     Answer.forEachIndexed{index,S->
         if(S==Respuestas[index]){
+            Correct[index]= true
             Score++
+
         }
     }
+    var UserAnswers: MutableList<ActivityAnswer> =mutableListOf()
+    Activity.Questions.forEachIndexed { I,Question->
+        UserAnswers.add(ActivityAnswer(Question.typeq,Correct[I],Respuestas[I]))
+    }
+    ActivityRepository.UploadAnswers(UploadAnswers(GroupID,Activity.ID, UserData.User,Score.toInt(),UserAnswers))
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -234,14 +252,14 @@ fun ResultsView(Activity: Activity,Answer:MutableList<Any>,Respuestas:MutableLis
             Spacer(modifier = Modifier.size(10.dp))
             var P = ((Score.toFloat()/Answer.size.toFloat())*100)
             Text(
-                text = "Calificación final: ${P.toString()}/100",
+                text = "Calificación final: ${P.toInt()}/100",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.size(20.dp))
         }
         Button(
-            onClick = { /* Acción del botón */ },
+            onClick = { GoBack() },
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E2D7C)),
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
@@ -255,7 +273,7 @@ fun ResultsView(Activity: Activity,Answer:MutableList<Any>,Respuestas:MutableLis
 @Composable
 fun ActivityWraperProfesor(Activity: Activity, StudentsAnswersC:  Answers, Score: Float=0f, GoBack:()-> Unit){
     var StudentsAnswers = remember {StudentsAnswersC.List}
-    var UsrAnswers: List<ActivityAnswer> = StudentsAnswers[0].Answers
+    var UsrAnswers by remember { mutableStateOf<List<ActivityAnswer>>(StudentsAnswers[0].Answers)}
     var Index = remember { mutableStateOf(0) }
 
     //
@@ -272,7 +290,7 @@ fun ActivityWraperProfesor(Activity: Activity, StudentsAnswersC:  Answers, Score
     Correct=UsrAnswers[Index.value].Correct
     Text(text = "Aciertos:${CorrectAnswers}")
 
-    var Q by remember { mutableStateOf(Question("","",""))  }
+    var Q by remember { mutableStateOf(Question("","","",0))  }
     var navController = rememberNavController()
 
     BackHandler {

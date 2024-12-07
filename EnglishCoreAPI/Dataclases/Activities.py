@@ -4,14 +4,8 @@ from typing import Any
 
 
 
-#Request
-class ActivityRequest(BaseModel):
-    ID:str
 
 
-class GetActivityAnwersPck(BaseModel):
-    GroupID:str
-    ActID:str
 
 #Previews
 class ActivityPreview(BaseModel):
@@ -105,3 +99,23 @@ class StudentAnswers(BaseModel):
 class AnsweredActivity(BaseModel):
     Act:Activity
     StudentsAnswers:list[StudentAnswers]
+
+#Request
+class ActivityRequest(BaseModel):
+    ID:str
+
+class GetActivityAnwersPck(BaseModel):
+    GroupID:str
+    ActID:str
+
+class GetActivity(BaseModel):
+    GroupID:str
+    ActID:str
+    UsrID:str
+
+class UploadAnswers(BaseModel):
+    GroupID:str
+    ActID:str
+    UsrID:str
+    Score:int
+    Answers:list[ActivityAnswer]
