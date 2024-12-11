@@ -115,33 +115,33 @@ fun ShowSections() {
                     LazyColumn (modifier = Modifier.fillMaxSize().background(Color.White)){
                         item {
                             SectionCards(position = "1", title = "BASICS", onClick = {
-                                val intent = Intent(context, ActivitiesList::class.java)
-                                context.startActivity(intent)
+                                //val intent = Intent(context, ActivitiesList::class.java)
+                                //context.startActivity(intent)
                             })
                         }
                         item {
                             SectionCards(position = "2", title = "INTERMEDIATE", onClick = {
-                                val intent = Intent(context, ActivitiesList::class.java)
-                                context.startActivity(intent)
+                                //val intent = Intent(context, ActivitiesList::class.java)
+                                //context.startActivity(intent)
                             })
 
                         }
                         item {
                             SectionCards(position = "3",title = "ADVANCED", onClick = {
-                                val intent = Intent(context, ActivitiesList::class.java)
-                                context.startActivity(intent)
+                                // intent = Intent(context, ActivitiesList::class.java)
+                                //context.startActivity(intent)
                             })
                         }
                         item {
                             SectionCards(position = "4", title = "EXPERT", onClick = {
-                                val intent = Intent(context, ActivitiesList::class.java)
-                                context.startActivity(intent)
+                                //val intent = Intent(context, ActivitiesList::class.java)
+                                //context.startActivity(intent)
                             })
                         }
                         item {
                             SectionCards(position = "5", title = "MASTER", onClick = {
-                                val intent = Intent(context, ActivitiesList::class.java)
-                                context.startActivity(intent)
+                                //val intent = Intent(context, ActivitiesList::class.java)
+                                //context.startActivity(intent)
                             })
                         }
 

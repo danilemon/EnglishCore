@@ -64,7 +64,8 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
         verticalArrangement = Arrangement.Top) {
         Text(text = index.toString()+". "+Question.questionQ,style = TextStyle(fontWeight = FontWeight.ExtraBold,color=Color.Black,fontSize = 25.sp  ))
         Spacer(modifier = Modifier.size(10.dp))
-        Box(modifier = Modifier.height(1.dp)
+        Box(modifier = Modifier
+            .height(1.dp)
             .fillMaxWidth()
             .background(Color.Black))
         if(Question.helpTextQ.isNotEmpty()){
@@ -77,12 +78,16 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
             AsyncImage(
                 model = Question.imgQ,
                 contentDescription = "Imagen desde URL",
-                modifier = Modifier.size(100.dp).weight(1f) // Tamaño ajustable
+                modifier = Modifier
+                    .size(100.dp)
+                    .weight(1f) // Tamaño ajustable
             )
             Spacer(modifier = Modifier.size(10.dp))
         }
     }
-        Box(modifier = Modifier.weight(1.5f).fillMaxWidth()){
+        Box(modifier = Modifier
+            .weight(1.5f)
+            .fillMaxWidth()){
             when(Question){
                 is OpenQuestion->{
                     var a = ""
@@ -94,11 +99,15 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
                     OpenQuestionView(Answer = Answer,answer)
                 }
                 is ClosedQuestion->{
-                    var a = ""
-                    if(Saved is String){
-                        a = Saved as String
+                    var a = -1
+                    if(Saved is Int){
+                        a = Saved as Int
                     }
-                    ClosedQuestionView(Question,a,answer)
+                    if (Question.TrueFalse){
+                        TrueFalseQuestionView( a, answer)
+                    }else {
+                        ClosedQuestionView(Question, a, answer)
+                    }
                 }
                 is CompleteText ->{
                     var a = emptyList<String>()
@@ -120,7 +129,9 @@ fun OpenQuestionView(Answer: MutableState<String>,answer:(Any)->Unit){
             value = Answer.value,
             onValueChange = { Answer.value = it
                 answer(Answer.value)},
-            modifier = Modifier.fillMaxSize().padding(32.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp)
         )
     }
 }
@@ -129,44 +140,67 @@ fun OpenQuestionView(Answer: MutableState<String>,answer:(Any)->Unit){
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ClosedQuestionView(Question:ClosedQuestion,Saved:String,answer:(Any)->Unit){
+fun ClosedQuestionView(Question:ClosedQuestion, Saved: Int, answer:(Any)->Unit){
 
     Box(modifier = Modifier.fillMaxSize()){
         FlowRow(modifier=Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top, horizontalArrangement = Arrangement.Center){
             var Selection by remember { mutableStateOf(Saved) }
             for(i in 0..(Question.Options.size)-1){
                             var item  = Question.Options[i] // La opción de la lista
-                            var Lambda: (String, Int) -> Unit ={ S:String, Index: Int->
-                                Selection=S
+                            var Lambda: (Int) -> Unit ={ Index: Int->
+                                Selection=Index
                                 answer(Index)
                             }
-                            LabeledRadioButon(item, selected = item==Selection, onClick = Lambda, Index = i)
+                            LabeledRadioButon(item, selected = i==Selection, onClick = Lambda, Index = i)
                         }
             }
         }
     }
 
+
 @Composable
-fun LabeledRadioButon(s: String, selected: Boolean,
-                      onClick: ((String, Int) -> Unit),
-                      enabled: Boolean=true, Index: Int){
+fun TrueFalseQuestionView(Saved: Int, answer:(Any)->Unit){
+    Box(modifier = Modifier.fillMaxSize()){
+        var Selection by remember { mutableStateOf(Saved) }
+        Row(modifier=Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+            var Lambda1: (Int) -> Unit ={
+                Selection=1
+                answer(1)
+            }
+            LabeledRadioButon(s="True",selected = Selection==1, onClick = Lambda1, Mod = Modifier.padding(horizontal = 15.dp))
+            var Lambda2: (Int) -> Unit ={
+                Selection=1
+                answer(1)
+            }
+            LabeledRadioButon(s="False",selected = Selection==1, onClick = Lambda2, Mod = Modifier.padding(horizontal = 15.dp))
+        }
+    }
+}
+@Composable
+fun LabeledRadioButon(s: String, selected: Boolean, Mod: Modifier= Modifier,
+                      onClick: ((Int) -> Unit),
+                      enabled: Boolean=true, Index: Int=0){
     Row(
-        modifier = Modifier
+        modifier = Mod
             .height(56.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
         RadioButton(
             selected = selected,
             onClick = {
-                onClick(s,Index)
+                onClick(Index)
                       },
             enabled = enabled
         )
         Text(
             text = s,
-            modifier = Modifier.padding(start = 8.dp).selectable(selected = selected,
-                onClick = {onClick(s,Index)},
-                enabled = enabled)
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .selectable(
+                    selected = selected,
+                    onClick = { onClick(Index) },
+                    enabled = enabled
+                )
         )
 
     }
@@ -182,7 +216,9 @@ fun  CompleteTextView(Question:CompleteText,Saved:List<String>,answer:(Any)->Uni
     var Counter = 0
     Box(modifier = Modifier.fillMaxSize()) {
         FlowRow(
-            modifier = Modifier.fillMaxSize().fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxSize()
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.Start
 
@@ -263,12 +299,9 @@ fun Spiner(Options:List<String>,Index:Int,Saved:String,Answer:(String,Int)->Unit
 @Composable
 fun ActivityPreview() {
     EnglishCoreAppKTheme {
-//        var OpenQ=OpenQuestion(1,"What is the meaning of the word","Run","","")
-//        var ClosedQuestion= ClosedQuestion(2,"What is the meaining of this word","Run","", listOf<String>("Correr","Volar","nadar","Comer","Hablar"),"Correr")
-//        var CompleteText=CompleteText(3,"Complete the folowing text","use the words in the box","","Yesterday i was {} in the park , the i {} my friend and we decided to have a {} Runing Competition",listOf<String>("A","A","A","A"),
-//            listOf("")
-//        )
-        //QuestionView(1,CompleteText)
+        TrueFalseQuestionView(-1){A->
+            print("A")
+        }
     }
 }
 

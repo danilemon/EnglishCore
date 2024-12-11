@@ -42,7 +42,7 @@ class ActivitiesService:
         return OpenQuestion(Type=1,Question=Data.get("Pregunta",None),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None))
 
     def ClosedQuestionCase(Data):
-        return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",None))
+        return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",None),TrueFalse=Data.get("TrueFalse",False))
 
     def CompleteTextCase(Data):
         return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]))

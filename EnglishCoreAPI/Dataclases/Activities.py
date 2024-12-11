@@ -67,6 +67,7 @@ class ClosedQuestion(BaseModel):
     Img:str| None
     Options:list| None
     Answer:int| None
+    TrueFalse:bool=False
 
 class OpenQuestion(BaseModel):
     Type:int
@@ -74,6 +75,7 @@ class OpenQuestion(BaseModel):
     HelpText:str| None
     Img:str| None
     Answer:str| None
+    
 
 class CompleteText(BaseModel):
     Type:int

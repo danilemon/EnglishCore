@@ -59,7 +59,7 @@ fun StudentAsignedActivities(GroupID: String){
             SimpleDialog(DialogText)
         }
         if (!ShowAct) {
-            AsignedActsView(GroupID, false, true) { Act: String ->
+            AsignedActsView(GroupID, false, true,true) { Act: String ->
                 var HasAnsers:(String)-> Unit={S->
                     DialogText=S
                     ShowDialog=true

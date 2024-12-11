@@ -163,6 +163,7 @@ data class ClosedQuestion(
     val HelpText: String="",
     val Img: String="",
     val Options: List<String>,
+    val TrueFalse: Boolean=false,
     val Answer: Int
 ) : Question(
     questionQ = Question,   // Asignar explícitamente a questionQ
