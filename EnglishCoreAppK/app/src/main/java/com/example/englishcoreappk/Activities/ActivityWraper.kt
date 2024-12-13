@@ -312,7 +312,7 @@ fun ActivityWraperProfesor(Activity: Activity, StudentsAnswersC:  Answers, Score
             }
             is CompleteText ->{
                 var CTQ= i as CompleteText
-                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers)
+                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers,MultipleSets = CTQ.MultipleSets, NoRep = CTQ.NoRep)
                 Questions.add(q)
             }
         }

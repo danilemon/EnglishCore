@@ -17,6 +17,9 @@ interface ActIvityService{
     @POST("/GetAnsweredActivity")
     fun GetAnsweredActivity(@Body request: GetActivityAnwers):Call<AnsweredActivity>
 
+    //Obtener Actividades
+    @POST("/GetExam")
+    fun GetExam(@Body request: GetActivity): Call<Activity>
     //Obtener datos para asignar
     @POST("/GetGroupActivities")
     fun GetGroupActs(@Body request: List<ActivityRequest>): Call<MutableList<List<Units>>>
@@ -162,7 +165,7 @@ data class ClosedQuestion(
     val Question: String,
     val HelpText: String="",
     val Img: String="",
-    val Options: List<String>,
+    val Options: List<String> = emptyList<String>(),
     val TrueFalse: Boolean=false,
     val Answer: Int
 ) : Question(
@@ -181,7 +184,9 @@ data class CompleteText(
     val Img: String,
     val Text: String,
     val Options: List<String>,
-    val Answers: List<String>
+    val Answers: List<String>,
+    val MultipleSets: List<List<String>>,
+    val NoRep: Boolean
 ) : Question(
     questionQ = Question,   // Asignar explícitamente a questionQ
     helpTextQ = HelpText,   // Asignar explícitamente a helpTextQ

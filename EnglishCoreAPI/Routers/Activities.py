@@ -10,7 +10,7 @@ Activities=APIRouter()
 
 #Obtener Actividades
 @Activities.post('/GetActivity')
-def GetActivity(Data:GetActivity):
+def GetAct(Data:GetActivity):
     Group_Ref=db.collection("Groups").document(Data.GroupID)
     Collection_ref=Group_Ref.collection("AsignedActivities")
     AsignedAct_Doc=Collection_ref.document(Data.ActID).get()
@@ -34,6 +34,21 @@ def GetAnsweredActivity(Data:GetActivityAnwersPck):
     StudentsAnswers=ActivitiesService.GetAnswers(list(Answers_Colecion.stream()))
     Response=AnsweredActivity(Act=ModeldAct,StudentsAnswers=StudentsAnswers)
     return Response
+
+
+@Activities.post('/GetExam')
+def GetExam(Data:GetActivity):
+    Group_Ref=db.collection("Groups").document(Data.GroupID)
+    Collection_ref=Group_Ref.collection("AsignedExams")
+    AsignedAct_Doc=Collection_ref.document(Data.ActID).get()
+    Answers=AsignedAct_Doc.reference.collection("Answers")
+    HasAnswer=Answers.document(Data.UsrID).get()
+    if HasAnswer.exists:
+        return JSONResponse(content={"message": "Actividad ya respondida"},status_code=400)
+    Act_Ref=AsignedAct_Doc.get("Activity")
+    ModeldAct:Activity=ActivitiesService.GetActivity(Act_Ref)
+    ModeldAct.ID=Data.ActID
+    return ModeldAct
 
 #Obtener listado de actividades
 @Activities.post("/GetGroupActivities")

@@ -85,6 +85,8 @@ class CompleteText(BaseModel):
     Text:str| None
     Options:list| None
     Answers:list| None
+    MultipleSets:list[list]
+    NoRep:bool
 
 
 #Actividades ya respondidas

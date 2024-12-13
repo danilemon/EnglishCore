@@ -198,4 +198,231 @@ def AgregarRespuestas():
         ]
     })
     print(Answer)
-AgregarRespuestas()
+
+
+
+def AgregarExamen():
+    Level_ref=db.collection("Levels").document("level1")
+    Exams=Level_ref.collection("exams")
+    Exam_ref=Exams.document("YecnDb9argBmphq22GbT")
+    collection_ref=Exam_ref.collection("Preguntas")
+    Doc={
+        "Index":1,
+        "Tipo":2,
+        "Pregunta":"Read and choose the correct words.",
+        "TextoSecundario":"Charlie isn't tall. He's",
+        "Incisos":["pretty","short","heavy"],
+        "Respuesta":1,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":2,
+        "Tipo":2,
+        "Pregunta":"Read and choose the correct words.",
+        "TextoSecundario":"Javier is good-looking. He is",
+        "Incisos":["pretty","talkative","shy"],
+        "Respuesta":0,
+    } 
+    doc_ref = collection_ref.add(Doc)
+    
+    Doc={
+        "Index":3,
+        "Tipo":2,
+        "Pregunta":"Read and choose the correct words.",
+        "TextoSecundario":"Amanda isn't very serious. she is",
+        "Incisos":["short","pretty","funny"],
+        "Respuesta":2,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":4,
+        "Tipo":2,
+        "Pregunta":"Read and choose the correct words.",
+        "TextoSecundario":"My brother isn't shy. He is",
+        "Incisos":["fiendly","thin","friendly"],
+        "Respuesta":0,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":5,
+        "Tipo":2,
+        "Pregunta":"Read and choose the correct words.",
+        "TextoSecundario":"My mother talks a lot. She's",
+        "Incisos":["talkative","pretty","heavy"],
+        "Respuesta":0,
+    }
+
+    
+    
+    Doc={
+        "Index":6,
+        "Tipo":2,
+        "Pregunta":"Complete with thw right response",
+        "TextoSecundario":"See you in a bit.",
+        "Incisos": ["Bye-Bye", "Very good, how about you, Mr Javier?", "Good afternoon"],
+        "Respuesta":1,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":7,
+        "Tipo":2,
+        "Pregunta":"Complete with thw right response",
+        "TextoSecundario":"Have a good weekend.",
+        "Incisos": [" Thaks, you too", "Nice to meet you, too", "I'm OK. Thanks"],
+        "Respuesta":0,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":8,
+        "Tipo":2,
+        "Pregunta":"Complete with thw right response",
+        "TextoSecundario":" Hello, how are you?",
+        "Incisos": ["Good morning, I'm ok.", "Nothing much, and you?", "See you next weekend"],
+        "Respuesta":1,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":9,
+        "Tipo":2,
+        "Pregunta":"Complete with thw right response",
+        "TextoSecundario":"See you next week!",
+        "Incisos": [" I'm fine, how about you?", " Nice to meet you, too.", "Good bye."],
+        "Respuesta":2,
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":10,
+        "Tipo":2,
+        "Pregunta":"Complete with thw right response",
+        "TextoSecundario":"Hello",
+        "Incisos": ["Bye-Bye", "I'm OK, thanks", "Good evening."],
+        "Respuesta":2,
+    }
+    doc_ref = collection_ref.add(Doc)
+
+    Doc={
+        "Index":15,
+        "Tipo":0,
+        "Text":"",
+    }
+    
+
+
+
+    Doc={
+        "Index":11,
+        "Tipo":3,
+        "Pregunta":"Complete the conversations. Select the correct words",
+        "TextoAcompletar":"""A: What is {}?
+B: {} my new laptop.
+""",
+        "MultipleSets":{"1":["this","you","these"],
+        "2":["(it is","these are","they're"]},
+        "Answers":["this","it is"]
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":12,
+        "Tipo":3,
+        "Pregunta":"Complete the conversations. Select the correct words",
+        "TextoAcompletar":"""A: are {}your pens?
+B: Yes, they {} Thank you.""",
+        "MultipleSets":{"1":["these","this","it"],
+        "2":["is","are","its"]},
+        "Answers":["this","are"]
+
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":13,
+        "Tipo":3,
+        "Pregunta":"Complete the conversations. Select the correct words",
+        "TextoAcompletar":"""A: Is {} a map?
+B: No, {} is not. It is a newspaper.""",
+        "MultipleSets":{"1":["this","its","these"],
+        "2":["is","are","it"]},
+        "Answers":["this","it"]
+    }
+    doc_ref = collection_ref.add(Doc)
+
+
+
+    
+    Doc={
+        "Index":14,
+        "Tipo":3,
+        "Pregunta":"Look at the image. Complete the sentenses using the words in the box",
+        "TextoAcompletar":"""1. The briefcase is {} the newspaper.
+2. The newspaper is {} the books.
+3. The cellphone is {} the briefcase.
+4. The keys are {} the newspaper.
+""","Options":["on","next to","under","in front of"],
+        "Answers":["next to","under","on","in front of"],
+        
+    }
+    doc_ref = collection_ref.add(Doc)
+
+
+    Doc={
+        "Index":15,
+        "Tipo":0,
+        "Text":"Hello! My name is Nikolaus Björn, but my friends call me Niko. I am 29 years old. I live in theU.S, but my family is from Germany. I am serious, inteligent, and short, but I'm not shy",
+    }
+    doc_ref = collection_ref.add(Doc)
+
+
+    Doc={
+        "Index":16,
+        "Tipo":1,
+        "Pregunta":": Read the text. Select True or False.",
+        "TextoSecundario":"He isn't shy",
+        "TrueFalse":True,
+        "Respuesta":True
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":17,
+        "Tipo":1,
+        "Pregunta":": Read the text. Select True or False.",
+        "TextoSecundario":"His family is German",
+        "TrueFalse":True,
+        "Respuesta":True
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":18,
+        "Tipo":1,
+        "Pregunta":": Read the text. Select True or False.",
+        "TextoSecundario":" He is 19 years old",
+        "TrueFalse":True,
+        "Respuesta":False
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":19,
+        "Tipo":1,
+        "Pregunta":": Read the text. Select True or False.",
+        "TextoSecundario":"He is funny.",
+        "TrueFalse":True,
+        "Respuesta":False
+    }
+    doc_ref = collection_ref.add(Doc)
+    Doc={
+        "Index":20,
+        "Tipo":1,
+        "Pregunta":": Read the text. Select True or False.",
+        "TextoSecundario":"His nickname is Niko",
+        "TrueFalse":True,
+        "Respuesta":True
+    }
+    doc_ref = collection_ref.add(Doc)
+    
+    
+    
+
+
+    
+    
+
+
+AgregarExamen()

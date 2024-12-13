@@ -45,6 +45,7 @@ import com.example.englishcoreappk.Students.ui.theme.EnglishCoreAppKTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.example.englishcoreappk.Activities.StudentAsignedActivities
+import com.example.englishcoreappk.Activities.StudentAsignedExam
 import com.example.englishcoreappk.Retrofit.UserData
 
 class StudentAsignedViews : ComponentActivity() {
@@ -135,6 +136,9 @@ fun GroupsNavigationHost(navController: NavHostController,GroupID: String){
         composable("Activities"){
             StudentAsignedActivities(GroupID)
         }
+        composable("Exams"){
+            StudentAsignedExam(GroupID)
+        }
     }
 }
 
@@ -166,7 +170,7 @@ fun SelectLevel(navController: NavHostController){
                     .weight(1f) // Equal space for all boxes
                     .background(Color(0xFFDB162F))
                     .clickable{
-                        navController.navigate("Activities")
+                        navController.navigate("Exams")
                     }
             ) {
                 Text(

@@ -29,7 +29,7 @@ object ActivityRepository {
                             }
                             is CompleteText ->{
                                 var CTQ= i as CompleteText
-                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers)
+                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers,MultipleSets = CTQ.MultipleSets, NoRep = CTQ.NoRep)
                                 NQuestions.add(q)
                             }
                         }
@@ -66,6 +66,48 @@ object ActivityRepository {
             ) {
                 println("Failed to fetch data from server")
                 t.printStackTrace()
+            }
+
+        })
+
+    }
+
+    fun GetExam(ActID: String, GroupID: String, HasAnswers:(String)->Unit, callback: (Activity)-> Unit){
+        val ActRqst=GetActivity(GroupID,ActID, UserData.User)
+        api.GetExam(ActRqst).enqueue(object:Callback<Activity>{
+            override fun onResponse(call: Call<Activity>, response: Response<Activity>) {
+                if(response.isSuccessful){
+                    val Act=response.body()!!
+                    val ActQuestions = Act.Questions
+                    val NQuestions: MutableList<Question> = mutableListOf()
+                    ActQuestions.forEach{i->
+                        when(i){
+                            is OpenQuestion->{
+                                var OpQ = i as OpenQuestion
+                                var q: OpenQuestion= OpenQuestion(Type = OpQ.Type, Question = OpQ.Question, HelpText = OpQ.HelpText, Img = OpQ.Img, Answer = OpQ.Answer)
+                                NQuestions.add(q)
+                            }
+                            is ClosedQuestion->{
+                                var ClQ = i as ClosedQuestion
+                                var q: ClosedQuestion= ClosedQuestion(Type = ClQ.Type, Question = ClQ.Question, HelpText = ClQ.HelpText, Img = ClQ.Img, Options = ClQ.Options, Answer = ClQ.Answer, TrueFalse =ClQ.TrueFalse )
+                                NQuestions.add(q)
+                            }
+                            is CompleteText ->{
+                                var CTQ= i as CompleteText
+                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers, MultipleSets = CTQ.MultipleSets, NoRep = CTQ.NoRep)
+                                NQuestions.add(q)
+                            }
+                        }
+                    }
+                    var FinalAct= Activity(ID =Act.ID, Name = Act.Name, Level = Act.Level, Topic = Act.Topic, NQuestions)
+                    callback(FinalAct)
+                }else{
+                    HasAnswers("La actividad ya fue respondida")
+                }
+            }
+
+            override fun onFailure(call: Call<Activity>, t: Throwable) {
+                TODO("Not yet implemented")
             }
 
         })

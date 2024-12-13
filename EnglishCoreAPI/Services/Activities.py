@@ -6,7 +6,7 @@ from google.cloud.firestore import DocumentReference
 class ActivitiesService:
 
     def GetActivity(Activity_Ref:DocumentReference):
-        Questions=Activity_Ref.collection("Preguntas").get()
+        Questions=Activity_Ref.collection("Preguntas").order_by("Index").get()
         QuestionsList=[]
         for Question in Questions:
             Question_Data=Question.to_dict()
@@ -42,10 +42,15 @@ class ActivitiesService:
         return OpenQuestion(Type=1,Question=Data.get("Pregunta",None),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None))
 
     def ClosedQuestionCase(Data):
-        return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",None),TrueFalse=Data.get("TrueFalse",False))
+        return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",[]),TrueFalse=Data.get("TrueFalse",False))
 
     def CompleteTextCase(Data):
-        return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]))
+        Sets=Data.get("MultipleSets",None)
+        if Sets:
+            Sets=Sets.values()
+        else:
+            Sets=[]
+        return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]),MultipleSets=Sets,NoRep=Data.get("NoRep",False))
 
 
     def GetGroupActivities(ID:str):
@@ -139,7 +144,7 @@ class ActivitiesService:
         AsiggnedExams=[]
         for Exam in Exams_ref.stream():
             data=Exam.to_dict()
-            Exam_doc=data["Activity"].get().to_dict()
+            Exam_doc=data["Activity"].get()
             Collection_ref=Exam.reference.collection("Answers")
             if any( Collection_ref.limit(1).stream()):
                 ExamPre=AsignedView(HasAnswers=True,Act=ActivityPreview(Name=Exam_doc.get("Nombre"),ID=Exam.id))

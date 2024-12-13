@@ -114,7 +114,12 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
                     if((Saved is MutableList<*>)){
                         a = Saved as List<String>
                     }
-                    CompleteTextView(Question,a,answer)
+                    if(Question.MultipleSets.isEmpty()){
+                        CompleteTextView(Question,a,answer)
+                    }else{
+                        CompleteTextViewSets(Question,a,answer,Question.MultipleSets)
+                    }
+
                 }
             }
         }
@@ -169,10 +174,10 @@ fun TrueFalseQuestionView(Saved: Int, answer:(Any)->Unit){
             }
             LabeledRadioButon(s="True",selected = Selection==1, onClick = Lambda1, Mod = Modifier.padding(horizontal = 15.dp))
             var Lambda2: (Int) -> Unit ={
-                Selection=1
-                answer(1)
+                Selection=0
+                answer(0)
             }
-            LabeledRadioButon(s="False",selected = Selection==1, onClick = Lambda2, Mod = Modifier.padding(horizontal = 15.dp))
+            LabeledRadioButon(s="False",selected = Selection==0, onClick = Lambda2, Mod = Modifier.padding(horizontal = 15.dp))
         }
     }
 }
@@ -240,6 +245,38 @@ fun  CompleteTextView(Question:CompleteText,Saved:List<String>,answer:(Any)->Uni
     }
 }
 
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun  CompleteTextViewSets(Question:CompleteText,Saved:List<String>,answer:(Any)->Unit,Sets: List<List<String>>){
+    val TextSegmented = Question.Text.split(" ").filter { it.isNotEmpty() }
+    val Answers = MutableList<String>(Question.Answers.size){""}
+    var Counter = 0
+    Box(modifier = Modifier.fillMaxSize()) {
+        FlowRow(
+            modifier = Modifier
+                .fillMaxSize()
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.Start
+
+        ) {
+            for (i in 0..TextSegmented.size - 1) {
+
+                if (TextSegmented[i] == "{}") {
+
+                    Spiner(Sets[Counter],Counter,Saved.getOrElse(Counter){""}){S,I->
+                        Answers[I]=S
+                        answer(Answers)
+                    }
+                    Counter++
+                } else {
+                    Text(text = TextSegmented[i] + " ")
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun Spiner(Options:List<String>,Index:Int,Saved:String,Answer:(String,Int)->Unit) {

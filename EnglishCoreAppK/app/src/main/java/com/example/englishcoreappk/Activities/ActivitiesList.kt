@@ -122,7 +122,7 @@ fun AsignedActsView(ID: String, Exam: Boolean, Act: Boolean, Student: Boolean=fa
                             }
                         }else if(Exam){
                             ExamsCards(item.Act.Name){
-                                if(!item.HasAnswers){
+                                if(!item.HasAnswers && !Student){
                                     Toast.makeText(context,"La actividad no tiene respuestas",Toast.LENGTH_SHORT).show()
                                 }else{
                                     Next(item.Act.ID)
@@ -130,7 +130,7 @@ fun AsignedActsView(ID: String, Exam: Boolean, Act: Boolean, Student: Boolean=fa
                             }
                         }else{
                             ExercisesCards(item.Act.Name){
-                                if(!item.HasAnswers){
+                                if(!item.HasAnswers && !Student){
                                     Toast.makeText(context,"La actividad no tiene respuestas",Toast.LENGTH_SHORT).show()
                                 }else{
                                     Next(item.Act.ID)

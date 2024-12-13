@@ -84,3 +84,46 @@ fun StudentAsignedActivities(GroupID: String){
         }
     }
 }
+@Composable
+fun StudentAsignedExam(GroupID: String){
+    var ACT by remember{ mutableStateOf<Activity?>(null)}
+    var ShowAct by remember { mutableStateOf(false) }
+
+    var Finished by remember { mutableStateOf(false) }
+    var Answers by remember { mutableStateOf<AnswersPkt?>(null) }
+
+
+    var ShowDialog by remember { mutableStateOf(false) }
+    var DialogText by remember { mutableStateOf("") }
+    Box(modifier = Modifier.fillMaxSize()){
+        if(ShowDialog){
+            SimpleDialog(DialogText)
+        }
+        if (!ShowAct) {
+            AsignedActsView(GroupID, true, false,true) { Act: String ->
+                var HasAnsers:(String)-> Unit={S->
+                    DialogText=S
+                    ShowDialog=true
+                }
+                ActivityRepository.GetExam(Act,GroupID,HasAnsers){it->
+                    ACT=it
+                    ShowAct=true
+                }
+            }
+        }
+        else if(Finished){
+            ResultsView(Answers!!.Activity,Answers!!.Answer,Answers!!.Respuestas,GroupID){
+                ShowAct=false
+            }
+        }
+        else {
+            val AsignedAct = ACT!!
+            ActivityWraper(AsignedAct){it->
+                Finished=true
+                Answers=it
+            }
+        }
+    }
+
+
+}
