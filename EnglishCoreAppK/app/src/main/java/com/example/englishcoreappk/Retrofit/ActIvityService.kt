@@ -177,6 +177,11 @@ data class ClosedQuestion(
 )
 
 @Serializable
+data class Set(
+    var Sett: List<String>
+)
+
+@Serializable
 data class CompleteText(
     val Type: Int,
     val Question: String,
@@ -185,7 +190,7 @@ data class CompleteText(
     val Text: String,
     val Options: List<String>,
     val Answers: List<String>,
-    val MultipleSets: List<List<String>>,
+    val MultipleSets: MutableList<Int>,
     val NoRep: Boolean
 ) : Question(
     questionQ = Question,   // Asignar explícitamente a questionQ

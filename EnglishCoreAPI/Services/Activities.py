@@ -45,12 +45,8 @@ class ActivitiesService:
         return ClosedQuestion(Type=2,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Answer=Data.get("Respuesta",None),Options=Data.get("Incisos",[]),TrueFalse=Data.get("TrueFalse",False))
 
     def CompleteTextCase(Data):
-        Sets=Data.get("MultipleSets",None)
-        if Sets:
-            Sets=Sets.values()
-        else:
-            Sets=[]
-        return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]),MultipleSets=Sets,NoRep=Data.get("NoRep",False))
+        sets=Data.get("MultipleSets",[])
+        return CompleteText(Type=3,Question=Data.get("Pregunta",""),HelpText=Data.get("TextoSecundario",""),Img=Data.get("Imagen",""),Text=Data.get("TextoAcompletar",""),Options=Data.get("Options",[]),Answers=Data.get("Answers",[]),MultipleSets=sets,NoRep=Data.get("NoRep",False))
 
 
     def GetGroupActivities(ID:str):

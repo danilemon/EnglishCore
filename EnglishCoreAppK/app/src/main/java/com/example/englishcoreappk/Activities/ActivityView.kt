@@ -79,7 +79,7 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
                 model = Question.imgQ,
                 contentDescription = "Imagen desde URL",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(200.dp)
                     .weight(1f) // Tamaño ajustable
             )
             Spacer(modifier = Modifier.size(10.dp))
@@ -117,7 +117,13 @@ fun QuestionView(index:Int,Question: Question,answer:(Any)->Unit,Saved:Any){
                     if(Question.MultipleSets.isEmpty()){
                         CompleteTextView(Question,a,answer)
                     }else{
-                        CompleteTextViewSets(Question,a,answer,Question.MultipleSets)
+                        var Options=mutableListOf<List<String>>()
+                        var Sets= Question.Options as MutableList<String>
+                        Question.MultipleSets.forEach{i->
+                            Options.add(Sets.subList(0,i).toList())
+                            Sets = Sets.subList(i, Sets.size).takeIf { it.isNotEmpty() }?.toMutableList() ?: mutableListOf()
+                        }
+                        CompleteTextViewSets(Question,a,answer,Options)
                     }
 
                 }

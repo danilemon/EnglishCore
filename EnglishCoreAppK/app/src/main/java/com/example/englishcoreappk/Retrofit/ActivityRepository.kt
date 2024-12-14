@@ -29,7 +29,7 @@ object ActivityRepository {
                             }
                             is CompleteText ->{
                                 var CTQ= i as CompleteText
-                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers,MultipleSets = CTQ.MultipleSets, NoRep = CTQ.NoRep)
+                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers, MultipleSets=CTQ.MultipleSets ,NoRep = CTQ.NoRep)
                                 NQuestions.add(q)
                             }
                         }
@@ -94,7 +94,7 @@ object ActivityRepository {
                             }
                             is CompleteText ->{
                                 var CTQ= i as CompleteText
-                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers, MultipleSets = CTQ.MultipleSets, NoRep = CTQ.NoRep)
+                                var q: CompleteText= CompleteText(Type = CTQ.Type, Question = CTQ.Question, HelpText = CTQ.HelpText, Img = CTQ.Img, Text = CTQ.Text, Options = CTQ.Options, Answers = CTQ.Answers, MultipleSets=CTQ.MultipleSets,NoRep = CTQ.NoRep)
                                 NQuestions.add(q)
                             }
                         }

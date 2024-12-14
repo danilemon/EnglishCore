@@ -305,19 +305,14 @@ def AgregarExamen():
         "Tipo":0,
         "Text":"",
     }
-    
-
-
-
     Doc={
         "Index":11,
         "Tipo":3,
         "Pregunta":"Complete the conversations. Select the correct words",
         "TextoAcompletar":"""A: What is {}?
 B: {} my new laptop.
-""",
-        "MultipleSets":{"1":["this","you","these"],
-        "2":["(it is","these are","they're"]},
+""",    "MultipleSets":[3,3],
+        "Options":["this","you","these","it is","these are","they're",],
         "Answers":["this","it is"]
     }
     doc_ref = collection_ref.add(Doc)
@@ -327,8 +322,8 @@ B: {} my new laptop.
         "Pregunta":"Complete the conversations. Select the correct words",
         "TextoAcompletar":"""A: are {}your pens?
 B: Yes, they {} Thank you.""",
-        "MultipleSets":{"1":["these","this","it"],
-        "2":["is","are","its"]},
+        "MultipleSets":[3,3],
+        "Options":["these","this","it","is","are","its"],
         "Answers":["this","are"]
 
     }
@@ -339,8 +334,8 @@ B: Yes, they {} Thank you.""",
         "Pregunta":"Complete the conversations. Select the correct words",
         "TextoAcompletar":"""A: Is {} a map?
 B: No, {} is not. It is a newspaper.""",
-        "MultipleSets":{"1":["this","its","these"],
-        "2":["is","are","it"]},
+        "MultipleSets":[3,3],
+        "Options":["this","its","these","is","are","it"],
         "Answers":["this","it"]
     }
     doc_ref = collection_ref.add(Doc)
