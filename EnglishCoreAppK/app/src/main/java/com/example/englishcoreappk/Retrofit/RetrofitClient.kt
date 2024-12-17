@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 
 object RetrofitClient {
-    private const val BASE_URL = "http://192.168.0.5:5000"  // Cambia esto por la URL de tu API
+    private const val BASE_URL = "http://192.168.1.76|:5000"  // Cambia esto por la URL de tu API
     val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Question::class.java, QuestionDeserializer()) // Registra el deserializador
         .create()

@@ -10,6 +10,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -147,7 +149,7 @@ fun ShowStudentView() {
 
                             // Texto de bienvenida centrado
                             Text(
-                                text = "¡HOLA ESTUDIANTE!",
+                                text = "WELCOME BACK STUDENT!",
                                 color = Color.White, // Ajusta el color según sea necesario
                                 modifier = Modifier
                                     .align(Alignment.Center).padding(top = 60.dp), // Centra el texto en el Box
@@ -157,7 +159,7 @@ fun ShowStudentView() {
                     }
                     item {
                         SectionCard(
-                            title = "PRACTICAR",
+                            title = "PRACTICE",
                             imageResource = R.drawable.practice_image,
                             modifier = Modifier.padding(16.dp),
                             onClick = {
@@ -168,7 +170,7 @@ fun ShowStudentView() {
                     }
                     item {
                         SectionCard(
-                            title = "PENDIENTES",
+                            title = "NOTIFICATIONS",
                             imageResource = R.drawable.pending_image,
                             modifier = Modifier.padding(16.dp),
                             onClick = {
@@ -179,7 +181,7 @@ fun ShowStudentView() {
                     }
                     item {
                         SectionCard(
-                            title = "CALIFICACIONES",
+                            title = "SCORES",
                             imageResource = R.drawable.grades_image,
                             modifier = Modifier.padding(16.dp),
                             onClick = {
@@ -192,7 +194,7 @@ fun ShowStudentView() {
                     item {
                         SectionCard(
                             title = "TICKETS",
-                            imageResource = R.drawable.harvard,
+                            imageResource = R.drawable.tickets_image,
                             modifier = Modifier.padding(16.dp),
                             onClick = {
                                 val intent = Intent(context, StudentsTickets::class.java)
@@ -234,6 +236,7 @@ fun SectionCard(title: String, imageResource: Int, modifier: Modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .background(Color.White) // Coloca un color de fondo por defecto
             .clickable { onClick() }
+
     ) {
         Image(
             painter = painterResource(id = imageResource),
@@ -242,9 +245,14 @@ fun SectionCard(title: String, imageResource: Int, modifier: Modifier = Modifier
         )
         Text(
             text = title,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.BottomStart).padding(start = 20.dp, bottom = 6.dp),
+            color = Color.Black,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(start = 20.dp, bottom = 6.dp),
 //            style = MaterialTheme.typography.h5
+        )
+        Divider(
+            color = Color.Gray, // Color de la línea
+            thickness = 1.dp, // Grosor de la línea
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
