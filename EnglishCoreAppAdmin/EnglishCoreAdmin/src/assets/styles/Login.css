@@ -1,0 +1,76 @@
+.log-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../images\login-bg.jpg');
+  background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  width: 100vw; /* Ocupa todo el ancho de la ventana */
+  margin: 0; /* Elimina márgenes externos */
+  padding: 0; /* Elimina relleno externo */
+  box-sizing: border-box; /* Asegura que el padding no afecte las dimensiones */
+}
+
+.login-container {
+    background-color: #ffffff; /* Un tono más oscuro del fondo */
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
+    width: 400px; /* Ancho fijo */
+    text-align: center; /* Centra el texto y los elementos */
+    font-weight: thin;
+    align-items: center;
+    align-self: center;
+  }
+  
+  .login-container h2 {
+    margin-bottom: 1rem;
+    color: #333; /* Color del texto */
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+    text-align: left; /* Alinea las etiquetas a la izquierda */
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    font-family: "Poppins", serif;
+
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+
+
+  .login-logo {
+    display: block; /* Asegura que se trate como un bloque */
+    margin: 0 auto; /* Centra horizontalmente */
+    width: 150px; /* Ajusta el tamaño si es necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    margin-bottom: 3rem; /* Espacio debajo de la imagen */
+  }
+
+  .log-btn{
+    font-family: "Poppins", serif;
+    transition-duration: 500ms;
+    background-color: #1c94ac;
+
+  }
+
+  .log-btn:hover{
+    background-color: #2cabff; /* Azul más oscuro al pasar el mouse */
+
+  }
+  
