@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import '../assets/styles/Login.css';
 import logo from '../assets/logos/logo.png'; 
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 import { ENDPOINTS } from '../api/apiConfig';
 function Login() {
 const [userN, setUserN] = useState('');
 const [passN, setPassN] = useState('');
 const [error, setError] = useState('');
 const [success, setSuccess] = useState(false);
-
+const navigate = useNavigate();
 const handleLogin = async (e) => {
   e.preventDefault();
 
@@ -45,6 +46,7 @@ const handleLogin = async (e) => {
       icon: "success",
       title: "Signed in successfully"
     });
+    navigate('/home');
   } catch (err) {
     setError(err.message);
     setSuccess(false);
@@ -68,7 +70,6 @@ const handleLogin = async (e) => {
         </div>
         <button className="log-btn" type="submit">Ingresar</button>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && <p style={{ color: 'green' }}>¡Inicio de sesión exitoso!</p>}
       </form>
     </div>
     </div>

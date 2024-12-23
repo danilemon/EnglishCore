@@ -1,0 +1,21 @@
+.home-page{
+    height: 100%;
+    width: 100%;
+}
+
+.greeting-div{
+    display: flex;
+    flex-direction: row; /* Los elementos se alinean en fila */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center; /* Centra horizontalmente */
+    height: 2rem;
+    gap: 2rem; /* Espaciado uniforme entre elementos */
+    background-color: #f5f5f5; /* Opcional: fondo claro para el header */
+    padding: 0 2rem; /* Agrega espacio interno */
+}
+
+.home-cont{
+    height: 35rem;
+    width: 100%;
+    background-color: #D9D9D9;
+}

@@ -1,0 +1,25 @@
+.notfound-page{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    align-items: center;
+    gap: 3rem;
+
+}
+
+.gohome-btn{
+    background-color: #007bff;
+    font-family: "Poppins", serif;
+    transition-duration: 500ms;
+}
+
+.gohome-btn:hover{
+    background-color: #00d5ff;
+
+
+}
+
+    

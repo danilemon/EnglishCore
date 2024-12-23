@@ -1,0 +1,60 @@
+.ftr-cont{
+    background-color: #222;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    gap: 20%;
+    height: 60px;
+}
+
+.ftr-cont p{
+    background-color: #222;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: small;
+    font-weight: 200;
+}
+
+.rights-div{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+}
+
+.priv-terms-div{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 40%;
+}
+
+.priv-terms-div p{
+   cursor: pointer;
+   transition: color 0.3s; /* Suaviza cambios de color */
+
+}
+
+.priv-terms-div p:hover{
+    color: #007bff; /* Cambia el color al pasar el mouse */
+ }
+
+.author-eng-cor{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.ftr-icons{
+    width: 30px;
+}
+
+.ftr-icons:hover{
+    cursor: pointer;
+}
