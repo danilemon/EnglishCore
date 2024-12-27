@@ -1,10 +1,11 @@
 
-.home-page {
+.stud-page {
     height: 100vh; /* Ajusta la altura al tamaño de la ventana */
     width: 100%;
     display: flex;
     flex-direction: column; /* Estructura en columna */
     overflow: hidden; /* Elimina los scrolls automáticos */
+    background-color: #FFFFFF;
 }
 
 .greeting-div {
@@ -48,7 +49,7 @@
     box-sizing: border-box;
     white-space: nowrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: auto;
+    height: 10px;
 }
 
 .content {
