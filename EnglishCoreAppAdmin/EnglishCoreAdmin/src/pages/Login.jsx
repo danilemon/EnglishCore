@@ -3,53 +3,63 @@ import '../assets/styles/Login.css';
 import logo from '../assets/logos/logo.png'; 
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-import { ENDPOINTS } from '../api/apiConfig';
+import db from '../services/firebaseConfig';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 function Login() {
 const [userN, setUserN] = useState('');
 const [passN, setPassN] = useState('');
 const [error, setError] = useState('');
-const [success, setSuccess] = useState(false);
 const navigate = useNavigate();
+
 const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const response = await fetch(ENDPOINTS.LOGIN, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: userN,
-        password: passN,
-      }),
-    });
+    const userRef = collection(db, "users");
 
-    if (!response.ok) {
-      throw new Error('Usuario o contraseña incorrectos');
+    // Crear la consulta para buscar el usuario con el username y password proporcionados
+    const q = query(
+      userRef,
+      where("username", "==", userN),
+      where("password", "==", passN),
+      where("isAdmin", "==", true)
+    );
+
+    // Ejecutar la consulta
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Si se encuentra el usuario
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+
+      Toast.fire({
+        icon: "success",
+        title: "Signed in successfully"
+      });
+
+      navigate('/home');
+    } else {
+      // Si no se encuentra un usuario con esas credenciales
+      Swal.fire({
+        icon: "error",
+        title: "Error de autenticación",
+        text: "Usuario o contraseña incorrectos.",
+      });
+      setError("Usuario o contraseña incorrectos.");
     }
-
-    const data = await response.json();
-    setSuccess(true);
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "success",
-      title: "Signed in successfully"
-    });
-    navigate('/home');
   } catch (err) {
-    setError(err.message);
-    setSuccess(false);
+    console.error("Error al iniciar sesión:", err);
+    setError("Hubo un problema al intentar iniciar sesión.");
   }
 };
 
