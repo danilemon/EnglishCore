@@ -1,0 +1,69 @@
+.student-header{
+    display: flex;
+    flex-direction: row;
+    background-color: #DB162F;
+    width: 100%;
+    height: 4rem;
+    align-items: center;
+}
+
+.student-header h2{
+    color: white;
+    padding-left: 1rem;
+}
+
+.top-student-buttons{
+    display: flex;
+    position: relative;
+    left: 50%;
+    gap: 1rem;
+   
+}
+
+
+.manage-st-btn{
+transition-duration: 500ms;
+}
+.manage-st-btn:hover{
+color: #DB162F;
+background-color: white;
+}
+
+.st-details{
+    margin-left: 1rem;
+}
+
+.st-details p{
+    font-weight: 400;
+}
+
+.std-content
+{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+}
+
+.scores-div
+{
+    background-color: #d9d9d9;
+    min-height: 35rem;
+    min-width: 50rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.scores-title
+{
+    background-color: #DB162F;
+    position: relative;
+    height: 4rem;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    color: white;
+    text-align: center;
+    align-content: center;
+    font-size: larger;
+    font-weight: bold;
+
+}

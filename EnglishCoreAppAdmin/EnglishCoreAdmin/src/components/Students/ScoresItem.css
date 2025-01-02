@@ -1,4 +1,4 @@
-.StudentItem {
+.ScoresItem {
     display: flex; /* Flexbox para organizar los elementos en fila */
     justify-content: space-between; /* Espaciado uniforme entre elementos principales */
     align-items: center; /* Centra los elementos verticalmente dentro de su contenedor */
@@ -12,24 +12,24 @@
 
 }
 
-.StudentItem:hover {
+.ScoresItem:hover {
     transform: scale(1.05); /* Aumenta el tamaño en un 5% */
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2); /* Incrementa la sombra para resaltar */
     cursor: pointer;
 }
 
-.StudentItem div {
+.ScoresItem div {
     display: flex; /* Flexbox para alinear el contenido dentro de cada sección */
     flex-direction: column; /* Alinea los elementos verticalmente dentro de cada bloque */
     align-items: flex-start; /* Alinea los textos al inicio */
     flex: 1; /* Hace que cada bloque ocupe el mismo espacio */
 }
 
-.StudentItem div:last-child {
+.ScoresItem div:last-child {
     align-items: flex-end; /* Alinea el último bloque (grupo) al final */
 }
 
-.StudentItem p {
+.ScoresItem p {
     font-weight: 300;
     font-size: large;
     margin: 2px 0; /* Espaciado mínimo entre los párrafos */

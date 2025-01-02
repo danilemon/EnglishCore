@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import '../assets/styles/Login.css';
 import logo from '../assets/logos/logo.png'; 
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import db from '../services/firebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { AuthContext } from '../context/AuthContext';
 function Login() {
 const [userN, setUserN] = useState('');
 const [passN, setPassN] = useState('');
 const [error, setError] = useState('');
+const {login} = useContext(AuthContext);
 const navigate = useNavigate();
 
 const handleLogin = async (e) => {
@@ -29,6 +31,8 @@ const handleLogin = async (e) => {
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
+      const userData = querySnapshot.docs[0].data();
+
       // Si se encuentra el usuario
       const Toast = Swal.mixin({
         toast: true,
@@ -42,6 +46,7 @@ const handleLogin = async (e) => {
         }
       });
 
+      login(userData); // Guardar datos del usuario en el contexto y LocalStorage
       Toast.fire({
         icon: "success",
         title: "Signed in successfully"
