@@ -35,7 +35,7 @@
     position: sticky; /* Mantiene el footer visible al desplazarse */
     bottom: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 100;
 }
 
 .top-bar {

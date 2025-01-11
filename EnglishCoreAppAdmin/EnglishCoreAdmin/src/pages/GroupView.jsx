@@ -11,6 +11,7 @@ import { collection, getDocs,getDoc,doc,query,where,addDoc,updateDoc} from 'fire
 function GroupView() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [groupData, setGroupData] = useState([]);
+  const [Schedules, setSchedules]=useState([]);
 
   const [Teachers,setTeachers]=useState([]);
 
@@ -39,7 +40,8 @@ function GroupView() {
         data.Days,
         TeacherData.Name+" "+TeacherData.LastName, // Concatenando el nombre y apellido
         TEACHER.id,
-        data.StudentsIDs.length
+        data.StudentsIDs.length,
+        data.StartDate
       );
       GroupsList.push(GroupData);
     }
@@ -177,6 +179,36 @@ function GroupView() {
             </select>
         </div>
 
+        
+
+        <div className="form-group">
+            <label>Días:</label>
+            <select onChange={(event) => {
+            const selectedValue = event.target.value;
+            setDays(selectedValue);
+            switch(selectedValue){
+              case "L-M-V":
+                setSchedules(["9:00 - 10:20 am","4:00 - 5:20 Pm","6:00 - 7:20 Pm","7:30 - 8:50 Pm"])
+                setHours(null)
+                break;
+              case "M-J":
+                setSchedules(["8:00 - 10 am"," 4:00 - 6:00 Pm","6:00 - 8:00 Pm"])
+                setHours(null)
+                break;
+              case "S":
+                setSchedules(["9:00 - 1:00 PM"])
+                setHours(null)
+                break;
+            }
+          }} 
+              value={days||""}>
+                <option value="" disabled></option>
+                <option value={"L-M-V"}>L-M-V</option>
+                <option value={"M-J"}>M-J</option>
+                <option value={"S"}>S</option>
+            </select>
+        </div>
+
         <div className="form-group">
             <label>Horario:</label>
             <select onChange={
@@ -185,21 +217,12 @@ function GroupView() {
                 setHours(selectedValue); 
             }} value={hours||""}>
                 <option value="" disabled></option>
-                <option value={"5:00 - 8:00"}>5:00 - 8:00</option>
-                <option value={"8:00 - 11:00"}>8:00 - 11:00</option>
-            </select>
-        </div>
-
-        <div className="form-group">
-            <label>Días:</label>
-            <select onChange={(event) => {
-            const selectedValue = event.target.value;
-            setDays(selectedValue); }} 
-              value={days||""}>
-                <option value="" disabled></option>
-                <option value={"L-M-V"}>L-M-V</option>
-                <option value={"M-J"}>M-J</option>
-                <option value={"S"}>S</option>
+                {
+                  Schedules.map((Hours)=>(<option value={Hours}>
+                    {Hours}
+                  </option>
+                  ))
+                }
             </select>
         </div>
 
@@ -246,13 +269,14 @@ function Modal({ onClose, children }) {
 
 
 class Group{
-  constructor(ID,Level,Hours,Days,Profesor,ProfesorID,Number){
+  constructor(ID,Level,Hours,Days,Profesor,ProfesorID,Number,StartDate){
     this.ID=ID;
     this.Level=Level;
     this.Hours=Hours;
     this.Days=Days;
     this.Profesor=Profesor;
     this.ProfesorID=ProfesorID;
+    this.StartDate=StartDate,
     this.Number=Number
     this.StudentList=[];
   }
@@ -270,16 +294,18 @@ class Group{
     return StudentsList;
   }
 
-  async UpdateGroup(level,hours,days,profesor){
+  async UpdateGroup(level,hours,days,profesor,Date,newStudents,RemovedStudents){
 
     this.Level=level||this.Level
     this.Hours=hours||this.Hours
     this.Days=days||this.Days
+    this.StartDate=Date||this.StartDate
    
 
     const DocRef=doc(db,"Groups",this.ID)
     const GroupDoc=await getDoc(DocRef);
 
+    const currentStudents=GroupDoc.data().StudentsIDs
 
     const newProfesor=profesor||this.ProfesorID
 
@@ -293,7 +319,19 @@ class Group{
     this.Profesor=TeacherData.Name+" "+TeacherData.LastName
     this.ProfesorID=TeacherDoc.id
 
-    
+    for (const student of newStudents) {
+      const studentDoc = doc(db, "users", student.ID);
+      currentStudents.push(studentDoc);
+      this.Number++ 
+      await updateDoc(studentDoc, {GroupID:DocRef,GroupAID:DocRef.id}); 
+    }
+    if(RemovedStudents.length  === 0){
+      currentStudents=currentStudents.filter(student=>!RemovedStudents.includes(student.id));
+      for(const student of RemovedStudents){
+        const studentDoc=doc(db,"users",student);
+        await updateDoc(studentDoc,{GroupAID:"",GroupID:null})
+      }
+    }
 
     const LevelRef = doc(db,"Levels",this.Level)
     const NewGroup={
@@ -301,8 +339,9 @@ class Group{
       Hours:this.Hours,
       Teacher:TeacherRef,
       Level:LevelRef,
-      LevelNumber:this.Level
-
+      LevelNumber:this.Level,
+      StartDate:this.StartDate,
+      StudentsIDs:currentStudents
     }
     await updateDoc(DocRef,NewGroup);
 
@@ -321,6 +360,7 @@ class Group{
       await updateDoc(TeacherRef,{Groups:NewGroups})
       await updateDoc(OriginalTeacher,{Groups:OriginalGroups})
     }
+
 
 
 

@@ -38,7 +38,7 @@ p {
 
 .modal-content {
     background: white;
-    height: 80%;
+    height: auto;
     padding: 20px;
     border-radius: 10px;
     position: relative;
@@ -105,3 +105,22 @@ p {
     cursor: pointer;
     width: 100%;
 }
+
+.student-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .student-name {
+    margin: 0;
+    flex-grow: 1; /* Ocupa todo el espacio restante */
+  }
+  
+  .student-button {
+    padding: 2px 5px; /* Reduce el tamaño del botón */
+    font-size: 0.8rem; /* Ajusta el tamaño del texto */
+    min-width: auto; /* Evita que tenga un tamaño mínimo innecesario */
+  }
+  
