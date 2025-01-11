@@ -305,7 +305,7 @@ class Group{
     const DocRef=doc(db,"Groups",this.ID)
     const GroupDoc=await getDoc(DocRef);
 
-    const currentStudents=GroupDoc.data().StudentsIDs
+    let currentStudents=GroupDoc.data().StudentsIDs
 
     const newProfesor=profesor||this.ProfesorID
 
@@ -325,11 +325,12 @@ class Group{
       this.Number++ 
       await updateDoc(studentDoc, {GroupID:DocRef,GroupAID:DocRef.id}); 
     }
-    if(RemovedStudents.length  === 0){
+    if(RemovedStudents.length  !== 0){
       currentStudents=currentStudents.filter(student=>!RemovedStudents.includes(student.id));
       for(const student of RemovedStudents){
         const studentDoc=doc(db,"users",student);
         await updateDoc(studentDoc,{GroupAID:"",GroupID:null})
+        this.Number--
       }
     }
 

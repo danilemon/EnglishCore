@@ -71,7 +71,6 @@ function GroupItem({Group}) {
         Students.splice(Index, 1);  
         setStudents(Students)
         const Repeated = newStudents.findIndex(studentI => studentI.ID === Student);
-
         SetFullStudents((Prev)=>[...Prev,new UserPreview(Student,Name)])
         if(Repeated !== -1){
             const UpdatedStudents=[...newStudents]
@@ -222,7 +221,11 @@ function GroupItem({Group}) {
               ))
         }
     </div>
-    <button className="submit-btn"  onClick={() => Group.UpdateGroup(level, hours, days, teacher,date,newStudents,RemovedStudents)}>guardar</button>
+    <button className="submit-btn"  onClick={() => 
+        {Group.UpdateGroup(level, hours, days, teacher,date,newStudents,RemovedStudents)
+        setNewStudents([])
+        setRemovedStudents([])   
+        }}>guardar</button>
     </div>
                 </Modal>
             )}
