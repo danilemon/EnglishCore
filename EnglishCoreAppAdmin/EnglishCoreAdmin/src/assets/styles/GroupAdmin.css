@@ -44,12 +44,14 @@
     align-items: center;
     width: 100%;
     background-color: #F2F4F3;
-    padding: 20px;
+    padding: 0px;
     box-sizing: border-box;
     white-space: nowrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: auto;
 }
+
+
 
 .content {
     flex: 1; /* Permite que este div ocupe el espacio restante */
@@ -93,3 +95,50 @@ select{
 option {
     font-family: "Poppins", serif;
 }
+
+.top-bar2{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    background-color: #F2F4F3;
+    padding: 0px;
+    height: auto;
+}
+
+.Section-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #F2F4F3;
+    padding: 20px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: auto;
+}
+.SelectOption {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos (p y select) en columna */
+    align-items: center;    /* Centra los elementos horizontalmente */
+    justify-content: center; /* Centra los elementos verticalmente */
+ /* Fondo gris claro */
+    padding: 20px;           /* Espaciado interno */
+    border-radius: 8px;      /* Bordes redondeados */
+    width: 300px;            /* Ancho del contenedor */
+    margin: 0 auto;          /* Centrar horizontalmente en la página */
+  }
+  
+  .SelectOption p {
+    margin-bottom: 10px;     /* Espaciado entre el texto y el select */
+    font-weight: bold;       /* Negrita para el texto */
+  }
+  
+  .custom-combobox select {
+    padding: 10px;           /* Espaciado interno para el select */
+    border: 1px solid #ccc;  /* Borde del select */
+    border-radius: 5px;      /* Bordes redondeados */
+    background-color: #fff;  /* Fondo blanco para el select */
+    font-size: 16px;         /* Tamaño de fuente */
+    width: 100%;             /* El select ocupa todo el ancho disponible */
+  }

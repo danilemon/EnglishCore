@@ -1,6 +1,6 @@
 import {React,useState, useEffect } from 'react';
 
-import '../assets/styles/GroupView.css';
+import '../assets/styles/GroupAdmin.css';
 import db from '../services/firebaseConfig';
 import GroupItem from '../components/Groups/GroupItem';
 import Swal from 'sweetalert2';

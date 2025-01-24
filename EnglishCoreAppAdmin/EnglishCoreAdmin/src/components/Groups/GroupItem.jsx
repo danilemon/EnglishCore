@@ -43,7 +43,7 @@ function GroupItem({Group}) {
           teachers.push(new UserPreview(doc.id,data.Name+" "+data.LastName));
         });
         setTeachers(teachers)
-      }
+    }
 
     const AddStudent = async(event)=>{
         const value = event.target.value;
@@ -79,7 +79,6 @@ function GroupItem({Group}) {
         }else{
             setRemovedStudents((Prev)=>[...Prev,Student])
         }
-        
     }
     useEffect(() => {
         const Setup = async () => {
@@ -104,130 +103,129 @@ function GroupItem({Group}) {
             <p>Numero de alumnos: {Group.Number}</p>
             <button onClick={() => setIsModalVisible(true)}>Desplegar</button>
             {isModalVisible && (
-                <Modal onClose={() =>{ 
-                    setRemovedStudents([])
-                    setIsModalVisible(false)
-                    setLevel(null)
-                    setHours(null)
-                    setDays(null)
-                    setTeacher(null)
-                    setDate(null)
-                    setStudents([])
-                    setNewStudents([])
-                }}>
-                    <h2 className="modal-title">Grupo</h2>
-                    <div className="modal-body">
-                    <div className="form-grid">
-        <div className="form-group">
-            <label>Nivel:</label>
-            <select onChange={
-              (event) => {
-                const selectedValue = event.target.value;
-                setLevel(selectedValue); 
-            }} value={level||Group.Level}>
-            <option value="" disabled></option>
-                <option value={"level1"}>Nivel-1</option>
-                <option value={"level2"}>Nivel-2</option>
-                <option value={"level3"}>Nivel-3</option>
-                <option value={"level4"}>Nivel-4</option>
-                <option value={"level5"}>Nivel-5</option>
-            </select>
-        </div>
-        <div className="form-group">
-            <label>Días:</label>
-            <select onChange={(event) => {
-            const selectedValue = event.target.value;
-            setDays(selectedValue); 
-            switch(selectedValue){
-                case "L-M-V":
-                  setSchedules(["9:00 - 10:20 am","4:00 - 5:20 Pm","6:00 - 7:20 Pm","7:30 - 8:50 Pm"])
-                  setHours(null)
-                  break;
-                case "M-J":
-                  setSchedules(["8:00 - 10 am"," 4:00 - 6:00 Pm","6:00 - 8:00 Pm"])
-                  setHours(null)
-                  break;
-                case "S":
-                  setSchedules(["9:00 - 1:00 PM"])
-                  setHours(null)
-                  break;
-              }
-            }} 
-              value={days||Group.Days}>
+          <Modal onClose={() =>{ 
+              setRemovedStudents([])
+              setIsModalVisible(false)
+              setLevel(null)
+              setHours(null)
+              setDays(null)
+              setTeacher(null)
+              setDate(null)
+              setStudents([])
+              setNewStudents([])
+          }}>
+            <h2 className="modal-title">Grupo</h2>
+            <div className="modal-body">
+            <div className="form-grid">
+            <div className="form-group">
+                <label>Nivel:</label>
+                <select onChange={
+                  (event) => {
+                    const selectedValue = event.target.value;
+                    setLevel(selectedValue); 
+                }} value={level||Group.Level}>
                 <option value="" disabled></option>
-                <option value={"L-M-V"}>L-M-V</option>
-                <option value={"M-J"}>M-J</option>
-                <option value={"S"}>S</option>
-            </select>
-        </div>
-        <div className="form-group">
-            <label>Horario:</label>
-            <select onChange={
-              (event) => {
+                    <option value={"level1"}>Nivel-1</option>
+                    <option value={"level2"}>Nivel-2</option>
+                    <option value={"level3"}>Nivel-3</option>
+                    <option value={"level4"}>Nivel-4</option>
+                    <option value={"level5"}>Nivel-5</option>
+                </select>
+            </div>
+            <div className="form-group">
+                <label>Días:</label>
+                <select onChange={(event) => {
                 const selectedValue = event.target.value;
-                setHours(selectedValue); 
-            }} value={hours||Group.Hours}>
+                setDays(selectedValue); 
+                switch(selectedValue){
+                    case "L-M-V":
+                      setSchedules(["9:00 - 10:20 am","4:00 - 5:20 Pm","6:00 - 7:20 Pm","7:30 - 8:50 Pm"])
+                      setHours(null)
+                      break;
+                    case "M-J":
+                      setSchedules(["8:00 - 10 am"," 4:00 - 6:00 Pm","6:00 - 8:00 Pm"])
+                      setHours(null)
+                      break;
+                    case "S":
+                      setSchedules(["9:00 - 1:00 PM"])
+                      setHours(null)
+                      break;
+                  }
+                }} 
+                  value={days||Group.Days}>
+                    <option value="" disabled></option>
+                    <option value={"L-M-V"}>L-M-V</option>
+                    <option value={"M-J"}>M-J</option>
+                    <option value={"S"}>S</option>
+                </select>
+            </div>
+            <div className="form-group">
+                <label>Horario:</label>
+                <select onChange={
+                  (event) => {
+                    const selectedValue = event.target.value;
+                    setHours(selectedValue); 
+                }} value={hours||Group.Hours}>
+                    {
+                      hours == null &&(<option value="" >{Group.Hours}</option>)  
+                    }
+                    {
+                      Schedules.map((Hours)=>(<option value={Hours}>
+                        {Hours}
+                      </option>
+                      ))
+                    }
+                </select>
+            </div>
+            <div className="form-group">
+                <label>Profesor:</label>
+                <select onChange={(event) => {
+                const selectedValue = event.target.value;
+                setTeacher(selectedValue);}}
+                  value={teacher || Group.Profesor}>
+                    <option value="" disabled></option>
+                  {
+                    Teachers.map((teacher)=>(<option value={teacher.ID}>
+                      {teacher.FName}
+                    </option>))
+                  }
+                </select>
+            </div>
+            <div className="form-group">
+                <label>Fecha de inicio:</label>
+                <input type="date" value={date || Group.StartDate} onChange={(event) => {
+                const selectedValue = event.target.value;
+                setDate(selectedValue);}}/>
+            </div>
+            <div className="form-group">
+                <label>Agregar Alumno:</label>
+                <input type="text" list="options" onInput={AddStudent}/>
+                <datalist id="options">
+                    {
+                        FullStudents.map((student)=>(
+                            <option value={student.FName}></option>
+                        ))
+                    }
+                </datalist>
+            </div>
+            </div>
+            <div className="students-list">
                 {
-                  hours == null &&(<option value="" >{Group.Hours}</option>)  
+                    students.map((student,index) => (
+                        <div key={student.ID} className="student-row">
+                          <p className="student-name">{student.FName}</p>
+                          <button className="student-button" onClick={() => RemoveStudent(student.ID,student.FName,index)}>X</button>
+                        </div>
+                      ))
                 }
-                {
-                  Schedules.map((Hours)=>(<option value={Hours}>
-                    {Hours}
-                  </option>
-                  ))
-                }
-            </select>
-        </div>
-        
-        <div className="form-group">
-            <label>Profesor:</label>
-            <select onChange={(event) => {
-            const selectedValue = event.target.value;
-            setTeacher(selectedValue);}}
-              value={teacher || Group.Profesor}>
-                <option value="" disabled></option>
-              {
-                Teachers.map((teacher)=>(<option value={teacher.ID}>
-                  {teacher.FName}
-                </option>))
-              }
-            </select>
-        </div>
-        <div className="form-group">
-            <label>Fecha de inicio:</label>
-            <input type="date" value={date || Group.StartDate} onChange={(event) => {
-            const selectedValue = event.target.value;
-            setDate(selectedValue);}}/>
-        </div>
-        <div className="form-group">
-            <label>Agregar Alumno:</label>
-            <input type="text" list="options" onInput={AddStudent}/>
-            <datalist id="options">
-                {
-                    FullStudents.map((student)=>(
-                        <option value={student.FName}></option>
-                    ))
-                }
-            </datalist>
-        </div>
-    </div>
-    <div className="students-list">
-        {
-            students.map((student,index) => (
-                <div key={student.ID} className="student-row">
-                  <p className="student-name">{student.FName}</p>
-                  <button className="student-button" onClick={() => RemoveStudent(student.ID,student.FName,index)}>X</button>
-                </div>
-              ))
-        }
-    </div>
-    <button className="submit-btn"  onClick={() => 
-        {Group.UpdateGroup(level, hours, days, teacher,date,newStudents,RemovedStudents)
-        setNewStudents([])
-        setRemovedStudents([])   
-        }}>guardar</button>
-    </div>
-                </Modal>
+            </div>
+            <button className="submit-btn"  onClick={() => 
+                {Group.UpdateGroup(level, hours, days, teacher,date,newStudents,RemovedStudents)
+                setNewStudents([])
+                setRemovedStudents([])   
+                }}>guardar</button>
+            </div>
+          </Modal>
             )}
         </div>
     );

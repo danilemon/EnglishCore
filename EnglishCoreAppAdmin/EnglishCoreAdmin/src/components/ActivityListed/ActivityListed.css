@@ -1,0 +1,112 @@
+.ActivityItem{
+    display: flex; /* Cambié a flexbox para alinear los elementos horizontalmente */
+    justify-content: space-between; /* Distribuye el espacio de manera uniforme entre los elementos */
+    align-items: center; /* Centra los elementos verticalmente */
+    width: 90%; /* El contenedor ocupará el 80% del ancho de la pantalla */
+    height: auto; /* La altura se ajustará automáticamente según el contenido */
+    background-color: #D2DBD6; /* Color de fondo */
+    border-radius: 10px; /* Redondeo de las esquinas */
+    padding: 10px 40px; /* Espacio alrededor de los elementos */
+    margin: 10px /* Centra el contenedor en la pantalla */
+}
+
+.activity-viewer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.phone-screen {
+    width: 300px;
+    height: 500px;
+    border: 2px solid #000;
+    border-radius: 10px;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;  /* Alinea los textos al principio */
+    
+}
+
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.small-text {
+    font-size: 12px;
+    color: #000;
+    text-align: left;
+    margin: 0;  /* Elimina márgenes verticales */
+}
+
+.large-bold-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+    margin: 0;  /* Elimina márgenes verticales */
+}
+
+.divider {
+    border: none;  /* Elimina cualquier borde por defecto */
+    border-top: 2px solid #000;  /* Crea una línea negra más gruesa */
+    margin: 0px 0;  /* Añade espacio vertical alrededor de la línea */
+    width: 100%;  /* Asegura que la línea ocupe todo el ancho */
+}
+
+.centered-gray-text {
+    font-size: 16px;
+    color: #7d7d7d;
+    text-align: center;
+}
+
+.navigation-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 150px;
+}
+
+.arrow-button {
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.ClosedQuestion {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 20px; 
+  }
+
+  .Question-Content{
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    flex-grow: 1; /* Hace que el contenedor ocupe todo el espacio restante en .phone-screen */
+    width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+    padding: 0px; /* Opcional: espacio alrededor del contenido */
+}
+
+.OpenQuestionView{
+    display: flex;
+    margin: 10px;
+    height: 90%;
+    width: 100%;
+    flex-grow: 1;
+    border: 2px solid #000;
+    justify-content: center; 
+    align-items: center; 
+    border-radius: 10px;
+    background-color: #cfc5c5;
+}
+
+
+
+
+
+

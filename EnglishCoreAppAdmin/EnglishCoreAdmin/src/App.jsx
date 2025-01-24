@@ -6,6 +6,7 @@ import ManageStudents from './pages/ManageStudents';
 import GroupView from './pages/GroupView';
 import ManageExercises from './pages/ManageExercises';
 import ProtectedRoute from './components/Authentication/ProtectedRoute';
+import ViewActivities from "./pages/ViewActivities";
 import { AuthProvider } from './context/AuthContext';
 import StudentView from './pages/StudentView';
 function App() {
@@ -22,7 +23,7 @@ function App() {
         <Route path="/students/:id" element={<ProtectedRoute><StudentView/></ProtectedRoute>}/>
         <Route path="/exercises" element={<ProtectedRoute><ManageExercises /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
-     
+        <Route path="/ViewActivities" element={<ViewActivities/>}/>
       </Routes>
     </Router>
     </AuthProvider>
