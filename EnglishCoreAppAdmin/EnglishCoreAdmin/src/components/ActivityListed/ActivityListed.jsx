@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {OpenQuestion,ClosedQuestion,CompleteQuestion} from "../../pages/ViewActivities"
-import db from "../../services/firebaseConfig"
+import {OpenQuestion,ClosedQuestion,CompleteQuestion,TextView} from "../../pages/ViewActivities"
 import './ActivityListed.css'
 
 function ActivityListed({Actvitiy}){
@@ -62,10 +61,13 @@ function ActivityViwer({ACT}) {
             <div className="phone-screen">
             <div className="text-container">
                     <p className="small-text">{ACT.Name+":"+ACT.Subject}</p>
-                    <p className="large-bold-text">{(index+1)+". "+Question.Question}</p>
+                    <p className="large-bold-text">{(index+1)+". "+(Question.Question||"")}</p>
                     <hr className="divider" />
-                    <p className="centered-gray-text">{Question.HelpText}</p>
+                    <p className="centered-gray-text">{Question.HelpText||""}</p>
+                    {Question.Img &&(<img className="centered-gray-text" src={Question.Img} alt="Descripción de la imagen" width="30%" height="30%"/>)}
+                    
             </div>
+            
             <div className="Question-Content">
                 {
                     Content(Question)
@@ -127,8 +129,26 @@ function OpenQuestionView({OP}){
 }
 
 function CompleteTextView({CT}){
-
+    let Words=[]
+    Words=CT.Text.split(/\s+/);
+    return(<div className='CompleteText'>
+        {
+            Words.map((unit)=>{
+                if(unit!=="{}"){
+                    return(<p>{unit}</p>)
+                }else{
+                    return(<select>
+                        {CT.Options.map((unit)=>(
+                            <option value={unit}>{unit}</option>
+                        ))}
+                    </select>)
+                }
+            })
+        }
+    </div>)
 }
+
+
 
 function Modal({ onClose, children }) {
     return (
@@ -146,12 +166,13 @@ function Content(Question){
     switch(true){
         case Question instanceof OpenQuestion:
             return(<OpenQuestionView OP={Question}/>)
-            break;
         case Question instanceof ClosedQuestion:
             return(<ClosedQuestionView CQ={Question}/>)
-            break;
         case Question instanceof CompleteQuestion:
-            break;
+            return(<CompleteTextView CT={Question}/>)
+        case Question instanceof TextView:
+            return(<div></div>)
+
     }
 }
 export default ActivityListed;

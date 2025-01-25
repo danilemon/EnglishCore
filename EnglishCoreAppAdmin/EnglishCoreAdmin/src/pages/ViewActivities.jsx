@@ -5,7 +5,7 @@ import Footer from '../components/Shared/Footer';
 import ActivityItem from '../components/ActivityListed/ActivityListed';
 import db from '../services/firebaseConfig';
 
-import {  collection,getDocs,doc} from 'firebase/firestore';
+import {  collection,getDocs,doc,query,orderBy} from 'firebase/firestore';
 function ViewActivities(){
 
     const [Activities,SetActivities]=useState([]);
@@ -44,7 +44,6 @@ function ViewActivities(){
       {
         Activities.map((Act)=>(
           <ActivityItem Actvitiy={Act} />
-          
         ))
       }
     </div>
@@ -179,7 +178,9 @@ function ExamsTopBar({UpdateActivities}){
     </div>
 </div>)
 }
-function Practices({UpdateActivities}){}
+function Practices({UpdateActivities}){
+
+}
 class LevelUnit{
   constructor(ID,Name){
     this.ID=ID,
@@ -193,15 +194,20 @@ class Activity{
     this.Name=Name,
     this.Subject=Subject,
     this.Number=Number,
-    this.Doc=Doc}
+    this.Doc=Doc
+    }
 
   async  getQuestions() {
     const Collection =collection(this.Doc.ref,"Preguntas");
-    const Docs=await getDocs(Collection);
+    const Query=query(Collection,orderBy("Index","asc"))
+    const Docs=await getDocs(Query);
     const Questions=[];
     Docs.forEach((doc)=>{
       const data=doc.data()
       switch(data.Tipo){
+        case 0:
+          Questions.push(new TextView(data.Text))
+          break;
         case 1:
           Questions.push(new OpenQuestion(data.Pregunta||"",data.TextoSecundario||"",data.Imagen||"",data.Respuesta||""))
           break;
@@ -211,6 +217,7 @@ class Activity{
         case 3:
           Questions.push(new CompleteQuestion(data.Pregunta||"",data.TextoSecundario||"",data.Imagen||"",data.Answers||[],data.TextoAcompletar||"",data.Options||[],data.MultipleSets||[],data.NoRep||false))
           break;
+        
         
       }
     })
@@ -250,6 +257,12 @@ export class CompleteQuestion{
     this.Options=Options,
     this.MultipleSets=MultipleSets,
     this.NoRep=NoRep
+  }
+}
+
+export class TextView{
+  constructor(HelpText){
+    this.HelpText=HelpText
   }
 }
 export default ViewActivities
